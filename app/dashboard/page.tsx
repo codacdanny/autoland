@@ -54,7 +54,7 @@ export default function Dashboard() {
   const metrics = [
     {
       title: "Total Income",
-      value: "#90,000,000",
+      value: "₦90,000,000",
       change: "+12.5%",
       isIncrease: true,
       icon: FaWallet,
@@ -62,8 +62,8 @@ export default function Dashboard() {
       bgGradient: "linear(to-r, purple.400, purple.600)",
     },
     {
-      title: "Total Job Order",
-      value: "200",
+      title: "Total Outflow",
+      value: "₦2,000,000",
       change: "+8.2%",
       isIncrease: true,
       icon: FaClipboardList,
@@ -71,8 +71,8 @@ export default function Dashboard() {
       bgGradient: "linear(to-r, blue.400, blue.600)",
     },
     {
-      title: "Completed Job Order",
-      value: "72",
+      title: "Expenses",
+      value: "₦12,000,000",
       change: "+5.1%",
       isIncrease: true,
       icon: FaCheckCircle,
@@ -80,8 +80,8 @@ export default function Dashboard() {
       bgGradient: "linear(to-r, green.400, green.600)",
     },
     {
-      title: "Ongoing Job Order",
-      value: "128",
+      title: "Net Profit",
+      value: "₦30,000,000",
       change: "-2.3%",
       isIncrease: false,
       icon: FaClock,
@@ -111,8 +111,7 @@ export default function Dashboard() {
             boxShadow="xl"
             backdropFilter="blur(10px)"
             border="1px solid"
-            borderColor="gray.100"
-          >
+            borderColor="gray.100">
             <VStack align="stretch" spacing={1}>
               <Text fontSize="2xl" fontWeight="bold">
                 Hi, Manager! 👋
@@ -148,16 +147,14 @@ export default function Dashboard() {
                   variant="ghost"
                   position="relative"
                   color="gray.600"
-                  _hover={{ bg: "gray.100" }}
-                >
+                  _hover={{ bg: "gray.100" }}>
                   <Badge
                     position="absolute"
                     top="-1"
                     right="-1"
                     colorScheme="red"
                     borderRadius="full"
-                    size="sm"
-                  >
+                    size="sm">
                     3
                   </Badge>
                 </IconButton>
@@ -170,16 +167,14 @@ export default function Dashboard() {
                   variant="ghost"
                   position="relative"
                   color="gray.600"
-                  _hover={{ bg: "gray.100" }}
-                >
+                  _hover={{ bg: "gray.100" }}>
                   <Badge
                     position="absolute"
                     top="-1"
                     right="-1"
                     colorScheme="red"
                     borderRadius="full"
-                    size="sm"
-                  >
+                    size="sm">
                     5
                   </Badge>
                 </IconButton>
@@ -209,8 +204,7 @@ export default function Dashboard() {
                   <MenuItem
                     bgColor="gray.100"
                     color="gray.600"
-                    icon={<FaSignOutAlt />}
-                  >
+                    icon={<FaSignOutAlt />}>
                     Logout
                   </MenuItem>
                 </MenuList>
@@ -226,8 +220,7 @@ export default function Dashboard() {
               lg: "repeat(4, 1fr)",
             }}
             gap={8}
-            mb={8}
-          >
+            mb={8}>
             {metrics.map((metric, index) => (
               <Box
                 key={index}
@@ -240,8 +233,7 @@ export default function Dashboard() {
                 boxShadow="lg"
                 position="relative"
                 overflow="hidden"
-                animation={`${animation} ${index * 0.1 + 0.2}s`}
-              >
+                animation={`${animation} ${index * 0.1 + 0.2}s`}>
                 <Box
                   position="absolute"
                   top={0}
@@ -259,8 +251,7 @@ export default function Dashboard() {
                     borderRadius="xl"
                     bg={metric.bgGradient}
                     color="gray.600"
-                    boxShadow="lg"
-                  >
+                    boxShadow="lg">
                     <metric.icon size={18} />
                   </Box>
                   <Badge
@@ -271,8 +262,7 @@ export default function Dashboard() {
                     display="flex"
                     alignItems="center"
                     fontSize="sm"
-                    fontWeight="bold"
-                  >
+                    fontWeight="bold">
                     {metric.isIncrease ? <FaCaretUp /> : <FaCaretDown />}
                     {metric.change}
                   </Badge>
@@ -299,8 +289,7 @@ export default function Dashboard() {
             boxShadow="xl"
             backdropFilter="blur(10px)"
             border="1px solid"
-            borderColor="gray.100"
-          >
+            borderColor="gray.100">
             <Flex justify="space-between" align="center" mb={6}>
               <Text fontSize="lg" fontWeight="semibold">
                 Recent Job Orders
@@ -309,8 +298,7 @@ export default function Dashboard() {
                 align="center"
                 color="blue.500"
                 cursor="pointer"
-                _hover={{ color: "blue.600" }}
-              >
+                _hover={{ color: "blue.600" }}>
                 <Text mr={2}>See More</Text>
                 <FaArrowRight />
               </Flex>
@@ -352,8 +340,7 @@ export default function Dashboard() {
                     transform: "scale(1.01)",
                     transition: "all 0.2s",
                   }}
-                  cursor="pointer"
-                >
+                  cursor="pointer">
                   <Td fontWeight="medium" py={4}>
                     BK-PA1001
                   </Td>
@@ -376,8 +363,7 @@ export default function Dashboard() {
                       px={3}
                       py={1}
                       fontSize="sm"
-                      textTransform="none"
-                    >
+                      textTransform="none">
                       Ongoing
                     </Badge>
                   </Td>
