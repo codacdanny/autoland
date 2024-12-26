@@ -31,7 +31,7 @@ import { usePathname, useRouter } from "next/navigation";
 const SidebarContainer = styled(Box)`
   background: #002050;
   color: #fff;
-  max-height: 100svh;
+  min-height: 100svh;
   overflow-y: scroll;
   scrollbar-width: none;
   width: 250px;
@@ -92,18 +92,8 @@ const SidebarContent = ({ onClose }: SidebarContentProps) => {
     { icon: FaHome, label: "Dashboard", path: "/dashboard" },
     {
       icon: FaCarSide,
-      label: "Car Management",
+      label: "Booking",
       path: "/dashboard/car-management",
-    },
-    {
-      icon: FaCarRear,
-      label: "Booking Service",
-      path: "/dashboard/booking-service",
-    },
-    {
-      icon: FaHistory,
-      label: "Service History",
-      path: "/dashboard/service-history",
     },
     {
       icon: FaCalendarAlt,
@@ -112,11 +102,6 @@ const SidebarContent = ({ onClose }: SidebarContentProps) => {
     },
     { icon: FaCreditCard, label: "Accounts", path: "/dashboard/payments" },
     { icon: FaNetworkWired, label: "Plans", path: "/dashboard/plans" },
-    {
-      icon: FaCarSide,
-      label: "Road Side Services",
-      path: "/dashboard/roadside",
-    },
   ];
 
   const bottomMenuItems = [
