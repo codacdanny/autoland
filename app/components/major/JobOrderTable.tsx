@@ -25,7 +25,8 @@ export default function JobOrderTable() {
       boxShadow="md"
       backdropFilter="blur(5px)"
       border="1px solid"
-      borderColor="gray.100">
+      borderColor="gray.100"
+    >
       <Flex justify="space-between" align="center" mb={6}>
         <Text fontSize="lg" fontWeight="semibold">
           Job Orders
@@ -35,7 +36,8 @@ export default function JobOrderTable() {
           color="blue.500"
           cursor="pointer"
           gap={2}
-          _hover={{ color: "blue.600" }}>
+          _hover={{ color: "blue.600" }}
+        >
           <Text>See More</Text>
           <FaArrowRight />
         </Flex>
@@ -58,7 +60,8 @@ export default function JobOrderTable() {
               background: "gray.400",
             },
           },
-        }}>
+        }}
+      >
         <Table variant="simple" minWidth="1000px">
           <Thead>
             <Tr>
@@ -95,7 +98,8 @@ export default function JobOrderTable() {
                 transform: "scale(1.01)",
                 transition: "all 0.2s",
               }}
-              cursor="pointer">
+              cursor="pointer"
+            >
               <Td fontWeight="medium" py={4}>
                 BK-PA1001
               </Td>
@@ -118,7 +122,80 @@ export default function JobOrderTable() {
                   px={3}
                   py={1}
                   fontSize="sm"
-                  textTransform="none">
+                  textTransform="none"
+                >
+                  Ongoing
+                </Badge>
+              </Td>
+            </Tr>
+            <Tr
+              _hover={{
+                bg: "gray.50",
+                transform: "scale(1.01)",
+                transition: "all 0.2s",
+              }}
+              cursor="pointer"
+            >
+              <Td fontWeight="medium" py={4}>
+                BK-PA1001
+              </Td>
+              <Td>Jan 1, 2025</Td>
+              <Td>Danny Code</Td>
+              <Td>info@dannyco.com</Td>
+              <Td>Wheel Alignment</Td>
+              <Td color="green.500" fontWeight="medium">
+                #800,000 Paid
+              </Td>
+              <Td>
+                <Flex align="center">
+                  <Text>Technician Name</Text>
+                </Flex>
+              </Td>
+              <Td>
+                <Badge
+                  colorScheme="orange"
+                  borderRadius="full"
+                  px={3}
+                  py={1}
+                  fontSize="sm"
+                  textTransform="none"
+                >
+                  Ongoing
+                </Badge>
+              </Td>
+            </Tr>
+            <Tr
+              _hover={{
+                bg: "gray.50",
+                transform: "scale(1.01)",
+                transition: "all 0.2s",
+              }}
+              cursor="pointer"
+            >
+              <Td fontWeight="medium" py={4}>
+                BK-PA1001
+              </Td>
+              <Td>Jan 1, 2025</Td>
+              <Td>Danny Code</Td>
+              <Td>info@dannyco.com</Td>
+              <Td>Wheel Alignment</Td>
+              <Td color="green.500" fontWeight="medium">
+                #800,000 Paid
+              </Td>
+              <Td>
+                <Flex align="center">
+                  <Text>Technician Name</Text>
+                </Flex>
+              </Td>
+              <Td>
+                <Badge
+                  colorScheme="orange"
+                  borderRadius="full"
+                  px={3}
+                  py={1}
+                  fontSize="sm"
+                  textTransform="none"
+                >
                   Ongoing
                 </Badge>
               </Td>
