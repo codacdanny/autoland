@@ -26,20 +26,20 @@ export default function Header() {
       animate={{ opacity: 1, y: 0 }}
       justify="space-between"
       bg="whiteBg"
-      p={6}
+      py={2}
+      px={6}
       align="center"
-      mb={8}
+      mb={6}
       borderRadius="2xl"
       boxShadow="md"
       backdropFilter="blur(5px)"
       border="1px solid"
-      borderColor="gray.100"
-    >
+      borderColor="gray.100">
       <VStack align="stretch" spacing={1}>
-        <Text fontSize="2xl" fontWeight="bold">
+        <Text fontSize="md" fontWeight="bold">
           Hi, Manager! 👋
         </Text>
-        <Text color="gray.500" fontSize="md">
+        <Text color="gray.500" fontSize="sm">
           {`Let's check your garage today`}
         </Text>
       </VStack>
@@ -48,16 +48,17 @@ export default function Header() {
         {/* Enhanced Search Bar */}
         <InputGroup maxW="300px">
           <InputLeftElement pointerEvents="none">
-            <FaSearch color="gray.300" />
+            <FaSearch color="#dbdbd9" />
           </InputLeftElement>
           <Input
             placeholder="Search..."
-            _placeholder={{ color: "gray.500" }}
+            _placeholder={{ color: "gray.300", fontSize: "sm" }}
             bg="gray.50"
+            color="gray.500"
             border="1px solid"
             borderColor="gray.200"
             _hover={{ borderColor: "gray.300" }}
-            _focus={{ borderColor: "blue.500", boxShadow: "none" }}
+            _focus={{ borderColor: "gray.500", boxShadow: "none" }}
             rounded="lg"
           />
         </InputGroup>
@@ -69,17 +70,15 @@ export default function Header() {
             aria-label="Messages"
             variant="ghost"
             position="relative"
-            color="gray.600"
-            _hover={{ bg: "gray.100" }}
-          >
+            color="gray.400"
+            _hover={{ bg: "gray.100" }}>
             <Badge
               position="absolute"
               top="-1"
               right="-1"
               colorScheme="red"
               borderRadius="full"
-              size="sm"
-            >
+              size="sm">
               3
             </Badge>
           </IconButton>
@@ -91,17 +90,15 @@ export default function Header() {
             aria-label="Notifications"
             variant="ghost"
             position="relative"
-            color="gray.600"
-            _hover={{ bg: "gray.100" }}
-          >
+            color="gray.400"
+            _hover={{ bg: "gray.100" }}>
             <Badge
               position="absolute"
               top="-1"
               right="-1"
               colorScheme="red"
               borderRadius="full"
-              size="sm"
-            >
+              size="sm">
               5
             </Badge>
           </IconButton>
@@ -131,8 +128,7 @@ export default function Header() {
             <MenuItem
               bgColor="gray.100"
               color="gray.600"
-              icon={<FaSignOutAlt />}
-            >
+              icon={<FaSignOutAlt />}>
               Logout
             </MenuItem>
           </MenuList>

@@ -12,8 +12,10 @@ import { motion } from "framer-motion";
 import { keyframes } from "@emotion/react";
 import Sidebar from "../components/major/Sidebar";
 import MainContent from "../components/minor/MainContent";
-import JobOrderTable from "../components/major/JobOrderTable";
 import Header from "../components/minor/Header";
+import { MetricCardData } from "../types/metrics";
+import MetricCards from "../components/minor/MetricCards";
+import JobOrderTable from "../components/major/JobOrderTable";
 
 const fadeIn = keyframes`
   from { opacity: 0; transform: translateY(10px) }
@@ -25,7 +27,7 @@ export default function Dashboard() {
   const cardBg = "white";
   const animation = `${fadeIn} 0.5s ease-out`;
 
-  const metrics = [
+  const dashboardMetrics: MetricCardData[] = [
     {
       title: "Total Income",
       value: "₦90,000,000",
@@ -75,74 +77,7 @@ export default function Dashboard() {
           <Header />
 
           {/* Enhanced Metrics Grid */}
-          <Grid
-            templateColumns={{
-              base: "repeat(1, 1fr)",
-              md: "repeat(2, 1fr)",
-              lg: "repeat(4, 1fr)",
-            }}
-            gap={8}
-            mb={8}
-          >
-            {metrics.map((metric, index) => (
-              <Box
-                key={index}
-                as={motion.div}
-                whileHover={{ scale: 1.02 }}
-                // transition={{ duration: 0.2 }}
-                p={6}
-                borderRadius="2xl"
-                bg={cardBg}
-                boxShadow="md"
-                position="relative"
-                overflow="hidden"
-                animation={`${animation} ${index * 0.1 + 0.2}s`}
-              >
-                <Box
-                  position="absolute"
-                  top={0}
-                  right={0}
-                  bottom={0}
-                  width="100%"
-                  bgGradient={metric.bgGradient}
-                  opacity={0.1}
-                  borderRadius="2xl"
-                />
-
-                <Flex justify="space-between" align="center" mb={4}>
-                  <Box
-                    p={4}
-                    borderRadius="xl"
-                    bg={metric.bgGradient}
-                    color="gray.600"
-                    boxShadow="lg"
-                  >
-                    <metric.icon size={18} />
-                  </Box>
-                  <Badge
-                    colorScheme={metric.isIncrease ? "green" : "red"}
-                    borderRadius="full"
-                    px={3}
-                    py={1}
-                    display="flex"
-                    alignItems="center"
-                    fontSize="sm"
-                    fontWeight="bold"
-                  >
-                    {metric.isIncrease ? <FaCaretUp /> : <FaCaretDown />}
-                    {metric.change}
-                  </Badge>
-                </Flex>
-
-                <Text color="gray.500" fontSize="sm" mb={2}>
-                  {metric.title}
-                </Text>
-                <Text color="gray.600" fontSize="lg" fontWeight="bold">
-                  {metric.value}
-                </Text>
-              </Box>
-            ))}
-          </Grid>
+          <MetricCards metrics={dashboardMetrics} />
 
           {/* Enhanced Recent Job Orders Table */}
           <JobOrderTable />
