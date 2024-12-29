@@ -105,7 +105,7 @@ export default function OnlineBooking() {
                   <Icon as={FaUserFriends} fontSize="md" color="blue.500" />
                   <Box>
                     <Text fontSize="sm" fontWeight="bold" color="gray.700">
-                      Online Customers
+                      Online Job orders
                     </Text>
                     <Text color="gray.500">
                       Manage Online orders and customer repairs
