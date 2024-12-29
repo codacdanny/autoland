@@ -24,9 +24,10 @@ export default function JobOrderTable() {
       clientName: "Danny Code",
       email: "info@dannyco.com",
       issue: "Wheel Alignment",
-      payment: "#800,000",
+      payment: "Completed",
       technician: "John Smith",
-      status: "Ongoing",
+      repairStatus: "Ongoing",
+      deliveryStatus: "Yes",
     },
     {
       id: "BK-PA1001",
@@ -34,9 +35,10 @@ export default function JobOrderTable() {
       clientName: "Danny Code",
       email: "info@dannyco.com",
       issue: "Wheel Alignment",
-      payment: "#800,000",
+      payment: "Completed",
       technician: "John Smith",
-      status: "Ongoing",
+      repairStatus: "Ongoing",
+      deliveryStatus: "Yes",
     },
     {
       id: "BK-PA1001",
@@ -44,9 +46,10 @@ export default function JobOrderTable() {
       clientName: "Danny Code",
       email: "info@dannyco.com",
       issue: "Wheel Alignment",
-      payment: "#800,000",
+      payment: "Incomplete",
       technician: "John Smith",
-      status: "Ongoing",
+      repairStatus: "Ongoing",
+      deliveryStatus: "Yes",
     },
     {
       id: "BK-PA1001",
@@ -54,9 +57,10 @@ export default function JobOrderTable() {
       clientName: "Danny Code",
       email: "info@dannyco.com",
       issue: "Wheel Alignment",
-      payment: "#800,000",
+      payment: "Incomplete",
       technician: "John Smith",
-      status: "Ongoing",
+      repairStatus: "Ongoing",
+      deliveryStatus: "Yes",
     },
   ];
 
@@ -111,7 +115,7 @@ export default function JobOrderTable() {
           {/* Grid Header */}
           <Box
             display="grid"
-            gridTemplateColumns="repeat(8, 1fr)"
+            gridTemplateColumns="repeat(9, 1fr)"
             gap={4}
             bg="gray.50"
             borderRadius="lg"
@@ -124,6 +128,7 @@ export default function JobOrderTable() {
             <GridHeader>Payment</GridHeader>
             <GridHeader>Technician</GridHeader>
             <GridHeader>Status</GridHeader>
+            <GridHeader>Delivery Status</GridHeader>
           </Box>
 
           {/* Grid Body */}
@@ -132,7 +137,7 @@ export default function JobOrderTable() {
               <Box
                 key={order.id}
                 display="grid"
-                gridTemplateColumns="repeat(8, 1fr)"
+                gridTemplateColumns="repeat(9, 1fr)"
                 gap={4}
                 p={4}
                 bg="white"
@@ -173,12 +178,14 @@ export default function JobOrderTable() {
 
                 <Flex align="center">
                   <Badge
-                    colorScheme="green"
+                    colorScheme={
+                      order.payment === "Completed" ? "green" : "red"
+                    }
                     variant="subtle"
                     px={3}
                     py={1}
                     borderRadius="full">
-                    {order.payment} Paid
+                    {order.payment}
                   </Badge>
                 </Flex>
 
@@ -189,7 +196,7 @@ export default function JobOrderTable() {
                 <Flex align="center">
                   <Badge
                     colorScheme={
-                      order.status === "Completed" ? "green" : "orange"
+                      order.repairStatus === "Completed" ? "green" : "orange"
                     }
                     display="flex"
                     alignItems="center"
@@ -199,11 +206,33 @@ export default function JobOrderTable() {
                     borderRadius="full">
                     <Icon
                       as={
-                        order.status === "Completed" ? FaCheckCircle : FaClock
+                        order.repairStatus === "Completed"
+                          ? FaCheckCircle
+                          : FaClock
                       }
                       boxSize={3}
                     />
-                    {order.status}
+                    {order.repairStatus}
+                  </Badge>
+                </Flex>
+                <Flex align="center">
+                  <Badge
+                    colorScheme={
+                      order.deliveryStatus === "Yes" ? "green" : "orange"
+                    }
+                    display="flex"
+                    alignItems="center"
+                    gap={1}
+                    px={3}
+                    py={1}
+                    borderRadius="full">
+                    <Icon
+                      as={
+                        order.deliveryStatus === "Yes" ? FaCheckCircle : FaClock
+                      }
+                      boxSize={3}
+                    />
+                    {order.deliveryStatus}
                   </Badge>
                 </Flex>
               </Box>

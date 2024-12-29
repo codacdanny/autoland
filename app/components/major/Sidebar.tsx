@@ -158,30 +158,30 @@ const SidebarContent = ({ onClose }: SidebarContentProps) => {
       icon: FaCarSide,
       label: "Booking",
       subItems: [
-        { label: "Walk-in", path: "/dashboard/booking/" },
-        { label: "Online Booking", path: "/dashboard/booking/online-booking" },
+        { label: "Walk-in", path: "/booking/" },
+        { label: "Online Booking", path: "/booking/online-booking" },
       ],
     },
     {
       icon: FaCalendarAlt,
       label: "Appointments",
-      path: "/dashboard/appointments",
+      path: "/appointments",
     },
-    { icon: FaCreditCard, label: "Accounts", path: "/dashboard/payments" },
-    { icon: FaNetworkWired, label: "Plans", path: "/dashboard/plans" },
+    { icon: FaCreditCard, label: "Accounts", path: "/payments" },
+    { icon: FaNetworkWired, label: "Plans", path: "/plans" },
   ];
 
   const bottomMenuItems = [
     {
       icon: FaBell,
       label: "Notifications",
-      path: "/dashboard/notification",
+      path: "/notification",
     },
-    { icon: FaUserCog, label: "Settings", path: "/dashboard/profile" },
+    { icon: FaUserCog, label: "Settings", path: "/profile" },
     {
       icon: FaQuestionCircle,
       label: "Help & Support",
-      path: "/dashboard/support",
+      path: "/support",
     },
   ];
 
