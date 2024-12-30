@@ -112,22 +112,6 @@ export default function OnlineBooking() {
                     </Text>
                   </Box>
                 </HStack>
-
-                <Button
-                  as={motion.button}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  size="sm"
-                  colorScheme="blue"
-                  leftIcon={<FaPlus />}
-                  onClick={onOpen}
-                  boxShadow="md"
-                  _hover={{
-                    transform: "translateY(-2px)",
-                    boxShadow: "lg",
-                  }}>
-                  Complete Job Order
-                </Button>
               </Flex>
             </Box>
             {/* Enhanced Recent Job Orders Table */}

@@ -1,8 +1,26 @@
-import React from "react";
-import { Box, Flex, Text, Badge, Icon, VStack } from "@chakra-ui/react";
-import { FaArrowRight, FaClock, FaCheckCircle } from "react-icons/fa";
+import React, { useState } from "react";
+import {
+  Box,
+  Flex,
+  Text,
+  Badge,
+  Icon,
+  VStack,
+  Collapse,
+  Button,
+  HStack,
+} from "@chakra-ui/react";
+import {
+  FaArrowRight,
+  FaClock,
+  FaCheckCircle,
+  FaFileAlt,
+  FaFileInvoice,
+  FaClipboardList,
+} from "react-icons/fa";
 import { motion } from "framer-motion";
 import { Link } from "@chakra-ui/next-js";
+import { useRouter } from "next/navigation";
 
 const GridHeader = ({ children }: { children: React.ReactNode }) => (
   <Text
@@ -16,6 +34,9 @@ const GridHeader = ({ children }: { children: React.ReactNode }) => (
 );
 
 export default function JobOrderTable() {
+  const router = useRouter();
+  const [expandedRow, setExpandedRow] = useState<string | null>(null);
+
   // Sample data - you can replace with your actual data
   const orders = [
     {
@@ -63,6 +84,14 @@ export default function JobOrderTable() {
       deliveryStatus: "Yes",
     },
   ];
+
+  const handleRowClick = (orderId: string) => {
+    setExpandedRow(expandedRow === orderId ? null : orderId);
+  };
+
+  const handleActionClick = (orderId: string, action: string) => {
+    router.push(`/job-order/${orderId}/${action}`);
+  };
 
   return (
     <Box
@@ -134,107 +163,151 @@ export default function JobOrderTable() {
           {/* Grid Body */}
           <VStack spacing={2} align="stretch">
             {orders.map((order) => (
-              <Box
-                key={order.id}
-                display="grid"
-                gridTemplateColumns="repeat(9, 1fr)"
-                gap={4}
-                p={4}
-                bg="white"
-                borderRadius="lg"
-                _hover={{
-                  transform: "translateY(-2px)",
-                  boxShadow: "sm",
-                  bg: "gray.50",
-                }}
-                transition="all 0.2s"
-                cursor="pointer">
-                <Flex align="center">
-                  <Text fontWeight="medium">{order.id}</Text>
-                </Flex>
+              <Box key={order.id}>
+                <Box
+                  display="grid"
+                  gridTemplateColumns="repeat(9, 1fr)"
+                  gap={4}
+                  p={4}
+                  bg="white"
+                  borderRadius="lg"
+                  onClick={() => handleRowClick(order.id)}
+                  _hover={{
+                    transform: "translateY(-2px)",
+                    boxShadow: "sm",
+                    bg: "gray.50",
+                  }}
+                  transition="all 0.2s"
+                  cursor="pointer">
+                  <Flex align="center">
+                    <Text fontWeight="medium">{order.id}</Text>
+                  </Flex>
 
-                <Flex align="center">
-                  <Text>{order.date}</Text>
-                </Flex>
+                  <Flex align="center">
+                    <Text>{order.date}</Text>
+                  </Flex>
 
-                <Flex align="center">
-                  <Text>{order.clientName}</Text>
-                </Flex>
+                  <Flex align="center">
+                    <Text>{order.clientName}</Text>
+                  </Flex>
 
-                <Flex align="center">
-                  <Text
-                    color="gray.600"
-                    fontSize="sm"
-                    overflow="hidden"
-                    textOverflow="ellipsis"
-                    whiteSpace="nowrap">
-                    {order.email}
-                  </Text>
-                </Flex>
+                  <Flex align="center">
+                    <Text
+                      color="gray.600"
+                      fontSize="sm"
+                      overflow="hidden"
+                      textOverflow="ellipsis"
+                      whiteSpace="nowrap">
+                      {order.email}
+                    </Text>
+                  </Flex>
 
-                <Flex align="center">
-                  <Text>{order.issue}</Text>
-                </Flex>
+                  <Flex align="center">
+                    <Text>{order.issue}</Text>
+                  </Flex>
 
-                <Flex align="center">
-                  <Badge
-                    colorScheme={
-                      order.payment === "Completed" ? "green" : "red"
-                    }
-                    variant="subtle"
-                    px={3}
-                    py={1}
-                    borderRadius="full">
-                    {order.payment}
-                  </Badge>
-                </Flex>
-
-                <Flex align="center">
-                  <Text>{order.technician}</Text>
-                </Flex>
-
-                <Flex align="center">
-                  <Badge
-                    colorScheme={
-                      order.repairStatus === "Completed" ? "green" : "orange"
-                    }
-                    display="flex"
-                    alignItems="center"
-                    gap={1}
-                    px={3}
-                    py={1}
-                    borderRadius="full">
-                    <Icon
-                      as={
-                        order.repairStatus === "Completed"
-                          ? FaCheckCircle
-                          : FaClock
+                  <Flex align="center">
+                    <Badge
+                      colorScheme={
+                        order.payment === "Completed" ? "green" : "red"
                       }
-                      boxSize={3}
-                    />
-                    {order.repairStatus}
-                  </Badge>
-                </Flex>
-                <Flex align="center">
-                  <Badge
-                    colorScheme={
-                      order.deliveryStatus === "Yes" ? "green" : "orange"
-                    }
-                    display="flex"
-                    alignItems="center"
-                    gap={1}
-                    px={3}
-                    py={1}
-                    borderRadius="full">
-                    <Icon
-                      as={
-                        order.deliveryStatus === "Yes" ? FaCheckCircle : FaClock
+                      variant="subtle"
+                      px={3}
+                      py={1}
+                      borderRadius="full">
+                      {order.payment}
+                    </Badge>
+                  </Flex>
+
+                  <Flex align="center">
+                    <Text>{order.technician}</Text>
+                  </Flex>
+
+                  <Flex align="center">
+                    <Badge
+                      colorScheme={
+                        order.repairStatus === "Completed" ? "green" : "orange"
                       }
-                      boxSize={3}
-                    />
-                    {order.deliveryStatus}
-                  </Badge>
-                </Flex>
+                      display="flex"
+                      alignItems="center"
+                      gap={1}
+                      px={3}
+                      py={1}
+                      borderRadius="full">
+                      <Icon
+                        as={
+                          order.repairStatus === "Completed"
+                            ? FaCheckCircle
+                            : FaClock
+                        }
+                        boxSize={3}
+                      />
+                      {order.repairStatus}
+                    </Badge>
+                  </Flex>
+                  <Flex align="center">
+                    <Badge
+                      colorScheme={
+                        order.deliveryStatus === "Yes" ? "green" : "orange"
+                      }
+                      display="flex"
+                      alignItems="center"
+                      gap={1}
+                      px={3}
+                      py={1}
+                      borderRadius="full">
+                      <Icon
+                        as={
+                          order.deliveryStatus === "Yes"
+                            ? FaCheckCircle
+                            : FaClock
+                        }
+                        boxSize={3}
+                      />
+                      {order.deliveryStatus}
+                    </Badge>
+                  </Flex>
+                </Box>
+
+                <Collapse in={expandedRow === order.id}>
+                  <Box
+                    ml={4}
+                    p={4}
+                    bg="gray.50"
+                    borderRadius="lg"
+                    mt={2}
+                    border="1px dashed"
+                    borderColor="gray.200">
+                    <HStack spacing={4} justify="flex-end">
+                      <Button
+                        leftIcon={<FaFileAlt />}
+                        size="sm"
+                        colorScheme="blue"
+                        variant="outline"
+                        onClick={() =>
+                          handleActionClick(order.id, "registration")
+                        }>
+                        Registration
+                      </Button>
+                      <Button
+                        leftIcon={<FaClipboardList />}
+                        size="sm"
+                        colorScheme="green"
+                        variant="outline"
+                        onClick={() => handleActionClick(order.id, "estimate")}>
+                        Estimate Form
+                      </Button>
+                      <Button
+                        leftIcon={<FaFileInvoice />}
+                        size="sm"
+                        colorScheme="purple"
+                        variant="outline"
+                        onClick={() => handleActionClick(order.id, "invoice")}>
+                        Invoice
+                      </Button>
+                    </HStack>
+                  </Box>
+                </Collapse>
               </Box>
             ))}
           </VStack>

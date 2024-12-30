@@ -116,10 +116,11 @@ export default function BookingPage() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 size="sm"
+                fontWeight="medium"
                 colorScheme="blue"
                 leftIcon={<FaPlus />}
                 onClick={onOpen}
-                boxShadow="md"
+                boxShadow="sm"
                 _hover={{
                   transform: "translateY(-2px)",
                   boxShadow: "lg",
