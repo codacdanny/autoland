@@ -78,7 +78,8 @@ export default function BookingPage() {
             animate={{ opacity: 1, y: 0 }}
             // transition={{ delay: 0.2 }}
             mb={8}
-            p={6}
+            py={2}
+            px={6}
             borderRadius="2xl"
             bg="white"
             boxShadow="sm"
