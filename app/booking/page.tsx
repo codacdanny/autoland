@@ -7,6 +7,8 @@ import {
   HStack,
   useDisclosure,
   Icon,
+  Collapse,
+  VStack,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { FaPlus, FaUserFriends } from "react-icons/fa";
@@ -20,7 +22,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import { MetricCardData } from "../types/metrics";
 
 export default function BookingPage() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { onOpen, onClose, isOpen, onToggle } = useDisclosure();
   const JobOrderMetrics: MetricCardData[] = [
     {
       title: "Total Job Orders",
@@ -110,23 +112,44 @@ export default function BookingPage() {
                   </Text>
                 </Box>
               </HStack>
-
-              <Button
-                as={motion.button}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                size="sm"
-                fontWeight="medium"
-                colorScheme="blue"
-                leftIcon={<FaPlus />}
-                onClick={onOpen}
-                boxShadow="sm"
-                _hover={{
-                  transform: "translateY(-2px)",
-                  boxShadow: "lg",
-                }}>
-                Add Job Order
-              </Button>
+              <Flex flexDir="column" gap={2}>
+                <Button
+                  as={motion.button}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  size="sm"
+                  fontWeight="medium"
+                  colorScheme="blue"
+                  leftIcon={<FaPlus />}
+                  onClick={onToggle}
+                  boxShadow="sm"
+                  _hover={{
+                    transform: "translateY(-2px)",
+                    boxShadow: "lg",
+                  }}>
+                  Add Job Order
+                </Button>
+                <Collapse in={isOpen} animateOpacity>
+                  <Flex justifyContent="space-between" gap={4}>
+                    <Button
+                      fontSize="sm"
+                      fontWeight="normal"
+                      size="xs"
+                      colorScheme="blue"
+                      p={4}>
+                      New
+                    </Button>
+                    <Button
+                      fontWeight="normal"
+                      fontSize="sm"
+                      size="xs"
+                      colorScheme="blue"
+                      p={4}>
+                      Old
+                    </Button>
+                  </Flex>
+                </Collapse>
+              </Flex>
             </Flex>
           </Box>
 

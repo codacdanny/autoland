@@ -25,7 +25,7 @@ import {
   FaChevronDown,
   FaChevronRight,
 } from "react-icons/fa";
-import { FaCarSide, FaNetworkWired } from "react-icons/fa6";
+import { FaCarSide, FaNetworkWired, FaPeopleGroup } from "react-icons/fa6";
 import styled from "@emotion/styled";
 import logo from "../../assets/logo.webp";
 import { ComponentType, useState } from "react";
@@ -75,9 +75,7 @@ const SubMenuItem = ({ label, path, active = false, onClick }: any) => (
       }}
       color="white"
       transition="all 0.3s ease">
-      <Text fontSize="sm" fontWeight="medium">
-        {label}
-      </Text>
+      <Text fontWeight="medium">{label}</Text>
     </HStack>
   </Link>
 );
@@ -117,7 +115,9 @@ const SidebarItem = ({
         justify="space-between">
         <HStack>
           <Icon as={icon} />
-          <Text fontWeight="medium">{label}</Text>
+          <Text fontWeight="medium" fontSize="sm">
+            {label}
+          </Text>
         </HStack>
         {subItems && (
           <ChakraIcon
@@ -167,6 +167,7 @@ const SidebarContent = ({ onClose }: SidebarContentProps) => {
       label: "Appointments",
       path: "/appointments",
     },
+    { icon: FaPeopleGroup, label: "Customers", path: "/customers" },
     { icon: FaCreditCard, label: "Accounts", path: "/payments" },
     { icon: FaNetworkWired, label: "Plans", path: "/plans" },
   ];
