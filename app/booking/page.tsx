@@ -133,6 +133,8 @@ export default function BookingPage() {
                 <Collapse in={isOpen} animateOpacity>
                   <Flex justifyContent="space-between" gap={4}>
                     <Button
+                      as="a"
+                      href="/create-job-order"
                       fontSize="sm"
                       fontWeight="normal"
                       size="xs"
@@ -141,6 +143,8 @@ export default function BookingPage() {
                       New
                     </Button>
                     <Button
+                      as="a"
+                      href="/customers"
                       fontWeight="normal"
                       fontSize="sm"
                       size="xs"
