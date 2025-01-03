@@ -184,45 +184,8 @@ export default function InvoicePage({ params }: { params: { id: string } }) {
         Total: ${totalPrice.toFixed(2)}
       </Text>
       <Button size="sm" colorScheme="blue" mt={4} onClick={handleEditToggle}>
-        {isEditable ? "Finish Editing" : "Edit Invoice"}
+        Send to Client
       </Button>
-      <Box>
-        <Flex gap={2} justifyContent="space-between" mt={4}>
-          <Input
-            placeholder="Service"
-            _placeholder={{
-              color: "#666",
-            }}
-            value={newService}
-            onChange={(e) => setNewService(e.target.value)}
-            mb={2}
-            bgColor="gray.100"
-            outline="1px solid #666"
-          />
-          <Input
-            type="number"
-            placeholder="Price"
-            _placeholder={{
-              color: "#666",
-            }}
-            value={newPrice}
-            onChange={(e) => setNewPrice(e.target.value)}
-            mb={2}
-            bgColor="gray.100"
-            outline="1px solid #666"
-            _focus={{ outline: "none", border: "none" }}
-          />
-        </Flex>
-        {editIndex !== null ? (
-          <Button colorScheme="blue" size="sm" onClick={handleUpdateItem}>
-            Update
-          </Button>
-        ) : (
-          <Button colorScheme="blue" size="sm" onClick={handleAddItem}>
-            Add
-          </Button>
-        )}
-      </Box>
     </FormContainer>
   );
 }

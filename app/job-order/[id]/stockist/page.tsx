@@ -78,7 +78,7 @@ const SectionTitle = styled(Heading)`
   }
 `;
 
-export default function EstimatePage() {
+export default function StockistPage() {
   const [formData, setFormData] = useState({
     name: "",
     regNo: "",
@@ -470,7 +470,7 @@ export default function EstimatePage() {
             size="sm"
             onClick={handleSubmit}
             leftIcon={<FaFileInvoice />}>
-            Generate Estimate
+            Generate Invoice
           </Button>
         </Flex>
       </StyledContainer>

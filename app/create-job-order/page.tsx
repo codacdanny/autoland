@@ -109,6 +109,10 @@ export default function CreateJobOrderPage() {
     carColour: "",
     odometer: "",
     workshop: "",
+    team: "",
+    firstPayment: "",
+    secondPayment: "",
+    debt: "",
     customerRequest: "",
   });
 
@@ -117,6 +121,9 @@ export default function CreateJobOrderPage() {
   ]);
   const [parts, setParts] = useState([
     { partNo: "", description: "", qty: "", price: "", cost: "" },
+  ]);
+  const [payment, setPayment] = useState([
+    { firstPayment: "", secondPayment: "", debt: "" },
   ]);
 
   const handleChange = (
@@ -213,9 +220,30 @@ export default function CreateJobOrderPage() {
                   placeholder="Car Year"
                   value={formData.carYear}
                   onChange={handleChange}>
-                  <option value="2023">2023</option>
-                  <option value="2022">2022</option>
-                  <option value="2021">2021</option>
+                  <option
+                    style={{
+                      backgroundColor: "#eee",
+                      color: "gray.500",
+                    }}
+                    value="2023">
+                    2023
+                  </option>
+                  <option
+                    style={{
+                      backgroundColor: "#eee",
+                      color: "gray.500",
+                    }}
+                    value="2022">
+                    2022
+                  </option>
+                  <option
+                    style={{
+                      backgroundColor: "#eee",
+                      color: "gray.500",
+                    }}
+                    value="2021">
+                    2021
+                  </option>
                 </Select>
                 <StyledInput
                   name="date"
@@ -247,9 +275,30 @@ export default function CreateJobOrderPage() {
                   placeholder="Workshop"
                   value={formData.workshop}
                   onChange={handleChange}>
-                  <option value="Workshop A">Workshop A</option>
-                  <option value="Workshop B">Workshop B</option>
-                  <option value="Workshop C">Workshop C</option>
+                  <option
+                    style={{
+                      backgroundColor: "#eee",
+                      color: "gray.500",
+                    }}
+                    value="Workshop A">
+                    Workshop A
+                  </option>
+                  <option
+                    style={{
+                      backgroundColor: "#eee",
+                      color: "gray.500",
+                    }}
+                    value="Workshop B">
+                    Workshop B
+                  </option>
+                  <option
+                    style={{
+                      backgroundColor: "#eee",
+                      color: "gray.500",
+                    }}
+                    value="Workshop C">
+                    Workshop C
+                  </option>
                 </Select>
                 <Textarea
                   name="customerRequest"
@@ -532,7 +581,78 @@ export default function CreateJobOrderPage() {
                 </Checkbox>
               </VStack>
             </Box>
-
+            <Box>
+              <SectionTitle>
+                <Icon as={FaTools} fontSize="sm" color="blue.500" />
+                <Heading as="h3" size="xs">
+                  Assign Technicians
+                </Heading>
+              </SectionTitle>
+              <VStack align="stretch">
+                <Select
+                  name="team"
+                  fontSize="sm"
+                  placeholder="Team"
+                  value={formData.team}
+                  onChange={handleChange}>
+                  <option
+                    style={{
+                      backgroundColor: "#eee",
+                      color: "gray.500",
+                    }}
+                    value="Alpha">
+                    Team Alpha
+                  </option>
+                  <option
+                    style={{
+                      backgroundColor: "#eee",
+                      color: "gray.500",
+                    }}
+                    value="Beta">
+                    Team Beta
+                  </option>
+                  <option
+                    style={{
+                      backgroundColor: "#eee",
+                      color: "gray.500",
+                    }}
+                    value="Omega">
+                    Team Omega
+                  </option>
+                </Select>
+              </VStack>
+            </Box>
+            <Box mb={8}>
+              <SectionTitle>
+                <Icon as={FaTools} fontSize="sm" color="blue.500" />
+                <Heading as="h3" size="xs">
+                  Payment
+                </Heading>
+              </SectionTitle>
+              {payment.map((payment, index) => (
+                <HStack key={index} mb={2} spacing={4}>
+                  <StyledInput
+                    name="firstPayment"
+                    placeholder="First Payment"
+                    value={payment.firstPayment}
+                    onChange={() => {}}
+                  />
+                  <StyledInput
+                    name="secondPayment"
+                    placeholder="Second Payment"
+                    value={payment.secondPayment}
+                    onChange={() => {}}
+                  />
+                  <StyledInput
+                    name="debt"
+                    placeholder="Debt"
+                    type="number"
+                    value={payment.debt}
+                    onChange={() => {}}
+                  />
+                </HStack>
+              ))}
+            </Box>
             <Box mb={8}>
               <SectionTitle>
                 <Icon as={FaTools} fontSize="sm" color="blue.500" />

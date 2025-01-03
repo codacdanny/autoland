@@ -25,7 +25,12 @@ import {
   FaChevronDown,
   FaChevronRight,
 } from "react-icons/fa";
-import { FaCarSide, FaNetworkWired, FaPeopleGroup } from "react-icons/fa6";
+import {
+  FaCarSide,
+  FaNetworkWired,
+  FaPeopleGroup,
+  FaScrewdriverWrench,
+} from "react-icons/fa6";
 import styled from "@emotion/styled";
 import logo from "../../assets/logo.webp";
 import { ComponentType, useState } from "react";
@@ -90,51 +95,87 @@ const SidebarItem = ({
 }: SidebarItemProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
 
   const handleClick = () => {
     if (subItems) {
       setIsOpen(!isOpen);
-    } else if (onClick) {
-      onClick();
+    } else if (path) {
+      router.push(path);
+      if (onClick) onClick();
     }
   };
 
   return (
     <>
-      <HStack
-        cursor="pointer"
-        p={3}
-        borderRadius="md"
-        bg={active ? "rgba(255, 255, 255, 0.1)" : "transparent"}
-        _hover={{
-          bg: "rgba(255, 255, 255, 0.1)",
-        }}
-        color="white"
-        transition="all 0.3s ease"
-        onClick={handleClick}
-        justify="space-between">
-        <HStack>
-          <Icon as={icon} />
-          <Text fontWeight="medium" fontSize="sm">
-            {label}
-          </Text>
+      {path && !subItems ? (
+        <Link href={path} style={{ textDecoration: "none" }}>
+          <HStack
+            cursor="pointer"
+            p={3}
+            borderRadius="md"
+            bg={active ? "rgba(255, 255, 255, 0.1)" : "transparent"}
+            _hover={{
+              bg: "rgba(255, 255, 255, 0.1)",
+            }}
+            color="white"
+            transition="all 0.3s ease"
+            onClick={onClick}>
+            <Icon as={icon} />
+            <Text fontWeight="medium" fontSize="sm">
+              {label}
+            </Text>
+            {subItems && (
+              <ChakraIcon
+                as={isOpen ? FaChevronDown : FaChevronRight}
+                fontSize="xs"
+                ml="auto"
+              />
+            )}
+          </HStack>
+        </Link>
+      ) : (
+        <HStack
+          cursor="pointer"
+          p={3}
+          borderRadius="md"
+          bg={active ? "rgba(255, 255, 255, 0.1)" : "transparent"}
+          _hover={{
+            bg: "rgba(255, 255, 255, 0.1)",
+          }}
+          color="white"
+          transition="all 0.3s ease"
+          onClick={handleClick}
+          justify="space-between">
+          <HStack>
+            <Icon as={icon} />
+            <Text fontWeight="medium" fontSize="sm">
+              {label}
+            </Text>
+          </HStack>
+          {subItems && (
+            <ChakraIcon
+              as={isOpen ? FaChevronDown : FaChevronRight}
+              fontSize="xs"
+            />
+          )}
         </HStack>
-        {subItems && (
-          <ChakraIcon
-            as={isOpen ? FaChevronDown : FaChevronRight}
-            fontSize="xs"
-          />
-        )}
-      </HStack>
+      )}
+
       {subItems && (
         <Collapse in={isOpen}>
           <VStack align="stretch" spacing={0}>
             {subItems.map((item) => (
-              <SubMenuItem
+              <Link
                 key={item.path}
-                {...item}
-                active={pathname === item.path}
-              />
+                href={item.path}
+                style={{ textDecoration: "none" }}>
+                <SubMenuItem
+                  {...item}
+                  active={pathname === item.path}
+                  onClick={onClick}
+                />
+              </Link>
             ))}
           </VStack>
         </Collapse>
@@ -158,7 +199,7 @@ const SidebarContent = ({ onClose }: SidebarContentProps) => {
       icon: FaCarSide,
       label: "Booking",
       subItems: [
-        { label: "Walk-in", path: "/booking/" },
+        { label: "Walk-in", path: "/booking" }, // Updated path
         { label: "Online Booking", path: "/booking/online-booking" },
       ],
     },
@@ -169,7 +210,16 @@ const SidebarContent = ({ onClose }: SidebarContentProps) => {
     },
     { icon: FaPeopleGroup, label: "Customers", path: "/customers" },
     { icon: FaCreditCard, label: "Accounts", path: "/payments" },
-    { icon: FaNetworkWired, label: "Plans", path: "/plans" },
+    // {
+    //   icon: FaCreditCard,
+    //   label: "Accounts",
+    //   subItems: [
+    //     { label: "Payments", path: "/payments" },
+    //     { label: "Front esk", path: "/frontdesk" },
+    //     { label: "Stockist", path: "/stockist" },
+    //   ],
+    // },
+    { icon: FaScrewdriverWrench, label: "Technicians", path: "/technicians" },
   ];
 
   const bottomMenuItems = [

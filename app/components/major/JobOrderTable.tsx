@@ -109,7 +109,7 @@ export default function JobOrderTable() {
         <Text fontSize="lg" fontWeight="semibold">
           Job Orders
         </Text>
-        <Link href="/dashboard/booking">
+        <Link href="/booking">
           <Flex
             align="center"
             color="blue.500"

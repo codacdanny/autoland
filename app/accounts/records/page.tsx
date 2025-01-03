@@ -1,30 +1,13 @@
-"use client";
-import { Box, Flex, Text, Grid, Badge } from "@chakra-ui/react";
-import {
-  FaWallet,
-  FaClipboardList,
-  FaCheckCircle,
-  FaClock,
-  FaCaretUp,
-  FaCaretDown,
-} from "react-icons/fa";
-import { motion } from "framer-motion";
-import { keyframes } from "@emotion/react";
-import Sidebar from "../components/major/Sidebar";
-import MainContent from "../components/minor/MainContent";
-import Header from "../components/minor/Header";
-import { MetricCardData } from "../types/metrics";
-import MetricCards from "../components/minor/MetricCards";
-import JobOrderTable from "../components/major/JobOrderTable";
+import Sidebar from "@/app/components/major/Sidebar";
+import Header from "@/app/components/minor/Header";
+import MainContent from "@/app/components/minor/MainContent";
+import MetricCards from "@/app/components/minor/MetricCards";
+import { MetricCardData } from "@/app/types/metrics";
+import { Box, Flex } from "@chakra-ui/react";
+import { FaCheckCircle } from "react-icons/fa";
+import { FaClipboardList, FaClock, FaWallet } from "react-icons/fa6";
 
-const fadeIn = keyframes`
-  from { opacity: 0; transform: translateY(10px) }
-  to { opacity: 1; transform: translateY(0) }
-`;
-
-export default function Dashboard() {
-  const bgGradient = "linear(to-br, blue.50, purple.50, pink.50)";
-
+export default function Records() {
   const dashboardMetrics: MetricCardData[] = [
     {
       title: "Total Income",
@@ -63,22 +46,15 @@ export default function Dashboard() {
       bgGradient: "linear(to-r, orange.400, orange.600)",
     },
   ];
-
   return (
-    <Flex bgGradient={bgGradient} minH="100vh">
+    <Flex>
       <Box display={{ base: "none", lg: "block" }}>
         <Sidebar />
       </Box>
       <MainContent>
         <Box flex="1" p={8}>
-          {/* Header */}
           <Header />
-
-          {/* Enhanced Metrics Grid */}
           <MetricCards metrics={dashboardMetrics} />
-
-          {/* Enhanced Recent Job Orders Table */}
-          <JobOrderTable />
         </Box>
       </MainContent>
     </Flex>

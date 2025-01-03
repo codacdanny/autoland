@@ -59,7 +59,7 @@ export default function Header() {
             borderColor="gray.200"
             _hover={{ borderColor: "gray.300" }}
             _focus={{ borderColor: "gray.500", boxShadow: "none" }}
-            rounded="lg"
+            rounded="full"
           />
         </InputGroup>
 

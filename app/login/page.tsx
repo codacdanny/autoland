@@ -55,7 +55,8 @@ export default function Login() {
           <Input
             placeholder="Email Address"
             type="email"
-            bg="white"
+            bg="transparent"
+            color="white"
             border="1px solid"
             borderColor="gray.200"
           />
@@ -63,7 +64,8 @@ export default function Login() {
           <Input
             placeholder="Password"
             type="password"
-            bg="white"
+            bg="transparent"
+            color="white"
             border="1px solid"
             borderColor="gray.200"
           />

@@ -8,7 +8,6 @@ import {
   useDisclosure,
   Icon,
   Collapse,
-  VStack,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { FaPlus, FaUserFriends } from "react-icons/fa";
@@ -22,7 +21,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import { MetricCardData } from "../types/metrics";
 
 export default function BookingPage() {
-  const { onOpen, onClose, isOpen, onToggle } = useDisclosure();
+  const { isOpen, onToggle } = useDisclosure();
   const JobOrderMetrics: MetricCardData[] = [
     {
       title: "Total Job Orders",
@@ -86,7 +85,8 @@ export default function BookingPage() {
             border="1px solid"
             borderColor="gray.100"
             position="relative"
-            overflow="hidden">
+            overflow="hidden"
+          >
             <Box
               position="absolute"
               top={0}
@@ -101,7 +101,8 @@ export default function BookingPage() {
               justify="space-between"
               align="center"
               flexWrap={{ base: "wrap", md: "nowrap" }}
-              gap={4}>
+              gap={4}
+            >
               <HStack spacing={4}>
                 <Icon as={FaUserFriends} fontSize="md" color="blue.500" />
                 <Box>
@@ -127,7 +128,8 @@ export default function BookingPage() {
                   _hover={{
                     transform: "translateY(-2px)",
                     boxShadow: "lg",
-                  }}>
+                  }}
+                >
                   Add Job Order
                 </Button>
                 <Collapse in={isOpen} animateOpacity>
@@ -139,7 +141,8 @@ export default function BookingPage() {
                       fontWeight="normal"
                       size="xs"
                       colorScheme="blue"
-                      p={4}>
+                      p={4}
+                    >
                       New
                     </Button>
                     <Button
@@ -149,7 +152,8 @@ export default function BookingPage() {
                       fontSize="sm"
                       size="xs"
                       colorScheme="blue"
-                      p={4}>
+                      p={4}
+                    >
                       Old
                     </Button>
                   </Flex>
