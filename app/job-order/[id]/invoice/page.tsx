@@ -4,7 +4,6 @@ import {
   Box,
   Heading,
   Text,
-  Input,
   Button,
   useToast,
   Table,
@@ -13,7 +12,6 @@ import {
   Tr,
   Th,
   Td,
-  Flex,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 
@@ -35,7 +33,7 @@ interface EstimateItem {
 
 export default function InvoicePage({ params }: { params: { id: string } }) {
   const toast = useToast();
-  const [estimateData, setEstimateData] = useState<EstimateItem[]>([
+  const [estimateData] = useState<EstimateItem[]>([
     { id: 1, service: "Oil Change", price: 50 },
     { id: 2, service: "Tire Rotation", price: 30 },
     { id: 3, service: "Brake Inspection", price: 70 },
@@ -45,87 +43,98 @@ export default function InvoicePage({ params }: { params: { id: string } }) {
     { id: 7, service: "Coolant Flush", price: 60 },
     { id: 8, service: "Spark Plug Replacement", price: 40 },
   ]);
-  const [isEditable, setIsEditable] = useState(false);
-  const [newService, setNewService] = useState("");
-  const [newPrice, setNewPrice] = useState("");
-  const [editIndex, setEditIndex] = useState<number | null>(null);
+  // const [isEditable, setIsEditable] = useState(false);
+  // const [newService, setNewService] = useState("");
+  // const [newPrice, setNewPrice] = useState("");
+  // const [editIndex, setEditIndex] = useState<number | null>(null);
 
   const totalPrice = estimateData.reduce(
     (total, item) => total + item.price,
     0
   );
 
-  const handleEditToggle = () => {
-    setIsEditable(!isEditable);
-  };
+  // const handleEditToggle = () => {
+  //   setIsEditable(!isEditable);
+  // };
 
-  const handleAddItem = () => {
-    if (newService && newPrice) {
-      const newItem: EstimateItem = {
-        id: estimateData.length + 1,
-        service: newService,
-        price: parseFloat(newPrice),
-      };
-      setEstimateData([...estimateData, newItem]);
-      setNewService("");
-      setNewPrice("");
-      toast({
-        title: "Item added.",
-        description: "New service has been added successfully.",
-        position: "top-right",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-      });
-    } else {
-      toast({
-        title: "Error adding item.",
-        description: "Please fill in both fields.",
-        position: "top-right",
+  // const handleAddItem = () => {
+  //   if (newService && newPrice) {
+  //     const newItem: EstimateItem = {
+  //       id: estimateData.length + 1,
+  //       service: newService,
+  //       price: parseFloat(newPrice),
+  //     };
+  //     setEstimateData([...estimateData, newItem]);
+  //     setNewService("");
+  //     setNewPrice("");
+  //     toast({
+  //       title: "Item added.",
+  //       description: "New service has been added successfully.",
+  //       position: "top-right",
+  //       status: "success",
+  //       duration: 5000,
+  //       isClosable: true,
+  //     });
+  //   } else {
+  //     toast({
+  //       title: "Error adding item.",
+  //       description: "Please fill in both fields.",
+  //       position: "top-right",
 
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-  };
+  //       status: "error",
+  //       duration: 5000,
+  //       isClosable: true,
+  //     });
+  //   }
+  // };
 
-  const handleEditItem = (index: number) => {
-    const item = estimateData[index];
-    setNewService(item.service);
-    setNewPrice(item.price.toString());
-    setEditIndex(index);
-  };
+  // const handleEditItem = (index: number) => {
+  //   const item = estimateData[index];
+  //   setNewService(item.service);
+  //   setNewPrice(item.price.toString());
+  //   setEditIndex(index);
+  // };
 
-  const handleUpdateItem = () => {
-    if (editIndex !== null && newService && newPrice) {
-      const updatedData = estimateData.map((item, index) =>
-        index === editIndex
-          ? { ...item, service: newService, price: parseFloat(newPrice) }
-          : item
-      );
-      setEstimateData(updatedData);
-      setNewService("");
-      setNewPrice("");
-      setEditIndex(null);
-      toast({
-        title: "Item updated.",
-        description: "Service has been updated successfully.",
-        position: "top-right",
+  // const handleUpdateItem = () => {
+  //   if (editIndex !== null && newService && newPrice) {
+  //     const updatedData = estimateData.map((item, index) =>
+  //       index === editIndex
+  //         ? { ...item, service: newService, price: parseFloat(newPrice) }
+  //         : item
+  //     );
+  //     setEstimateData(updatedData);
+  //     setNewService("");
+  //     setNewPrice("");
+  //     setEditIndex(null);
+  //     toast({
+  //       title: "Item updated.",
+  //       description: "Service has been updated successfully.",
+  //       position: "top-right",
 
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-  };
+  //       status: "success",
+  //       duration: 5000,
+  //       isClosable: true,
+  //     });
+  //   }
+  // };
 
-  const handleDeleteItem = (index: number) => {
-    const updatedData = estimateData.filter((_, i) => i !== index);
-    setEstimateData(updatedData);
+  // const handleDeleteItem = (index: number) => {
+  //   const updatedData = estimateData.filter((_, i) => i !== index);
+  //   setEstimateData(updatedData);
+  //   toast({
+  //     title: "Item deleted.",
+  //     description: "Service has been removed successfully.",
+  //     position: "top-right",
+
+  //     status: "success",
+  //     duration: 5000,
+  //     isClosable: true,
+  //   });
+  // };
+  const handleSend = () => {
     toast({
-      title: "Item deleted.",
-      description: "Service has been removed successfully.",
+      title: "Sent",
+      description: "Invoice has been sent to user",
       position: "top-right",
 
       status: "success",
@@ -133,7 +142,6 @@ export default function InvoicePage({ params }: { params: { id: string } }) {
       isClosable: true,
     });
   };
-
   return (
     <FormContainer>
       <Heading size="lg">Invoice</Heading>
@@ -145,16 +153,16 @@ export default function InvoicePage({ params }: { params: { id: string } }) {
           <Tr>
             <Th>Service</Th>
             <Th isNumeric>Price ($)</Th>
-            {isEditable && <Th>Edit</Th>}
-            {isEditable && <Th>Delete</Th>}
+            {/* {isEditable && <Th>Edit</Th>}
+            {isEditable && <Th>Delete</Th>} */}
           </Tr>
         </Thead>
         <Tbody>
-          {estimateData.map((item, index) => (
+          {estimateData.map((item) => (
             <Tr key={item.id}>
               <Td>{item.service}</Td>
               <Td isNumeric>{item.price.toFixed(2)}</Td>
-              {isEditable && (
+              {/* {isEditable && (
                 <>
                   <Td>
                     <Button
@@ -162,7 +170,8 @@ export default function InvoicePage({ params }: { params: { id: string } }) {
                       color="white"
                       bgColor="#002050"
                       size="sm"
-                      onClick={() => handleEditItem(index)}>
+                      onClick={() => handleEditItem(index)}
+                    >
                       Edit
                     </Button>
                   </Td>
@@ -170,12 +179,13 @@ export default function InvoicePage({ params }: { params: { id: string } }) {
                     <Button
                       size="sm"
                       colorScheme="red"
-                      onClick={() => handleDeleteItem(index)}>
+                      onClick={() => handleDeleteItem(index)}
+                    >
                       Delete
                     </Button>
                   </Td>
                 </>
-              )}
+              )} */}
             </Tr>
           ))}
         </Tbody>
@@ -183,7 +193,7 @@ export default function InvoicePage({ params }: { params: { id: string } }) {
       <Text fontSize="lg" fontWeight="bold" mt={4}>
         Total: ${totalPrice.toFixed(2)}
       </Text>
-      <Button size="sm" colorScheme="blue" mt={4} onClick={handleEditToggle}>
+      <Button size="sm" colorScheme="blue" mt={4} onClick={handleSend}>
         Send to Client
       </Button>
     </FormContainer>

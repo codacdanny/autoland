@@ -14,7 +14,7 @@ import {
   ModalCloseButton,
   FormControl,
   FormLabel,
-  Input,
+
   Select,
   Textarea,
   VStack,
@@ -36,13 +36,11 @@ import {
   FaFilter,
 } from "react-icons/fa";
 import styled from "@emotion/styled";
-import { motion } from "framer-motion";
-import { FaUserFriends } from "react-icons/fa";
+
 import Sidebar from "../components/major/Sidebar";
 import MainContent from "../components/minor/MainContent";
 import Header from "../components/minor/Header";
 import MetricCards from "../components/minor/MetricCards";
-import JobOrderTable from "../components/major/JobOrderTable";
 import { FaClipboardList, FaClock } from "react-icons/fa6";
 import { FaCheckCircle } from "react-icons/fa";
 import { MetricCardData } from "../types/metrics";
@@ -100,7 +98,7 @@ interface Expense {
 
 export default function PaymentsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [expenses, setExpenses] = useState<Expense[]>([
+  const [expenses] = useState<Expense[]>([
     {
       id: "EXP001",
       category: "Fuel",
@@ -173,7 +171,8 @@ export default function PaymentsPage() {
           <Grid
             templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }}
             gap={6}
-            mb={8}>
+            mb={8}
+          >
             <ExpenseCard>
               <VStack align="stretch" spacing={4}>
                 <Icon as={FaWallet} color="blue.500" boxSize={6} />
@@ -184,7 +183,8 @@ export default function PaymentsPage() {
                   colorScheme="blue"
                   leftIcon={<FaPlus />}
                   size="sm"
-                  onClick={onOpen}>
+                  onClick={onOpen}
+                >
                   Add New Expense
                 </Button>
               </VStack>
@@ -240,28 +240,32 @@ export default function PaymentsPage() {
                     style={{
                       backgroundColor: "#eee",
                       color: "gray.500",
-                    }}>
+                    }}
+                  >
                     Fuel
                   </option>
                   <option
                     style={{
                       backgroundColor: "#eee",
                       color: "gray.500",
-                    }}>
+                    }}
+                  >
                     Equipment
                   </option>
                   <option
                     style={{
                       backgroundColor: "#eee",
                       color: "gray.500",
-                    }}>
+                    }}
+                  >
                     Maintenance
                   </option>
                   <option
                     style={{
                       backgroundColor: "#eee",
                       color: "gray.500",
-                    }}>
+                    }}
+                  >
                     Others
                   </option>
                 </Select>
@@ -299,7 +303,8 @@ export default function PaymentsPage() {
                             : expense.status === "rejected"
                             ? "red"
                             : "yellow"
-                        }>
+                        }
+                      >
                         {expense.status}
                       </Badge>
                     </Td>
@@ -329,13 +334,15 @@ export default function PaymentsPage() {
                           ...newExpense,
                           category: e.target.value,
                         })
-                      }>
+                      }
+                    >
                       <option
                         style={{
                           backgroundColor: "#eee",
                           color: "gray.500",
                         }}
-                        value="fuel">
+                        value="fuel"
+                      >
                         Fuel
                       </option>
                       <option
@@ -343,7 +350,8 @@ export default function PaymentsPage() {
                           backgroundColor: "#eee",
                           color: "gray.500",
                         }}
-                        value="equipment">
+                        value="equipment"
+                      >
                         Equipment
                       </option>
                       <option
@@ -351,7 +359,8 @@ export default function PaymentsPage() {
                           backgroundColor: "#eee",
                           color: "gray.500",
                         }}
-                        value="maintenance">
+                        value="maintenance"
+                      >
                         Maintenance
                       </option>
                       <option
@@ -359,7 +368,8 @@ export default function PaymentsPage() {
                           backgroundColor: "#eee",
                           color: "gray.500",
                         }}
-                        value="others">
+                        value="others"
+                      >
                         Others
                       </option>
                     </Select>
@@ -408,13 +418,15 @@ export default function PaymentsPage() {
                           ...newExpense,
                           paymentMethod: e.target.value,
                         })
-                      }>
+                      }
+                    >
                       <option
                         style={{
                           backgroundColor: "#eee",
                           color: "gray.500",
                         }}
-                        value="cash">
+                        value="cash"
+                      >
                         Cash
                       </option>
                       <option
@@ -422,7 +434,8 @@ export default function PaymentsPage() {
                           backgroundColor: "#eee",
                           color: "gray.500",
                         }}
-                        value="transfer">
+                        value="transfer"
+                      >
                         Bank Transfer
                       </option>
                       <option
@@ -430,7 +443,8 @@ export default function PaymentsPage() {
                           backgroundColor: "#eee",
                           color: "gray.500",
                         }}
-                        value="card">
+                        value="card"
+                      >
                         Card Payment
                       </option>
                     </Select>

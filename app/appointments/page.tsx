@@ -19,8 +19,6 @@ import {
   ModalHeader,
   ModalBody,
   ModalCloseButton,
-  FormControl,
-  FormLabel,
   Stack,
   HStack,
   useDisclosure,
@@ -99,8 +97,7 @@ const mockAppointments: Appointment[] = [
 export default function AppointmentsPage() {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [selectedAppointment, setSelectedAppointment] =
-    useState<Appointment | null>(null);
+  const [, setSelectedAppointment] = useState<Appointment | null>(null);
   const [appointments, setAppointments] = useState(mockAppointments);
 
   const handleEditClick = (appointment: Appointment) => {
@@ -153,7 +150,7 @@ export default function AppointmentsPage() {
             <HStack>
               <Icon as={FaCalendarAlt} color="blue.500" />
               <Text color="gray.600" fontSize="sm">
-                Today's Appointments:{" "}
+                {`Today's Appointments`}:{" "}
                 {
                   appointments.filter((apt) => apt.status === "scheduled")
                     .length
@@ -202,7 +199,8 @@ export default function AppointmentsPage() {
                         colorScheme={getStatusColor(appointment.status)}
                         borderRadius="full"
                         px={3}
-                        py={1}>
+                        py={1}
+                      >
                         {appointment.status}
                       </Badge>
                     </Td>
@@ -213,7 +211,8 @@ export default function AppointmentsPage() {
                           colorScheme="blue"
                           variant="ghost"
                           leftIcon={<FaEdit />}
-                          onClick={() => handleEditClick(appointment)}>
+                          onClick={() => handleEditClick(appointment)}
+                        >
                           Edit
                         </Button>
                         {appointment.status !== "cancelled" && (
@@ -224,7 +223,8 @@ export default function AppointmentsPage() {
                             leftIcon={<FaTimes />}
                             onClick={() =>
                               handleStatusChange(appointment.id, "cancelled")
-                            }>
+                            }
+                          >
                             Cancel
                           </Button>
                         )}
@@ -245,14 +245,15 @@ export default function AppointmentsPage() {
                 borderColor="gray.100"
                 py={4}
                 fontSize="lg"
-                color="gray.700">
+                color="gray.700"
+              >
                 Edit Appointment
               </ModalHeader>
               <ModalCloseButton />
               <ModalBody py={6}>
                 {/* Add form fields for editing appointment */}
                 <Stack spacing={4}>
-                  // ... Add form fields similar to other forms in the app
+                  {/* Add form fields similar to other forms in the app */}
                 </Stack>
               </ModalBody>
             </StyledModal>

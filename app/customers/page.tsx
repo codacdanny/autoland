@@ -5,7 +5,7 @@ import {
   Button,
   Flex,
   Heading,
-  Input,
+ 
   Table,
   Tbody,
   Td,
@@ -25,16 +25,15 @@ import {
   Select,
   Divider,
   useToast,
-  InputGroup,
-  InputLeftElement,
+ 
   Avatar,
   Icon,
   HStack,
 } from "@chakra-ui/react";
 import {
-  FaSearch,
+
   FaCar,
-  FaHistory,
+  
   FaUser,
   FaPhone,
   FaEnvelope,
@@ -132,7 +131,7 @@ const enhancedCustomersData: Customer[] = [
 ];
 
 export default function CustomersPage() {
-  const [searchTerm, setSearchTerm] = useState("");
+  // const [searchTerm, setSearchTerm] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
     null

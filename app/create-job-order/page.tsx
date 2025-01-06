@@ -116,13 +116,11 @@ export default function CreateJobOrderPage() {
     customerRequest: "",
   });
 
-  const [workDescriptions, setWorkDescriptions] = useState([
-    { description: "", cost: "" },
-  ]);
-  const [parts, setParts] = useState([
+  const [workDescriptions] = useState([{ description: "", cost: "" }]);
+  const [parts] = useState([
     { partNo: "", description: "", qty: "", price: "", cost: "" },
   ]);
-  const [payment, setPayment] = useState([
+  const [payment] = useState([
     { firstPayment: "", secondPayment: "", debt: "" },
   ]);
 
@@ -156,7 +154,8 @@ export default function CreateJobOrderPage() {
           as={motion.div}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          p={6}>
+          p={6}
+        >
           <FormContainer>
             <Flex align="center" mb={8}>
               <Icon as={FaClipboard} fontSize="sm" color="blue.500" mr={3} />
@@ -219,13 +218,15 @@ export default function CreateJobOrderPage() {
                   fontSize="sm"
                   placeholder="Car Year"
                   value={formData.carYear}
-                  onChange={handleChange}>
+                  onChange={handleChange}
+                >
                   <option
                     style={{
                       backgroundColor: "#eee",
                       color: "gray.500",
                     }}
-                    value="2023">
+                    value="2023"
+                  >
                     2023
                   </option>
                   <option
@@ -233,7 +234,8 @@ export default function CreateJobOrderPage() {
                       backgroundColor: "#eee",
                       color: "gray.500",
                     }}
-                    value="2022">
+                    value="2022"
+                  >
                     2022
                   </option>
                   <option
@@ -241,7 +243,8 @@ export default function CreateJobOrderPage() {
                       backgroundColor: "#eee",
                       color: "gray.500",
                     }}
-                    value="2021">
+                    value="2021"
+                  >
                     2021
                   </option>
                 </Select>
@@ -274,13 +277,15 @@ export default function CreateJobOrderPage() {
                   fontSize="sm"
                   placeholder="Workshop"
                   value={formData.workshop}
-                  onChange={handleChange}>
+                  onChange={handleChange}
+                >
                   <option
                     style={{
                       backgroundColor: "#eee",
                       color: "gray.500",
                     }}
-                    value="Workshop A">
+                    value="Workshop A"
+                  >
                     Workshop A
                   </option>
                   <option
@@ -288,7 +293,8 @@ export default function CreateJobOrderPage() {
                       backgroundColor: "#eee",
                       color: "gray.500",
                     }}
-                    value="Workshop B">
+                    value="Workshop B"
+                  >
                     Workshop B
                   </option>
                   <option
@@ -296,7 +302,8 @@ export default function CreateJobOrderPage() {
                       backgroundColor: "#eee",
                       color: "gray.500",
                     }}
-                    value="Workshop C">
+                    value="Workshop C"
+                  >
                     Workshop C
                   </option>
                 </Select>
@@ -406,8 +413,8 @@ export default function CreateJobOrderPage() {
                 </Checkbox>
                 <Checkbox>
                   <Text fontSize="sm">
-                    When bouncing the vehicle's corners, no cracking noise is
-                    made
+                    {`When bouncing the vehicle's corners, no cracking noise is
+                    made`}
                   </Text>
                 </Checkbox>
                 <Checkbox>
@@ -594,13 +601,15 @@ export default function CreateJobOrderPage() {
                   fontSize="sm"
                   placeholder="Team"
                   value={formData.team}
-                  onChange={handleChange}>
+                  onChange={handleChange}
+                >
                   <option
                     style={{
                       backgroundColor: "#eee",
                       color: "gray.500",
                     }}
-                    value="Alpha">
+                    value="Alpha"
+                  >
                     Team Alpha
                   </option>
                   <option
@@ -608,7 +617,8 @@ export default function CreateJobOrderPage() {
                       backgroundColor: "#eee",
                       color: "gray.500",
                     }}
-                    value="Beta">
+                    value="Beta"
+                  >
                     Team Beta
                   </option>
                   <option
@@ -616,7 +626,8 @@ export default function CreateJobOrderPage() {
                       backgroundColor: "#eee",
                       color: "gray.500",
                     }}
-                    value="Omega">
+                    value="Omega"
+                  >
                     Team Omega
                   </option>
                 </Select>
@@ -681,7 +692,8 @@ export default function CreateJobOrderPage() {
                 onClick={() => {}}
                 color="gray.600"
                 border="1px solid"
-                borderColor="gray.300">
+                borderColor="gray.300"
+              >
                 Cancel
               </ActionButton>
               <ActionButton colorScheme="blue" onClick={handleSubmit}>

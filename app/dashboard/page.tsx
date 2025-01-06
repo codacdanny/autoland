@@ -1,26 +1,17 @@
 "use client";
-import { Box, Flex, Text, Grid, Badge } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import {
   FaWallet,
   FaClipboardList,
   FaCheckCircle,
   FaClock,
-  FaCaretUp,
-  FaCaretDown,
 } from "react-icons/fa";
-import { motion } from "framer-motion";
-import { keyframes } from "@emotion/react";
 import Sidebar from "../components/major/Sidebar";
 import MainContent from "../components/minor/MainContent";
 import Header from "../components/minor/Header";
 import { MetricCardData } from "../types/metrics";
 import MetricCards from "../components/minor/MetricCards";
 import JobOrderTable from "../components/major/JobOrderTable";
-
-const fadeIn = keyframes`
-  from { opacity: 0; transform: translateY(10px) }
-  to { opacity: 1; transform: translateY(0) }
-`;
 
 export default function Dashboard() {
   const bgGradient = "linear(to-br, blue.50, purple.50, pink.50)";
@@ -74,10 +65,10 @@ export default function Dashboard() {
           {/* Header */}
           <Header />
 
-          {/* Enhanced Metrics Grid */}
+          {/*  Metrics Grid */}
           <MetricCards metrics={dashboardMetrics} />
 
-          {/* Enhanced Recent Job Orders Table */}
+          {/*  Recent Job Orders Table */}
           <JobOrderTable />
         </Box>
       </MainContent>

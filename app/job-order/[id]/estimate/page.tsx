@@ -130,8 +130,12 @@ export default function EstimatePage() {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const { name, value } = e.target;
-    const updatedParts = [...spareParts];
-    updatedParts[index][name] = value;
+    const updatedParts = spareParts.map((part, idx) => {
+      if (idx === index) {
+        return { ...part, [name]: value };
+      }
+      return part;
+    });
     setSpareParts(updatedParts);
   };
 
@@ -151,7 +155,8 @@ export default function EstimatePage() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       bg="gray.50"
-      minH="100vh">
+      minH="100vh"
+    >
       <StyledContainer>
         <Flex align="center" mb={6}>
           <Icon as={FaFileInvoice} fontSize="sm" color="blue.500" mr={3} />
@@ -420,7 +425,8 @@ export default function EstimatePage() {
                           setSpareParts(
                             spareParts.filter((_, i) => i !== index)
                           )
-                        }>
+                        }
+                      >
                         Remove
                       </Button>
                     </Td>
@@ -435,7 +441,8 @@ export default function EstimatePage() {
             size="sm"
             variant="ghost"
             onClick={handleAddPart}
-            mt={4}>
+            mt={4}
+          >
             Add Part
           </Button>
         </Box>
@@ -469,7 +476,8 @@ export default function EstimatePage() {
             colorScheme="blue"
             size="sm"
             onClick={handleSubmit}
-            leftIcon={<FaFileInvoice />}>
+            leftIcon={<FaFileInvoice />}
+          >
             Generate Estimate
           </Button>
         </Flex>
