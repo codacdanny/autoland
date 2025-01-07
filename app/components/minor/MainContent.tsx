@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Container } from "@chakra-ui/react";
 
 export default function MainContent({
   children,
@@ -11,10 +11,8 @@ export default function MainContent({
       ml="250px"
       width="calc(100% - 250px)"
       bgColor="mainBg"
-      color="gray.900"
-      maxW="container.xl"
-    >
-      {children}
+      color="gray.900">
+      <Container maxWidth="container.2xl">{children}</Container>
     </Box>
   );
 }
