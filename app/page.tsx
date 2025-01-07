@@ -11,8 +11,14 @@ import {
 import bgLogin from "./assets/login_bg.jpg";
 import GlassCard from "./components/minor/GlassCard";
 import theme from "./theme";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
+  const handleLogin = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    router.push("/dashboard");
+  };
   return (
     <Box
       display="flex"
@@ -78,7 +84,8 @@ export default function Home() {
             size="md"
             borderRadius="lg"
             w="100%"
-            mt={4}>
+            mt={4}
+            onClick={handleLogin}>
             Sign In
           </Button>
         </Flex>
