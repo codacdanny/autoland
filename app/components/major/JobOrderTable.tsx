@@ -287,7 +287,7 @@ export default function JobOrderTable() {
                         onClick={() =>
                           handleActionClick(order.id, "registration")
                         }>
-                        Registration
+                        View Job Order
                       </Button>
                       <Button
                         leftIcon={<FaClipboardList />}
