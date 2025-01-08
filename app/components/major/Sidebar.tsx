@@ -12,7 +12,7 @@ import {
   Collapse,
   Icon as ChakraIcon,
 } from "@chakra-ui/react";
-import { Image, Link } from "@chakra-ui/next-js";
+import { Image } from "@chakra-ui/next-js";
 import {
   FaHome,
   FaCalendarAlt,
@@ -25,16 +25,12 @@ import {
   FaChevronDown,
   FaChevronRight,
 } from "react-icons/fa";
-import {
-  FaCarSide,
-  FaNetworkWired,
-  FaPeopleGroup,
-  FaScrewdriverWrench,
-} from "react-icons/fa6";
+import { FaCarSide, FaPeopleGroup, FaScrewdriverWrench } from "react-icons/fa6";
 import styled from "@emotion/styled";
 import logo from "../../assets/logo.webp";
 import { ComponentType, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
 
 const SidebarContainer = styled(Box)`
   background: #002050;
@@ -109,7 +105,7 @@ const SidebarItem = ({
   return (
     <>
       {path && !subItems ? (
-        <Link href={path} style={{ textDecoration: "none" }}>
+        <Link passHref href={path} style={{ textDecoration: "none" }}>
           <HStack
             cursor="pointer"
             p={3}

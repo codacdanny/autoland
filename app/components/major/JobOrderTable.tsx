@@ -19,8 +19,8 @@ import {
   FaClipboardList,
 } from "react-icons/fa";
 import { motion } from "framer-motion";
-import { Link } from "@chakra-ui/next-js";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const GridHeader = ({ children }: { children: React.ReactNode }) => (
   <Text
@@ -282,6 +282,7 @@ export default function JobOrderTable() {
                       <Button
                         leftIcon={<FaFileAlt />}
                         size="sm"
+                        as="a"
                         colorScheme="blue"
                         variant="outline"
                         onClick={() =>
@@ -292,6 +293,7 @@ export default function JobOrderTable() {
                       <Button
                         leftIcon={<FaClipboardList />}
                         size="sm"
+                        as="a"
                         colorScheme="green"
                         variant="outline"
                         onClick={() => handleActionClick(order.id, "estimate")}>
@@ -300,6 +302,7 @@ export default function JobOrderTable() {
                       <Button
                         leftIcon={<FaFileInvoice />}
                         size="sm"
+                        as="a"
                         colorScheme="purple"
                         variant="outline"
                         onClick={() => handleActionClick(order.id, "invoice")}>
