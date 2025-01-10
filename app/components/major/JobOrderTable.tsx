@@ -107,7 +107,7 @@ export default function JobOrderTable() {
       borderColor="gray.100">
       <Flex justify="space-between" align="center" mb={6}>
         <Text fontSize="lg" fontWeight="semibold">
-          Job Orders
+          Customer Orders
         </Text>
         <Link href="/booking">
           <Flex
@@ -288,7 +288,7 @@ export default function JobOrderTable() {
                         onClick={() =>
                           handleActionClick(order.id, "registration")
                         }>
-                        View Job Order
+                        View Customer Order
                       </Button>
                       <Button
                         leftIcon={<FaClipboardList />}
