@@ -13,13 +13,6 @@ import {
   Thead,
   Tr,
   useDisclosure,
-  // Drawer,
-  // DrawerBody,
-  // DrawerHeader,
-  // DrawerOverlay,
-  // DrawerContent,
-  // DrawerCloseButton,
-  // VStack,
   Text,
   Badge,
   Select,
@@ -109,14 +102,14 @@ const StyledSelect = styled(Select)`
   }
 `;
 
-const techniciansData = [
+const usersData = [
   {
     name: "Danny Praise",
     phone: "0807 4999 5108",
     workshop: "Port-Harcourt",
     email: "info@dannycode.com",
-    speciality: "German",
-    team: "Alpha",
+    speciality: "expenses",
+    role: "Account",
     status: "On Duty",
   },
   {
@@ -124,8 +117,8 @@ const techniciansData = [
     phone: "0807 4999 5108",
     workshop: "Port-Harcourt",
     email: "info@dannycode.com",
-    speciality: "Japanese",
-    team: "Bete",
+    speciality: "Stockist",
+    role: "Front Desk",
     status: "On Duty",
   },
   {
@@ -133,24 +126,24 @@ const techniciansData = [
     phone: "0807 4999 5108",
     workshop: "Port-Harcourt",
     email: "info@dannycode.com",
-    speciality: "America",
-    team: "Delta",
+    speciality: "Service Advisor",
+    role: "Front Desk",
     status: "On Leave",
   },
   // Add more technician data as needed
 ];
 
-interface TechnicianFormData {
+interface UserFormData {
   name: string;
   phone: string;
   workshop: string;
   email: string;
   speciality: string;
-  team: string;
+  role: string;
   status: string;
 }
 
-export default function TechniciansPage() {
+export default function UsersPage() {
   const [searchTerm] = useState("");
   // const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
@@ -159,17 +152,16 @@ export default function TechniciansPage() {
     onOpen: onModalOpen,
     onClose: onModalClose,
   } = useDisclosure();
-  const [formData, setFormData] = useState<TechnicianFormData>({
+  const [formData, setFormData] = useState<UserFormData>({
     name: "",
     phone: "",
     workshop: "",
     email: "",
     speciality: "",
-    team: "",
+    role: "",
     status: "On Duty",
   });
-  const [editingTechnician, setEditingTechnician] =
-    useState<TechnicianFormData | null>(null);
+  const [editingUser, setEditingUser] = useState<UserFormData | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
 
   // const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -186,24 +178,24 @@ export default function TechniciansPage() {
     }));
   };
 
-  const handleEdit = (technician: TechnicianFormData) => {
-    setEditingTechnician(technician);
-    setFormData(technician);
+  const handleEdit = (user: UserFormData) => {
+    setEditingUser(user);
+    setFormData(user);
     setIsEditMode(true);
     onModalOpen();
   };
 
-  const handleDelete = (technicianToDelete: TechnicianFormData) => {
-    const updatedTechnicians = techniciansData.filter(
-      (tech) => tech.email !== technicianToDelete.email
+  const handleDelete = (userToDelete: UserFormData) => {
+    const updatedUsers = usersData.filter(
+      (tech) => tech.email !== userToDelete.email
     );
     // Update your data source
-    techniciansData.length = 0;
-    techniciansData.push(...updatedTechnicians);
+    usersData.length = 0;
+    usersData.push(...updatedUsers);
 
     toast({
-      title: "Technician deleted",
-      description: "Technician has been removed successfully",
+      title: "User deleted",
+      description: "User has been removed successfully",
       status: "success",
       duration: 3000,
     });
@@ -211,14 +203,14 @@ export default function TechniciansPage() {
 
   const handleModalClose = () => {
     setIsEditMode(false);
-    setEditingTechnician(null);
+    setEditingUser(null);
     setFormData({
       name: "",
       phone: "",
       workshop: "",
       email: "",
       speciality: "",
-      team: "",
+      role: "",
       status: "On Duty",
     });
     onModalClose();
@@ -235,28 +227,28 @@ export default function TechniciansPage() {
       return;
     }
 
-    if (isEditMode && editingTechnician) {
-      // Update existing technician
-      const technicianIndex = techniciansData.findIndex(
-        (tech) => tech.email === editingTechnician.email
+    if (isEditMode && editingUser) {
+      // Update existing User
+      const userIndex = usersData.findIndex(
+        (tech) => tech.email === editingUser.email
       );
-      if (technicianIndex !== -1) {
-        techniciansData[technicianIndex] = formData;
+      if (userIndex !== -1) {
+        usersData[userIndex] = formData;
       }
       toast({
         title: "Success",
-        description: "Technician updated successfully",
+        description: "User updated successfully",
         status: "success",
         duration: 3000,
       });
     } else {
-      // Add new technician
-      const newTechnician = { ...formData };
-      techniciansData.push(newTechnician);
+      // Add new User
+      const newUser = { ...formData };
+      usersData.push(newUser);
 
       toast({
         title: "Success",
-        description: "Technician added successfully",
+        description: "User added successfully",
         status: "success",
         duration: 3000,
       });
@@ -265,8 +257,8 @@ export default function TechniciansPage() {
     handleModalClose();
   };
 
-  const filteredTechnicians = techniciansData.filter((technician) =>
-    technician.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredUsers = usersData.filter((user) =>
+    user.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -278,7 +270,7 @@ export default function TechniciansPage() {
         <Box flex="1" p={8}>
           <Header />
           <Flex justify="space-between" align="center" mb={4}>
-            <Heading size="sm">Technicians</Heading>
+            <Heading size="sm">Users</Heading>
             <Flex>
               <Button
                 colorScheme="blue"
@@ -286,7 +278,7 @@ export default function TechniciansPage() {
                 leftIcon={<FaPlus />}
                 onClick={onModalOpen}
                 size="sm">
-                Add Technician
+                Add User
               </Button>
             </Flex>
           </Flex>
@@ -320,26 +312,26 @@ export default function TechniciansPage() {
                     <Th>Workshop</Th>
                     <Th>Email</Th>
                     <Th>Speciality</Th>
-                    <Th>Team</Th>
+                    <Th>Role</Th>
                     <Th>Status</Th>
                     <Th>Actions</Th>
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {filteredTechnicians.map((technician, index) => (
+                  {filteredUsers.map((users, index) => (
                     <Tr key={index}>
-                      <Td>{technician.name}</Td>
-                      <Td>{technician.phone}</Td>
-                      <Td>{technician.workshop}</Td>
-                      <Td>{technician.email}</Td>
-                      <Td>{technician.speciality}</Td>
-                      <Td>{technician.team}</Td>
+                      <Td>{users.name}</Td>
+                      <Td>{users.phone}</Td>
+                      <Td>{users.workshop}</Td>
+                      <Td>{users.email}</Td>
+                      <Td>{users.speciality}</Td>
+                      <Td>{users.role}</Td>
                       <Td>
                         <Badge
                           colorScheme={
-                            technician.status === "On Duty" ? "green" : "red"
+                            users.status === "On Duty" ? "green" : "red"
                           }>
-                          {technician.status}
+                          {users.status}
                         </Badge>
                       </Td>
                       <Td>
@@ -348,7 +340,7 @@ export default function TechniciansPage() {
                             size="sm"
                             colorScheme="blue"
                             variant="ghost"
-                            onClick={() => handleEdit(technician)}
+                            onClick={() => handleEdit(users)}
                             leftIcon={<FaEdit />}>
                             Edit
                           </Button>
@@ -356,7 +348,7 @@ export default function TechniciansPage() {
                             size="sm"
                             colorScheme="red"
                             variant="ghost"
-                            onClick={() => handleDelete(technician)}
+                            onClick={() => handleDelete(users)}
                             leftIcon={<FaTrash />}>
                             Delete
                           </Button>
@@ -381,7 +373,7 @@ export default function TechniciansPage() {
             py={4}
             fontSize="lg"
             color="gray.700">
-            {isEditMode ? "Edit Technician" : "Add New Technician"}
+            {isEditMode ? "Edit User" : "Add New User"}
           </ModalHeader>
           <ModalCloseButton color="gray.800" />
           <ModalBody py={6}>
@@ -394,7 +386,7 @@ export default function TechniciansPage() {
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  placeholder="Enter technician's full name"
+                  placeholder="Enter user's full name"
                   //   _placeholder={{ color: "gray.400" }}
                 />
               </FormControl>
@@ -461,17 +453,17 @@ export default function TechniciansPage() {
                     <option
                       style={{ backgroundColor: "#fdfdfd" }}
                       value="German">
-                      German
+                      Service Advisor
                     </option>
                     <option
                       style={{ backgroundColor: "#fdfdfd" }}
                       value="Japanese">
-                      Japanese
+                      Expenses
                     </option>
                     <option
                       style={{ backgroundColor: "#fdfdfd" }}
                       value="American">
-                      American
+                      Accounting{" "}
                     </option>
                   </StyledSelect>
                 </FormControl>
@@ -483,18 +475,18 @@ export default function TechniciansPage() {
                 </FormLabel>
                 <StyledSelect
                   color="gray.800"
-                  name="team"
-                  value={formData.team}
+                  name="role"
+                  value={formData.role}
                   onChange={handleInputChange}
-                  placeholder="Select team">
+                  placeholder="Select role">
                   <option style={{ backgroundColor: "#fdfdfd" }} value="Alpha">
-                    Alpha
+                    Front Desk
                   </option>
                   <option style={{ backgroundColor: "#fdfdfd" }} value="Beta">
-                    Beta
+                    Accounts
                   </option>
                   <option style={{ backgroundColor: "#fdfdfd" }} value="Delta">
-                    Delta
+                    Manager
                   </option>
                 </StyledSelect>
               </FormControl>
@@ -557,7 +549,7 @@ export default function TechniciansPage() {
                 fontSize="sm"
                 onClick={handleSubmit}
                 width="full">
-                {isEditMode ? "Update Technician" : "Add Technician"}
+                {isEditMode ? "Update User" : "Add User"}
               </Button>
             </Stack>
           </ModalBody>

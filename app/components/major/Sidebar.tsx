@@ -25,7 +25,12 @@ import {
   FaChevronDown,
   FaChevronRight,
 } from "react-icons/fa";
-import { FaCarSide, FaPeopleGroup, FaScrewdriverWrench } from "react-icons/fa6";
+import {
+  FaCarSide,
+  FaPeopleGroup,
+  FaPersonCirclePlus,
+  FaScrewdriverWrench,
+} from "react-icons/fa6";
 import styled from "@emotion/styled";
 import logo from "../../assets/logo.webp";
 import { ComponentType, useState } from "react";
@@ -215,6 +220,7 @@ const SidebarContent = ({ onClose }: SidebarContentProps) => {
     //     { label: "Stockist", path: "/stockist" },
     //   ],
     // },
+    { icon: FaPersonCirclePlus, label: "Users", path: "/users" },
     { icon: FaScrewdriverWrench, label: "Technicians", path: "/technicians" },
   ];
 
