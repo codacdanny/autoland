@@ -695,7 +695,7 @@ export default function RegistrationPage() {
               Cancel
             </ActionButton>
             <ActionButton colorScheme="blue" onClick={handleSubmit}>
-              Create Job Order
+              Create Invoice
             </ActionButton>
           </Flex>
         </FormContainer>

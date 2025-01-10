@@ -15,6 +15,8 @@ import {
   HStack,
   Divider,
   Icon,
+  FormControl,
+  FormLabel,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import Sidebar from "../components/major/Sidebar";
@@ -60,7 +62,7 @@ const SectionTitle = styled(Heading)`
 `;
 
 const StyledInput = styled(Input)`
-  background: rgba(247, 250, 252, 0.8);
+  background: rgb(255, 255, 255);
   border: 1px solid #e2e8f0;
   border-radius: 10px;
   padding: 0.8rem 1rem;
@@ -154,8 +156,7 @@ export default function CreateJobOrderPage() {
           as={motion.div}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          p={6}
-        >
+          p={6}>
           <FormContainer>
             <Flex align="center" mb={8}>
               <Icon as={FaClipboard} fontSize="sm" color="blue.500" mr={3} />
@@ -172,18 +173,38 @@ export default function CreateJobOrderPage() {
                 </Heading>
               </SectionTitle>
               <VStack spacing={4} align="stretch">
-                <StyledInput
+                {/* <StyledInput
                   placeholder="Enter client's full name"
                   name="clientName"
                   value={formData.clientName}
                   onChange={handleChange}
-                />
-                <StyledInput
-                  name="phoneNumber"
-                  placeholder="Phone Number"
-                  value={formData.phoneNumber}
+                  variant="flushed"
+                /> */}
+                <Input
+                  placeholder="Client Name"
+                  variant="flushed"
+                  border="1px solid #e2e8f0"
+                  padding=".2rem 0.8rem"
+                  name="clientName"
+                  value={formData.clientName}
+                  borderRadius="10px"
+                  _placeholder={{ color: "#a0aec0", fontSize: "0.85rem" }}
                   onChange={handleChange}
                 />
+                <Input
+                  placeholder="Client Phone Number"
+                  variant="flushed"
+                  border="1px solid #e2e8f0"
+                  padding=".2rem 0.8rem"
+                  name="phoneNumber"
+                  value={formData.phoneNumber}
+                  borderRadius="10px"
+                  _placeholder={{ color: "#a0aec0", fontSize: "0.85rem" }}
+                  onChange={handleChange}
+                  bgColor="white"
+                  color="black"
+                />
+
                 <StyledInput
                   name="clientEmail"
                   placeholder="Client Email"
@@ -216,17 +237,15 @@ export default function CreateJobOrderPage() {
                 <Select
                   name="carYear"
                   fontSize="sm"
-                  placeholder="Car Year"
+                  placeholder="Select Car Year"
                   value={formData.carYear}
-                  onChange={handleChange}
-                >
+                  onChange={handleChange}>
                   <option
                     style={{
                       backgroundColor: "#eee",
                       color: "gray.500",
                     }}
-                    value="2023"
-                  >
+                    value="2023">
                     2023
                   </option>
                   <option
@@ -234,8 +253,7 @@ export default function CreateJobOrderPage() {
                       backgroundColor: "#eee",
                       color: "gray.500",
                     }}
-                    value="2022"
-                  >
+                    value="2022">
                     2022
                   </option>
                   <option
@@ -243,17 +261,14 @@ export default function CreateJobOrderPage() {
                       backgroundColor: "#eee",
                       color: "gray.500",
                     }}
-                    value="2021"
-                  >
+                    value="2021">
                     2021
                   </option>
                 </Select>
-                <StyledInput
-                  name="date"
-                  type="date"
-                  value={formData.date}
-                  onChange={handleChange}
-                />
+                <FormControl>
+                  <FormLabel>Select Date</FormLabel>
+                  <input type="date" />
+                </FormControl>
                 <StyledInput
                   name="carIssue"
                   placeholder="Car Issue"
@@ -277,15 +292,13 @@ export default function CreateJobOrderPage() {
                   fontSize="sm"
                   placeholder="Workshop"
                   value={formData.workshop}
-                  onChange={handleChange}
-                >
+                  onChange={handleChange}>
                   <option
                     style={{
                       backgroundColor: "#eee",
                       color: "gray.500",
                     }}
-                    value="Workshop A"
-                  >
+                    value="Workshop A">
                     Workshop A
                   </option>
                   <option
@@ -293,8 +306,7 @@ export default function CreateJobOrderPage() {
                       backgroundColor: "#eee",
                       color: "gray.500",
                     }}
-                    value="Workshop B"
-                  >
+                    value="Workshop B">
                     Workshop B
                   </option>
                   <option
@@ -302,8 +314,7 @@ export default function CreateJobOrderPage() {
                       backgroundColor: "#eee",
                       color: "gray.500",
                     }}
-                    value="Workshop C"
-                  >
+                    value="Workshop C">
                     Workshop C
                   </option>
                 </Select>
@@ -601,15 +612,13 @@ export default function CreateJobOrderPage() {
                   fontSize="sm"
                   placeholder="Team"
                   value={formData.team}
-                  onChange={handleChange}
-                >
+                  onChange={handleChange}>
                   <option
                     style={{
                       backgroundColor: "#eee",
                       color: "gray.500",
                     }}
-                    value="Alpha"
-                  >
+                    value="Alpha">
                     Team Alpha
                   </option>
                   <option
@@ -617,8 +626,7 @@ export default function CreateJobOrderPage() {
                       backgroundColor: "#eee",
                       color: "gray.500",
                     }}
-                    value="Beta"
-                  >
+                    value="Beta">
                     Team Beta
                   </option>
                   <option
@@ -626,8 +634,7 @@ export default function CreateJobOrderPage() {
                       backgroundColor: "#eee",
                       color: "gray.500",
                     }}
-                    value="Omega"
-                  >
+                    value="Omega">
                     Team Omega
                   </option>
                 </Select>
@@ -677,9 +684,6 @@ export default function CreateJobOrderPage() {
                   value={""}
                   onChange={() => {}}
                 />
-                <ActionButton colorScheme="blue" mt={2}>
-                  Add Signature
-                </ActionButton>
               </VStack>
             </Box>
 
@@ -687,13 +691,11 @@ export default function CreateJobOrderPage() {
 
             <Flex justify="flex-end" gap={4}>
               <ActionButton
-                variant="outline"
                 colorScheme="blue"
                 onClick={() => {}}
                 color="gray.600"
                 border="1px solid"
-                borderColor="gray.300"
-              >
+                borderColor="gray.300">
                 Cancel
               </ActionButton>
               <ActionButton colorScheme="blue" onClick={handleSubmit}>

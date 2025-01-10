@@ -300,6 +300,15 @@ export default function JobOrderTable() {
                         Estimate Form
                       </Button>
                       <Button
+                        leftIcon={<FaClipboardList />}
+                        size="sm"
+                        as="a"
+                        colorScheme="red"
+                        variant="outline"
+                        onClick={() => handleActionClick(order.id, "stockist")}>
+                        Stockist Form
+                      </Button>
+                      <Button
                         leftIcon={<FaFileInvoice />}
                         size="sm"
                         as="a"
