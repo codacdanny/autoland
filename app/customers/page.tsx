@@ -5,7 +5,6 @@ import {
   Button,
   Flex,
   Heading,
- 
   Table,
   Tbody,
   Td,
@@ -25,25 +24,26 @@ import {
   Select,
   Divider,
   useToast,
- 
   Avatar,
   Icon,
   HStack,
+  IconButton,
 } from "@chakra-ui/react";
 import {
-
   FaCar,
-  
   FaUser,
   FaPhone,
   FaEnvelope,
   FaDollarSign,
+  FaAngleRight,
+  FaAngleLeft,
 } from "react-icons/fa";
 import styled from "@emotion/styled";
 import Sidebar from "@/app/components/major/Sidebar";
 import MainContent from "@/app/components/minor/MainContent";
 import Header from "@/app/components/minor/Header";
 import { useRouter } from "next/navigation";
+import { FaCakeCandles } from "react-icons/fa6";
 
 const StyledTable = styled(Table)`
   th {
@@ -75,6 +75,7 @@ interface Customer {
   phoneNo: string;
   cars: number;
   debt: string;
+  birthDate: string;
   vehicles?: Array<{
     model: string;
     year: string;
@@ -95,6 +96,7 @@ const enhancedCustomersData: Customer[] = [
     phoneNo: "08156438520",
     cars: 2,
     debt: "$250.00",
+    birthDate: "01/13/1995",
     vehicles: [
       {
         model: "Toyota Camry",
@@ -132,6 +134,8 @@ const enhancedCustomersData: Customer[] = [
 
 export default function CustomersPage() {
   // const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
     null
@@ -139,7 +143,24 @@ export default function CustomersPage() {
   const [selectedVehicle, setSelectedVehicle] = useState("");
   const router = useRouter();
   const toast = useToast();
+  const dummyServiceHistory = Array.from({ length: 15 }, (_, index) => ({
+    id: index + 1,
+    service: `Service ${index + 1}`,
+    date: `2023-10-${index + 1}`,
+  }));
 
+  const itemsPerPage = 5; // Number of job orders to display per page
+  const totalPages = Math.ceil(dummyServiceHistory.length / itemsPerPage);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  // Calculate the current items to display
+  const currentItems = dummyServiceHistory.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
   const handleRowClick = (customer: Customer) => {
     setSelectedCustomer(customer);
     onOpen();
@@ -199,7 +220,8 @@ export default function CustomersPage() {
                           <Text
                             fontSize="xs"
                             fontWeight="semibold"
-                            color="gray.600">
+                            color="gray.600"
+                          >
                             {customer.email}
                           </Text>
                         </Box>
@@ -217,7 +239,8 @@ export default function CustomersPage() {
                           parseFloat(customer.debt.slice(1)) > 0
                             ? "red.500"
                             : "green.500"
-                        }>
+                        }
+                      >
                         {customer.debt}
                       </Text>
                     </Td>
@@ -228,7 +251,8 @@ export default function CustomersPage() {
                             ? "red"
                             : "green"
                         }
-                        borderRadius="full">
+                        borderRadius="full"
+                      >
                         {parseFloat(customer.debt.slice(1)) > 0
                           ? "Pending"
                           : "Clear"}
@@ -256,7 +280,7 @@ export default function CustomersPage() {
                       <Heading size="xz" mb={4}>
                         Personal Information
                       </Heading>
-                      <VStack align="stretch" spacing={3}>
+                      <VStack align="stretch" spacing={3} color="gray.700">
                         <HStack>
                           <Icon as={FaUser} color="blue.500" />
                           <Text>{selectedCustomer.name}</Text>
@@ -273,6 +297,10 @@ export default function CustomersPage() {
                           <Icon as={FaDollarSign} color="blue.500" />
                           <Text>Outstanding: {selectedCustomer.debt}</Text>
                         </HStack>
+                        <HStack>
+                          <Icon as={FaCakeCandles} color="blue.500" />
+                          <Text>Birthdate: {selectedCustomer.birthDate}</Text>
+                        </HStack>
                       </VStack>
                     </Box>
 
@@ -286,7 +314,8 @@ export default function CustomersPage() {
                       <Select
                         placeholder="Select vehicle for job order"
                         onChange={(e) => setSelectedVehicle(e.target.value)}
-                        mb={4}>
+                        mb={4}
+                      >
                         {selectedCustomer.vehicles?.map((vehicle, idx) => (
                           <option
                             style={{
@@ -294,20 +323,22 @@ export default function CustomersPage() {
                               color: "gray.500",
                             }}
                             key={idx}
-                            value={vehicle.model}>
+                            value={vehicle.model}
+                          >
                             {vehicle.model} ({vehicle.year})
                           </option>
                         ))}
                       </Select>
 
                       {/* Vehicle History */}
-                      {selectedCustomer.vehicles?.map((vehicle, idx) => (
+                      {/* {selectedCustomer.vehicles?.map((vehicle, idx) => (
                         <Box
                           key={idx}
                           mb={4}
                           p={4}
                           bg="gray.50"
-                          borderRadius="md">
+                          borderRadius="md"
+                        >
                           <HStack mb={2}>
                             <Icon as={FaCar} color="blue.500" />
                             <Text fontWeight="medium">
@@ -324,7 +355,8 @@ export default function CustomersPage() {
                                 p={2}
                                 bg="white"
                                 borderRadius="md"
-                                fontSize="sm">
+                                fontSize="sm"
+                              >
                                 <HStack justify="space-between">
                                   <Text>{history.service}</Text>
                                   <Text color="gray.600">{history.date}</Text>
@@ -336,7 +368,51 @@ export default function CustomersPage() {
                             ))}
                           </VStack>
                         </Box>
-                      ))}
+                      ))} */}
+                      <Text fontSize="sm" color="gray.600" mb={2}>
+                        Service History
+                      </Text>
+                      <VStack align="stretch" spacing={2}>
+                        {currentItems.map((history) => (
+                          <Box
+                            key={history.id}
+                            p={2}
+                            bg="white"
+                            borderRadius="md"
+                            fontSize="sm"
+                          >
+                            <HStack justify="space-between">
+                              <Text>Job Order ID: {history.id}</Text>
+                              <Text color="gray.600">{history.date}</Text>
+                            </HStack>
+                            <Text color="blue.500" fontWeight="medium">
+                              {history.service}
+                            </Text>
+                          </Box>
+                        ))}
+                      </VStack>
+
+                      {/* Pagination Controls */}
+                      <HStack spacing={4} mt={4}>
+                        <IconButton
+                          colorScheme="blue"
+                          aria-label="previous"
+                          icon={<FaAngleLeft color="#002050" />}
+                          onClick={() => handlePageChange(currentPage - 1)}
+                          isDisabled={currentPage === 1}
+                        />
+
+                        <Text>
+                          Page {currentPage} of {totalPages}
+                        </Text>
+                        <IconButton
+                          colorScheme="blue"
+                          aria-label="next"
+                          icon={<FaAngleRight color="#002050" />}
+                          onClick={() => handlePageChange(currentPage + 1)}
+                          isDisabled={currentPage === totalPages}
+                        />
+                      </HStack>
                     </Box>
 
                     <Button
@@ -345,7 +421,8 @@ export default function CustomersPage() {
                       size="sm"
                       leftIcon={<FaCar fontSize="sm" />}
                       onClick={handleCreateJobOrder}
-                      mt={4}>
+                      mt={4}
+                    >
                       Create Job Order
                     </Button>
                   </VStack>
