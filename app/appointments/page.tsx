@@ -24,6 +24,10 @@ import {
   useDisclosure,
   Icon,
   Text,
+  FormControl,
+  FormLabel,
+  Input,
+  Textarea,
 } from "@chakra-ui/react";
 import { FaCalendarAlt, FaClock, FaEdit, FaTimes } from "react-icons/fa";
 import styled from "@emotion/styled";
@@ -74,7 +78,7 @@ interface Appointment {
   date: string;
   time: string;
   vehicleInfo: string;
-  status: "scheduled" | "completed" | "cancelled";
+  status: "scheduled" | "completed" | "cancelled" | "approved";
   phone: string;
   email: string;
 }
@@ -97,17 +101,22 @@ const mockAppointments: Appointment[] = [
 export default function AppointmentsPage() {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [, setSelectedAppointment] = useState<Appointment | null>(null);
+  const [selectedAppointment, setSelectedAppointment] =
+    useState<Appointment | null>(null);
   const [appointments, setAppointments] = useState(mockAppointments);
+  const [editDescription, setEditDescription] = useState("");
+  const [editDate, setEditDate] = useState("");
 
   const handleEditClick = (appointment: Appointment) => {
     setSelectedAppointment(appointment);
+    setEditDate(appointment.date);
+    setEditDescription("");
     onOpen();
   };
 
   const handleStatusChange = (
     appointmentId: string,
-    newStatus: "scheduled" | "completed" | "cancelled"
+    newStatus: "scheduled" | "completed" | "cancelled" | "approved"
   ) => {
     setAppointments(
       appointments.map((apt) =>
@@ -215,6 +224,16 @@ export default function AppointmentsPage() {
                         >
                           Edit
                         </Button>
+                        <Button
+                          size="sm"
+                          colorScheme="green"
+                          variant="ghost"
+                          onClick={() =>
+                            handleStatusChange(appointment.id, "approved")
+                          }
+                        >
+                          Approve
+                        </Button>
                         {appointment.status !== "cancelled" && (
                           <Button
                             size="sm"
@@ -238,22 +257,108 @@ export default function AppointmentsPage() {
 
           {/* Edit Appointment Modal */}
           <Modal isOpen={isOpen} onClose={onClose} size="xl">
-            <ModalOverlay backdropFilter="blur(10px)" bg="blackAlpha.300" />
+            <ModalOverlay backdropFilter="blur(10px)" bg="blackAlpha.600" />
             <StyledModal>
               <ModalHeader
                 borderBottom="1px solid"
-                borderColor="gray.100"
+                borderColor="gray.300"
                 py={4}
                 fontSize="lg"
-                color="gray.700"
+                color="white"
+                fontWeight="bold"
+                bgGradient="linear(to-r, blue.400, blue.600)"
+                borderTopRadius="20px"
               >
                 Edit Appointment
               </ModalHeader>
-              <ModalCloseButton />
-              <ModalBody py={6}>
-                {/* Add form fields for editing appointment */}
+              <ModalCloseButton color="white" />
+              <ModalBody
+                py={6}
+                color="gray.200"
+                bg="gray.800"
+                borderRadius="md"
+              >
                 <Stack spacing={4}>
-                  {/* Add form fields similar to other forms in the app */}
+                  <Text fontWeight="bold" fontSize="lg" color="white">
+                    Appointment Details
+                  </Text>
+                  <Text color="gray.300">ID: {selectedAppointment?.id}</Text>
+                  <Text color="gray.300">
+                    Customer: {selectedAppointment?.customerName}
+                  </Text>
+                  <Text color="gray.300">
+                    Service: {selectedAppointment?.service}
+                  </Text>
+                  <Text color="gray.300">
+                    Current Date: {selectedAppointment?.date}
+                  </Text>
+                  <Text color="gray.300">
+                    Current Time: {selectedAppointment?.time}
+                  </Text>
+                  <Text color="gray.300">
+                    Vehicle Info: {selectedAppointment?.vehicleInfo}
+                  </Text>
+                  <Text color="gray.300">
+                    Status: {selectedAppointment?.status}
+                  </Text>
+
+                  <FormControl>
+                    <FormLabel
+                      htmlFor="edit-date"
+                      fontWeight="medium"
+                      color="white"
+                    >
+                      New Date
+                    </FormLabel>
+                    <Input
+                      border="1px solid #4A5568"
+                      borderRadius="md"
+                      focusBorderColor="blue.300"
+                      id="edit-date"
+                      type="date"
+                      value={editDate}
+                      onChange={(e) => setEditDate(e.target.value)}
+                      p={3}
+                      bg="gray.700"
+                      color="white"
+                    />
+                  </FormControl>
+
+                  <FormControl>
+                    <FormLabel
+                      htmlFor="edit-description"
+                      fontWeight="medium"
+                      color="white"
+                    >
+                      Description
+                    </FormLabel>
+                    <Textarea
+                      id="edit-description"
+                      placeholder="Explain why the appointment was moved"
+                      value={editDescription}
+                      onChange={(e) => setEditDescription(e.target.value)}
+                      border="1px solid #4A5568"
+                      borderRadius="md"
+                      focusBorderColor="blue.300"
+                      p={3}
+                      bg="gray.700"
+                      color="white"
+                    />
+                  </FormControl>
+
+                  <Button
+                    colorScheme="blue"
+                    onClick={() => {
+                      // Save logic here
+                      onClose();
+                    }}
+                    mt={4}
+                    bgGradient="linear(to-r, blue.400, blue.600)"
+                    _hover={{ bgGradient: "linear(to-r, blue.500, blue.700)" }}
+                    color="white"
+                  >
+                    Save
+                  </Button>
                 </Stack>
               </ModalBody>
             </StyledModal>
