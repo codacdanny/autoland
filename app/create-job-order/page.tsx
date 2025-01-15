@@ -4,7 +4,6 @@ import {
   Box,
   Heading,
   Text,
-  Input,
   Button,
   Select,
   Flex,
@@ -17,12 +16,24 @@ import {
   Icon,
   FormControl,
   FormLabel,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanels,
+  TabPanel,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import Sidebar from "../components/major/Sidebar";
 import MainContent from "../components/minor/MainContent";
 import { motion } from "framer-motion";
 import { FaCar, FaUser, FaTools, FaClipboard } from "react-icons/fa";
+import {
+  CheckboxGroup,
+  InputField,
+  SelectField,
+  StyledInput,
+  TextAreaField,
+} from "../components/minor/Form";
 
 // Updated styled components
 const FormContainer = styled(Box)`
@@ -58,26 +69,6 @@ const SectionTitle = styled(Heading)`
     width: 3px;
     background: linear-gradient(180deg, #3182ce, #805ad5);
     border-radius: 4px;
-  }
-`;
-
-const StyledInput = styled(Input)`
-  background: rgb(255, 255, 255);
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  padding: 0.8rem 1rem;
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
-
-  &:focus {
-    background: white;
-    border-color: #4299e1;
-    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
-  }
-
-  &::placeholder {
-    color: #a0aec0;
-    font-size: 0.85rem;
   }
 `;
 
@@ -118,14 +109,6 @@ export default function CreateJobOrderPage() {
     customerRequest: "",
   });
 
-  const [workDescriptions] = useState([{ description: "", cost: "" }]);
-  const [parts] = useState([
-    { partNo: "", description: "", qty: "", price: "", cost: "" },
-  ]);
-  const [payment] = useState([
-    { firstPayment: "", secondPayment: "", debt: "" },
-  ]);
-
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -156,7 +139,8 @@ export default function CreateJobOrderPage() {
           as={motion.div}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          p={6}>
+          p={6}
+        >
           <FormContainer>
             <Flex align="center" mb={8}>
               <Icon as={FaClipboard} fontSize="sm" color="blue.500" mr={3} />
@@ -165,527 +149,290 @@ export default function CreateJobOrderPage() {
               </Heading>
             </Flex>
 
-            <Box mb={8}>
-              <SectionTitle>
-                <Icon as={FaUser} fontSize="sm" color="blue.500" />
-                <Heading as="h3" size="xs">
-                  Client Information
-                </Heading>
-              </SectionTitle>
-              <VStack spacing={4} align="stretch">
-                {/* <StyledInput
-                  placeholder="Enter client's full name"
-                  name="clientName"
-                  value={formData.clientName}
-                  onChange={handleChange}
-                  variant="flushed"
-                /> */}
-                <Input
-                  placeholder="Client Name"
-                  variant="flushed"
-                  border="1px solid #e2e8f0"
-                  padding=".2rem 0.8rem"
-                  name="clientName"
-                  value={formData.clientName}
-                  borderRadius="10px"
-                  _placeholder={{ color: "#a0aec0", fontSize: "0.85rem" }}
-                  onChange={handleChange}
-                />
-                <Input
-                  placeholder="Client Phone Number"
-                  variant="flushed"
-                  border="1px solid #e2e8f0"
-                  padding=".2rem 0.8rem"
-                  name="phoneNumber"
-                  value={formData.phoneNumber}
-                  borderRadius="10px"
-                  _placeholder={{ color: "#a0aec0", fontSize: "0.85rem" }}
-                  onChange={handleChange}
-                  bgColor="white"
-                  color="black"
-                />
+            <Tabs variant="enclosed">
+              <TabList>
+                <Tab>Section A</Tab>
+                <Tab>Section B</Tab>
+                <Tab>Section C</Tab>
+              </TabList>
 
-                <StyledInput
-                  name="clientEmail"
-                  placeholder="Client Email"
-                  value={formData.clientEmail}
-                  onChange={handleChange}
-                />
-              </VStack>
-            </Box>
+              <TabPanels>
+                <TabPanel>
+                  {/* Information Section */}
+                  <Box mb={8}>
+                    <SectionTitle>
+                      <Icon as={FaUser} fontSize="sm" color="blue.500" />
+                      <Heading as="h3" size="xs">
+                        Client Information
+                      </Heading>
+                    </SectionTitle>
+                    <VStack spacing={4} align="stretch">
+                      <InputField
+                        name="clientName"
+                        placeholder="Client Name"
+                        value={formData.clientName}
+                        onChange={handleChange}
+                      />
+                      <InputField
+                        name="phoneNumber"
+                        placeholder="Client Phone Number"
+                        value={formData.phoneNumber}
+                        onChange={handleChange}
+                      />
+                      <InputField
+                        name="clientEmail"
+                        placeholder="Client Email"
+                        value={formData.clientEmail}
+                        onChange={handleChange}
+                      />
+                      <InputField
+                        name="clientBirthday"
+                        placeholder="Client Birthday"
+                        value={formData.clientEmail}
+                        onChange={handleChange}
+                      />
+                    </VStack>
+                  </Box>
 
-            <Box mb={8}>
-              <SectionTitle>
-                <Icon as={FaCar} fontSize="sm" color="blue.500" />
-                <Heading as="h3" size="xs">
-                  Vehicle Information
-                </Heading>
-              </SectionTitle>
-              <VStack spacing={4} align="stretch">
-                <StyledInput
-                  name="carNo"
-                  placeholder="Car No"
-                  value={formData.carNo}
-                  onChange={handleChange}
-                />
-                <StyledInput
-                  name="carMake"
-                  placeholder="Car Make"
-                  value={formData.carMake}
-                  onChange={handleChange}
-                />
-                <Select
-                  name="carYear"
-                  fontSize="sm"
-                  placeholder="Select Car Year"
-                  value={formData.carYear}
-                  onChange={handleChange}>
-                  <option
-                    style={{
-                      backgroundColor: "#eee",
-                      color: "gray.500",
-                    }}
-                    value="2023">
-                    2023
-                  </option>
-                  <option
-                    style={{
-                      backgroundColor: "#eee",
-                      color: "gray.500",
-                    }}
-                    value="2022">
-                    2022
-                  </option>
-                  <option
-                    style={{
-                      backgroundColor: "#eee",
-                      color: "gray.500",
-                    }}
-                    value="2021">
-                    2021
-                  </option>
-                </Select>
-                <FormControl>
-                  <FormLabel>Select Date</FormLabel>
-                  <input type="date" />
-                </FormControl>
-                <StyledInput
-                  name="carIssue"
-                  placeholder="Car Issue"
-                  value={formData.carIssue}
-                  onChange={handleChange}
-                />
-                <StyledInput
-                  name="carColour"
-                  placeholder="Car Colour"
-                  value={formData.carColour}
-                  onChange={handleChange}
-                />
-                <StyledInput
-                  name="odometer"
-                  placeholder="Odometer"
-                  value={formData.odometer}
-                  onChange={handleChange}
-                />
-                <Select
-                  name="workshop"
-                  fontSize="sm"
-                  placeholder="Workshop"
-                  value={formData.workshop}
-                  onChange={handleChange}>
-                  <option
-                    style={{
-                      backgroundColor: "#eee",
-                      color: "gray.500",
-                    }}
-                    value="Workshop A">
-                    Workshop A
-                  </option>
-                  <option
-                    style={{
-                      backgroundColor: "#eee",
-                      color: "gray.500",
-                    }}
-                    value="Workshop B">
-                    Workshop B
-                  </option>
-                  <option
-                    style={{
-                      backgroundColor: "#eee",
-                      color: "gray.500",
-                    }}
-                    value="Workshop C">
-                    Workshop C
-                  </option>
-                </Select>
-                <Textarea
-                  name="customerRequest"
-                  _placeholder={{ color: "#bdbdbd" }}
-                  bgColor="rgba(247, 250, 252, 0.8)"
-                  border="1px solid #e2e8f0"
-                  borderRadius="sm"
-                  p={4}
-                  fontSize="sm"
-                  placeholder="Customer's Request"
-                  value={formData.customerRequest}
-                  onChange={handleChange}
-                />
-              </VStack>
-            </Box>
+                  <Box mb={8}>
+                    <SectionTitle>
+                      <Icon as={FaCar} fontSize="sm" color="blue.500" />
+                      <Heading as="h3" size="xs">
+                        Vehicle Information
+                      </Heading>
+                    </SectionTitle>
+                    <VStack spacing={4} align="stretch">
+                      <InputField
+                        name="carNo"
+                        placeholder="Car VIN"
+                        value={formData.carNo}
+                        onChange={handleChange}
+                      />
+                      <InputField
+                        name="carNo"
+                        placeholder="Car Chasis Number"
+                        value={formData.carNo}
+                        onChange={handleChange}
+                      />
+                      <InputField
+                        name="carNo"
+                        placeholder="Car Plate Number"
+                        value={formData.carNo}
+                        onChange={handleChange}
+                      />
+                      <InputField
+                        name="carMake"
+                        placeholder="Car Make"
+                        value={formData.carMake}
+                        onChange={handleChange}
+                      />
+                      <InputField
+                        name="carYear"
+                        placeholder="Car Year"
+                        value={formData.carYear}
+                        onChange={handleChange}
+                      />
+                      <FormControl>
+                        <FormLabel fontSize="medium">Select Date</FormLabel>
+                        <input
+                          type="date"
+                          style={{
+                            backgroundColor: "#3280cd",
+                            color: "white",
+                            padding: "10px",
+                            border: "1px solid #bdbdb",
+                            borderRadius: "10px",
+                          }}
+                        />
+                      </FormControl>
+                      <InputField
+                        name="carIssue"
+                        placeholder="Car Issue"
+                        value={formData.carIssue}
+                        onChange={handleChange}
+                      />
+                      <InputField
+                        name="carColour"
+                        placeholder="Car Colour"
+                        value={formData.carColour}
+                        onChange={handleChange}
+                      />
+                      <InputField
+                        name="odometer"
+                        placeholder="Odometer"
+                        value={formData.odometer}
+                        onChange={handleChange}
+                      />
+                      <SelectField
+                        name="workshop"
+                        placeholder="Select Workshop"
+                        value={formData.workshop}
+                        onChange={handleChange}
+                        options={[
+                          { value: "Owerri", label: "Owerri" },
+                          { value: "Portharcourt", label: "Portharcourt" },
+                        ]}
+                      />
+                      <TextAreaField
+                        name="customerRequest"
+                        placeholder="Customer's Request"
+                        value={formData.customerRequest}
+                        onChange={handleChange}
+                      />
+                    </VStack>
+                  </Box>
 
-            <Box mb={8}>
-              <SectionTitle>
-                <Icon as={FaTools} fontSize="sm" color="blue.500" />
-                <Heading as="h3" size="xs">
-                  Descriptions of Work
-                </Heading>
-              </SectionTitle>
-              {workDescriptions.map((work, index) => (
-                <HStack key={index} mb={2} spacing={4}>
-                  <StyledInput
-                    name="description"
-                    placeholder="Description of Work"
-                    value={work.description}
-                    onChange={() => {}}
-                  />
-                  <StyledInput
-                    name="cost"
-                    placeholder="Cost"
-                    type="number"
-                    value={work.cost}
-                    onChange={() => {}}
-                  />
-                </HStack>
-              ))}
-              <ActionButton colorScheme="blue" onClick={() => {}}>
-                Add Work Description
-              </ActionButton>
-            </Box>
+                  <Box mb={8}>
+                    <SectionTitle>
+                      <Icon as={FaTools} fontSize="sm" color="blue.500" />
+                      <Heading as="h3" size="xs">
+                        Descriptions of Work
+                      </Heading>
+                    </SectionTitle>
+                    <HStack>
+                      <Textarea
+                        name="descriptionOfWork"
+                        _placeholder={{ color: "#bdbdbd" }}
+                        bgColor="rgba(247, 250, 252, 0.8)"
+                        border="1px solid #e2e8f0"
+                        borderRadius="sm"
+                        p={4}
+                        fontSize="sm"
+                        placeholder="Describe the Work that should be done on this vehicle"
+                        value={formData.customerRequest}
+                        onChange={handleChange}
+                      />
+                    </HStack>
+                  </Box>
+                </TabPanel>
 
-            <Box mb={8}>
-              <SectionTitle>
-                <Icon as={FaTools} fontSize="sm" color="blue.500" />
-                <Heading as="h3" size="xs">
-                  Parts
-                </Heading>
-              </SectionTitle>
-              {parts.map((part, index) => (
-                <HStack key={index} mb={2} spacing={4}>
-                  <StyledInput
-                    name="partNo"
-                    placeholder="Parts No"
-                    value={part.partNo}
-                    onChange={() => {}}
-                  />
-                  <StyledInput
-                    name="description"
-                    placeholder="Parts Description"
-                    value={part.description}
-                    onChange={() => {}}
-                  />
-                  <StyledInput
-                    name="qty"
-                    placeholder="QTY"
-                    type="number"
-                    value={part.qty}
-                    onChange={() => {}}
-                  />
-                  <StyledInput
-                    name="price"
-                    placeholder="Price"
-                    type="number"
-                    value={part.price}
-                    onChange={() => {}}
-                  />
-                  <StyledInput
-                    name="cost"
-                    placeholder="Cost"
-                    type="number"
-                    value={part.cost}
-                    onChange={() => {}}
-                  />
-                </HStack>
-              ))}
-              <ActionButton colorScheme="blue" onClick={() => {}}>
-                Add Part
-              </ActionButton>
-            </Box>
+                {/* Checkbox Section */}
+                <TabPanel>
+                  <Box mb={8}>
+                    <SectionTitle>
+                      <Icon as={FaTools} fontSize="sm" color="blue.500" />
+                      <Heading as="h3" size="xs">
+                        Suspension
+                      </Heading>
+                    </SectionTitle>
+                    <CheckboxGroup
+                      options={[
+                        { label: "Vehicle rests levelly" },
+                        {
+                          label:
+                            "When bouncing the vehicle's corners, no cracking noise is made",
+                        },
+                        { label: "All corners respond the same when bouncing" },
+                      ]}
+                    />
+                  </Box>
 
-            <Box mb={8}>
-              <SectionTitle>
-                <Icon as={FaTools} fontSize="sm" color="blue.500" />
-                <Heading as="h3" size="xs">
-                  Suspension
-                </Heading>
-              </SectionTitle>
-              <VStack align="stretch">
-                <Checkbox colorScheme="blue">
-                  <Text fontSize="sm">Vehicle rests levelly</Text>
-                </Checkbox>
-                <Checkbox>
-                  <Text fontSize="sm">
-                    {`When bouncing the vehicle's corners, no cracking noise is
-                    made`}
-                  </Text>
-                </Checkbox>
-                <Checkbox>
-                  <Text fontSize="sm">
-                    All corners respond the same when bouncing
-                  </Text>
-                </Checkbox>
-              </VStack>
-            </Box>
+                  <Box mb={8}>
+                    <SectionTitle>
+                      <Icon as={FaTools} fontSize="sm" color="blue.500" />
+                      <Heading as="h3" size="xs">
+                        Interior
+                      </Heading>
+                    </SectionTitle>
+                    <CheckboxGroup
+                      options={[
+                        { label: "Seat unworn and free of cracks" },
+                        { label: "All doors open and close freely" },
+                        { label: "Trunk opens and closes freely" },
+                        { label: "All gauges work" },
+                        {
+                          label:
+                            "No dashboard warning lights remain illuminated",
+                        },
+                        { label: "Stereo works" },
+                        { label: "Heaters work" },
+                        { label: "Air conditioning works" },
+                        { label: "Windshield wipers work" },
+                        { label: "Windshield wiper fluid dispenses properly" },
+                        {
+                          label:
+                            "All seats equipped with functional seat belts",
+                        },
+                        { label: "All seats adjust properly" },
+                        { label: "Sunroof opens and closes properly" },
+                        { label: "Car alarm works (if applicable)" },
+                        {
+                          label:
+                            "Truck & driver-side door lock and unlock with key",
+                        },
+                        { label: "Hazard light functions properly" },
+                        { label: "Headlight including bright works properly" },
+                      ]}
+                    />
+                  </Box>
+                </TabPanel>
+                {/* others */}
+                <TabPanel>
+                  <Box mb={8}>
+                    <SectionTitle>
+                      <Icon as={FaTools} fontSize="sm" color="blue.500" />
+                      <Heading as="h3" size="xs">
+                        Other Insights
+                      </Heading>
+                    </SectionTitle>
+                    <VStack align="stretch">
+                      <Checkbox>
+                        <Text fontSize="sm">
+                          Walk away if the seller objects to your inspection
+                        </Text>
+                      </Checkbox>
+                      <Checkbox>
+                        <Text fontSize="sm">
+                          {`Don’t feel rushed while inspecting`}
+                        </Text>
+                      </Checkbox>
+                      <Checkbox>
+                        <Text fontSize="sm">
+                          Try to get a mechanic to assess checklist results
+                        </Text>
+                      </Checkbox>
+                    </VStack>
+                  </Box>
+                  <Box>
+                    <SectionTitle>
+                      <Icon as={FaTools} fontSize="sm" color="blue.500" />
+                      <Heading as="h3" size="xs">
+                        Assign Technicians
+                      </Heading>
+                    </SectionTitle>
+                    <VStack align="stretch">
+                      <SelectField
+                        name="team"
+                        placeholder="Select Team"
+                        value={formData.carYear}
+                        onChange={handleChange}
+                        options={[
+                          { value: "team A", label: "Team A" },
+                          { value: "team B", label: "Team B" },
+                          { value: "team C", label: "Team C" },
+                        ]}
+                      />
+                    </VStack>
+                  </Box>
 
-            <Box mb={8}>
-              <SectionTitle>
-                <Icon as={FaTools} fontSize="sm" color="blue.500" />
-                <Heading as="h3" size="xs">
-                  Interior
-                </Heading>
-              </SectionTitle>
-              <VStack align="stretch">
-                <Checkbox>
-                  <Text fontSize="sm">Seat unworn and free of cracks</Text>
-                </Checkbox>
-                <Checkbox>
-                  <Text fontSize="sm">All doors open and close freely</Text>
-                </Checkbox>
-                <Checkbox>
-                  <Text fontSize="sm">Trunk opens and closes freely</Text>
-                </Checkbox>
-                <Checkbox>
-                  <Text fontSize="sm">All gauges work</Text>
-                </Checkbox>
-                <Checkbox>
-                  <Text fontSize="sm">
-                    No dashboard warning lights remain illuminated
-                  </Text>
-                </Checkbox>
-                <Checkbox>
-                  <Text fontSize="sm">Stereo works</Text>
-                </Checkbox>
-                <Checkbox>
-                  <Text fontSize="sm">Heaters work</Text>
-                </Checkbox>
-                <Checkbox>
-                  <Text fontSize="sm">Air conditioning works</Text>
-                </Checkbox>
-                <Checkbox>
-                  <Text fontSize="sm">Windshield wipers work</Text>
-                </Checkbox>
-                <Checkbox>
-                  <Text fontSize="sm">
-                    Windshield wiper fluid dispenses properly
-                  </Text>
-                </Checkbox>
-                <Checkbox>
-                  <Text fontSize="sm">
-                    All seats equipped with functional seat belts
-                  </Text>
-                </Checkbox>
-                <Checkbox>
-                  <Text fontSize="sm">All seats adjust properly</Text>
-                </Checkbox>
-                <Checkbox>
-                  <Text fontSize="sm">Sunroof opens and closes properly</Text>
-                </Checkbox>
-                <Checkbox>
-                  <Text fontSize="sm">Car alarm works (if applicable)</Text>
-                </Checkbox>
-                <Checkbox>
-                  <Text fontSize="sm">
-                    Truck & driver-side door lock and unlock with key
-                  </Text>
-                </Checkbox>
-                <Checkbox>
-                  <Text fontSize="sm">Hazard light functions properly</Text>
-                </Checkbox>
-                <Checkbox>
-                  <Text fontSize="sm">
-                    Headlight including bright works properly
-                  </Text>
-                </Checkbox>
-              </VStack>
-            </Box>
-
-            <Box mb={8}>
-              <SectionTitle>
-                <Icon as={FaTools} fontSize="sm" color="blue.500" />
-                <Heading as="h3" size="xs">
-                  Miscellaneous
-                </Heading>
-              </SectionTitle>
-              <VStack align="stretch">
-                <Checkbox>
-                  <Text fontSize="sm">
-                    Car manual located in the glove compartment
-                  </Text>
-                </Checkbox>
-                <Checkbox>
-                  <Text fontSize="sm">
-                    Instructions included for any accessories
-                  </Text>{" "}
-                </Checkbox>
-                <Checkbox>
-                  <Text fontSize="sm">
-                    Service and repair records available
-                  </Text>
-                </Checkbox>
-                <Checkbox>
-                  <Text fontSize="sm">Owner has title</Text>
-                </Checkbox>
-              </VStack>
-            </Box>
-
-            <Box mb={8}>
-              <SectionTitle>
-                <Icon as={FaTools} fontSize="sm" color="blue.500" />
-                <Heading as="h3" size="xs">
-                  Under Hood
-                </Heading>
-              </SectionTitle>
-              <VStack align="stretch">
-                <Checkbox>
-                  <Text fontSize="sm">Oil levels/filter</Text>
-                </Checkbox>
-                <Checkbox>
-                  <Text fontSize="sm">Brake fluid levels</Text>
-                </Checkbox>
-                <Checkbox>
-                  <Text fontSize="sm">Radiator/coolant levels</Text>
-                </Checkbox>
-                <Checkbox>
-                  <Text fontSize="sm">Air filter</Text>
-                </Checkbox>
-              </VStack>
-            </Box>
-
-            <Box mb={8}>
-              <SectionTitle>
-                <Icon as={FaTools} fontSize="sm" color="blue.500" />
-                <Heading as="h3" size="xs">
-                  Frame
-                </Heading>
-              </SectionTitle>
-              <VStack align="stretch">
-                <Checkbox>
-                  <Text fontSize="sm">Chassis is neither bent nor cracked</Text>
-                </Checkbox>
-              </VStack>
-            </Box>
-
-            <Box mb={8}>
-              <SectionTitle>
-                <Icon as={FaTools} fontSize="sm" color="blue.500" />
-                <Heading as="h3" size="xs">
-                  Other Insights
-                </Heading>
-              </SectionTitle>
-              <VStack align="stretch">
-                <Checkbox>
-                  <Text fontSize="sm">
-                    Walk away if the seller objects to your inspection
-                  </Text>
-                </Checkbox>
-                <Checkbox>
-                  <Text fontSize="sm">
-                    {`Don’t feel rushed while inspecting`}
-                  </Text>
-                </Checkbox>
-                <Checkbox>
-                  <Text fontSize="sm">
-                    Try to get a mechanic to assess checklist results
-                  </Text>
-                </Checkbox>
-              </VStack>
-            </Box>
-            <Box>
-              <SectionTitle>
-                <Icon as={FaTools} fontSize="sm" color="blue.500" />
-                <Heading as="h3" size="xs">
-                  Assign Technicians
-                </Heading>
-              </SectionTitle>
-              <VStack align="stretch">
-                <Select
-                  name="team"
-                  fontSize="sm"
-                  placeholder="Team"
-                  value={formData.team}
-                  onChange={handleChange}>
-                  <option
-                    style={{
-                      backgroundColor: "#eee",
-                      color: "gray.500",
-                    }}
-                    value="Alpha">
-                    Team Alpha
-                  </option>
-                  <option
-                    style={{
-                      backgroundColor: "#eee",
-                      color: "gray.500",
-                    }}
-                    value="Beta">
-                    Team Beta
-                  </option>
-                  <option
-                    style={{
-                      backgroundColor: "#eee",
-                      color: "gray.500",
-                    }}
-                    value="Omega">
-                    Team Omega
-                  </option>
-                </Select>
-              </VStack>
-            </Box>
-            <Box mb={8}>
-              <SectionTitle>
-                <Icon as={FaTools} fontSize="sm" color="blue.500" />
-                <Heading as="h3" size="xs">
-                  Payment
-                </Heading>
-              </SectionTitle>
-              {payment.map((payment, index) => (
-                <HStack key={index} mb={2} spacing={4}>
-                  <StyledInput
-                    name="firstPayment"
-                    placeholder="First Payment"
-                    value={payment.firstPayment}
-                    onChange={() => {}}
-                  />
-                  <StyledInput
-                    name="secondPayment"
-                    placeholder="Second Payment"
-                    value={payment.secondPayment}
-                    onChange={() => {}}
-                  />
-                  <StyledInput
-                    name="debt"
-                    placeholder="Debt"
-                    type="number"
-                    value={payment.debt}
-                    onChange={() => {}}
-                  />
-                </HStack>
-              ))}
-            </Box>
-            <Box mb={8}>
-              <SectionTitle>
-                <Icon as={FaTools} fontSize="sm" color="blue.500" />
-                <Heading as="h3" size="xs">
-                  Car Received By
-                </Heading>
-              </SectionTitle>
-              <VStack align="stretch">
-                <StyledInput
-                  placeholder="Car received by"
-                  value={""}
-                  onChange={() => {}}
-                />
-              </VStack>
-            </Box>
+                  <Box mb={8}>
+                    <SectionTitle>
+                      <Icon as={FaTools} fontSize="sm" color="blue.500" />
+                      <Heading as="h3" size="xs">
+                        Car Received By
+                      </Heading>
+                    </SectionTitle>
+                    <VStack align="stretch">
+                      <StyledInput
+                        placeholder="Car received by"
+                        value={""}
+                        onChange={() => {}}
+                      />
+                    </VStack>
+                  </Box>
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
 
             <Divider my={8} borderColor="gray.200" />
 
@@ -695,7 +442,8 @@ export default function CreateJobOrderPage() {
                 onClick={() => {}}
                 color="gray.600"
                 border="1px solid"
-                borderColor="gray.300">
+                borderColor="gray.300"
+              >
                 Cancel
               </ActionButton>
               <ActionButton colorScheme="blue" onClick={handleSubmit}>
