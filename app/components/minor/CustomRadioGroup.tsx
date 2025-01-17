@@ -1,7 +1,15 @@
 import React from "react";
 import { Radio, RadioGroup, Stack, Text } from "@chakra-ui/react";
 
-const CustomRadioGroup = ({ value, onChange }) => {
+interface CustomRadioGroupProps {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+const CustomRadioGroup: React.FC<CustomRadioGroupProps> = ({
+  value,
+  onChange,
+}) => {
   return (
     <RadioGroup onChange={onChange} value={value}>
       <Stack spacing={4}>
@@ -26,16 +34,7 @@ const CustomRadioGroup = ({ value, onChange }) => {
         >
           <Text fontSize="sm">Ongoing</Text>
         </Radio>
-        <Radio
-          value="approved"
-          borderColor="blue.500"
-          colorScheme="blue"
-          size="md"
-          _hover={{ bg: "blue.100" }}
-          _checked={{ bg: "blue.500", color: "white" }}
-        >
-          <Text fontSize="sm">Approved</Text>
-        </Radio>
+
         <Radio
           value="completed"
           borderColor="green.500"

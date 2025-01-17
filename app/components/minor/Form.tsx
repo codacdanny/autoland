@@ -48,7 +48,19 @@ export const InputField = ({
   />
 );
 
-export const SelectField = ({ placeholder, value, onChange, options }) => (
+export const SelectField = ({
+  name,
+  placeholder,
+  value,
+  onChange,
+  options,
+}: {
+  name: string;
+  placeholder: string;
+  value: string;
+  onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  options: { label: string; value: string }[];
+}) => (
   <Select
     name={name}
     fontSize="sm"
@@ -71,7 +83,17 @@ export const SelectField = ({ placeholder, value, onChange, options }) => (
   </Select>
 );
 
-export const TextAreaField = ({ name, placeholder, value, onChange }) => (
+export const TextAreaField = ({
+  name,
+  placeholder,
+  value,
+  onChange,
+}: {
+  name: string;
+  placeholder: string;
+  value: string;
+  onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+}) => (
   <Textarea
     name={name}
     placeholder={placeholder}
@@ -86,9 +108,13 @@ export const TextAreaField = ({ name, placeholder, value, onChange }) => (
   />
 );
 
-export const CheckboxGroup = ({ options }) => (
+export const CheckboxGroup = ({
+  options,
+}: {
+  options: { label: string }[];
+}) => (
   <VStack align="stretch">
-    {options.map((option) => (
+    {options.map((option: { label: string }) => (
       <Checkbox key={option.label}>
         <Text fontSize="sm">{option.label}</Text>
       </Checkbox>

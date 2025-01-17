@@ -12,8 +12,17 @@ import {
 import { FaUser, FaCar, FaTools } from "react-icons/fa";
 import { InputField, SelectField, TextAreaField } from "./Form";
 import { SectionTitle } from "./styling/sectionTitle";
+import { FormData } from "@/app/types/formData";
 
-const TabA = ({ formData, handleChange }) => {
+interface TabAProps {
+  formData: FormData;
+  handleChange: (
+    event: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => void;
+}
+const TabA = ({ formData, handleChange }: TabAProps) => {
   return (
     <>
       <Box mb={8}>

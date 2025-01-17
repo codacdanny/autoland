@@ -23,6 +23,8 @@ import { FaClipboard } from "react-icons/fa";
 import TabA from "../components/minor/TabA";
 import TabB from "../components/minor/TabB";
 import TabC from "../components/minor/TabC";
+import TabD from "../components/minor/TabD";
+import { FormData } from "../types/formData";
 
 // Updated styled components
 const FormContainer = styled(Box)`
@@ -58,7 +60,7 @@ const ActionButton = styled(Button)`
 
 export default function CreateJobOrderPage() {
   const toast = useToast();
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     clientName: "",
     phoneNumber: "",
     clientEmail: "",
@@ -122,6 +124,7 @@ export default function CreateJobOrderPage() {
                 <Tab>Section A</Tab>
                 <Tab>Section B</Tab>
                 <Tab>Section C</Tab>
+                <Tab>Section D</Tab>
               </TabList>
 
               <TabPanels>
@@ -136,6 +139,9 @@ export default function CreateJobOrderPage() {
                   <TabB />
                 </TabPanel>
                 {/* TAB C */}
+                <TabPanel>
+                  <TabD />
+                </TabPanel>
                 <TabPanel>
                   <TabC formData={formData} handleChange={handleChange} />
                 </TabPanel>

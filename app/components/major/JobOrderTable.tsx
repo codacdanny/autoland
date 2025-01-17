@@ -28,7 +28,8 @@ const GridHeader = ({ children }: { children: React.ReactNode }) => (
     fontWeight="semibold"
     color="gray.600"
     textTransform="uppercase"
-    p={4}>
+    p={4}
+  >
     {children}
   </Text>
 );
@@ -40,46 +41,53 @@ export default function JobOrderTable() {
   // Sample data - you can replace with your actual data
   const orders = [
     {
-      id: "BK-PA1001",
+      id: "JO-PA1001",
       date: "Jan 1, 2025",
       clientName: "Danny Code",
       email: "info@dannyco.com",
       issue: "Wheel Alignment",
       payment: "Completed",
-      technician: "John Smith",
+      team: "Team Warri",
+      customerJobOrderStatus: "Approved",
       repairStatus: "Ongoing",
       deliveryStatus: "Yes",
     },
     {
-      id: "BK-PA1001",
+      id: "JO-PA1001",
       date: "Jan 1, 2025",
       clientName: "Danny Code",
       email: "info@dannyco.com",
       issue: "Wheel Alignment",
       payment: "Completed",
-      technician: "John Smith",
+      team: "Team Warri",
+      customerJobOrderStatus: "Approved",
+
       repairStatus: "Ongoing",
       deliveryStatus: "Yes",
     },
     {
-      id: "BK-PA1001",
+      id: "JO-PA1001",
       date: "Jan 1, 2025",
       clientName: "Danny Code",
       email: "info@dannyco.com",
       issue: "Wheel Alignment",
       payment: "Incomplete",
-      technician: "John Smith",
+      team: "Team Warri",
+      customerJobOrderStatus: "Approved",
+
       repairStatus: "Ongoing",
       deliveryStatus: "Yes",
     },
     {
-      id: "BK-PA1001",
+      id: "JO-PA1001",
       date: "Jan 1, 2025",
       clientName: "Danny Code",
       email: "info@dannyco.com",
       issue: "Wheel Alignment",
       payment: "Incomplete",
-      technician: "John Smith",
+      team: "Team Warri",
+      customerJobOrderStatus: "Approved",
+
       repairStatus: "Ongoing",
       deliveryStatus: "Yes",
     },
@@ -104,7 +112,8 @@ export default function JobOrderTable() {
       boxShadow="md"
       backdropFilter="blur(5px)"
       border="1px solid"
-      borderColor="gray.100">
+      borderColor="gray.100"
+    >
       <Flex justify="space-between" align="center" mb={6}>
         <Text fontSize="lg" fontWeight="semibold">
           Customer Orders
@@ -115,7 +124,8 @@ export default function JobOrderTable() {
             color="blue.500"
             cursor="pointer"
             gap={2}
-            _hover={{ color: "blue.600" }}>
+            _hover={{ color: "blue.600" }}
+          >
             <Text>See More</Text>
             <FaArrowRight />
           </Flex>
@@ -139,24 +149,27 @@ export default function JobOrderTable() {
               background: "#a0aec0",
             },
           },
-        }}>
-        <Box minWidth="1200px">
+        }}
+      >
+        <Box minWidth="1400px">
           {/* Grid Header */}
           <Box
             display="grid"
-            gridTemplateColumns="repeat(9, 1fr)"
+            gridTemplateColumns="repeat(10, 1fr)"
             gap={4}
             bg="gray.50"
             borderRadius="lg"
-            mb={2}>
-            <GridHeader>Booking ID</GridHeader>
+            mb={2}
+          >
+            <GridHeader>Job ID</GridHeader>
             <GridHeader>Booking Date</GridHeader>
             <GridHeader>Client Name</GridHeader>
             <GridHeader>Client Email</GridHeader>
             <GridHeader>Car Issue</GridHeader>
             <GridHeader>Payment</GridHeader>
-            <GridHeader>Technician</GridHeader>
-            <GridHeader>Status</GridHeader>
+            <GridHeader>Team</GridHeader>
+            <GridHeader>Customer Job Order Status</GridHeader>
+            <GridHeader>Car Repair Status</GridHeader>
             <GridHeader>Delivery Status</GridHeader>
           </Box>
 
@@ -166,7 +179,7 @@ export default function JobOrderTable() {
               <Box key={order.id}>
                 <Box
                   display="grid"
-                  gridTemplateColumns="repeat(9, 1fr)"
+                  gridTemplateColumns="repeat(10, 1fr)"
                   gap={4}
                   p={4}
                   bg="white"
@@ -178,7 +191,8 @@ export default function JobOrderTable() {
                     bg: "gray.50",
                   }}
                   transition="all 0.2s"
-                  cursor="pointer">
+                  cursor="pointer"
+                >
                   <Flex align="center">
                     <Text fontWeight="medium">{order.id}</Text>
                   </Flex>
@@ -197,7 +211,8 @@ export default function JobOrderTable() {
                       fontSize="sm"
                       overflow="hidden"
                       textOverflow="ellipsis"
-                      whiteSpace="nowrap">
+                      whiteSpace="nowrap"
+                    >
                       {order.email}
                     </Text>
                   </Flex>
@@ -214,15 +229,40 @@ export default function JobOrderTable() {
                       variant="subtle"
                       px={3}
                       py={1}
-                      borderRadius="full">
+                      borderRadius="full"
+                    >
                       {order.payment}
                     </Badge>
                   </Flex>
 
                   <Flex align="center">
-                    <Text>{order.technician}</Text>
+                    <Text>{order.team}</Text>
                   </Flex>
-
+                  <Flex align="center">
+                    <Badge
+                      colorScheme={
+                        order.customerJobOrderStatus === "Approved"
+                          ? "green"
+                          : "red"
+                      }
+                      display="flex"
+                      alignItems="center"
+                      gap={1}
+                      px={3}
+                      py={1}
+                      borderRadius="full"
+                    >
+                      <Icon
+                        as={
+                          order.customerJobOrderStatus === "Approved"
+                            ? FaCheckCircle
+                            : FaClock
+                        }
+                        boxSize={3}
+                      />
+                      {order.customerJobOrderStatus}
+                    </Badge>
+                  </Flex>
                   <Flex align="center">
                     <Badge
                       colorScheme={
@@ -233,7 +273,8 @@ export default function JobOrderTable() {
                       gap={1}
                       px={3}
                       py={1}
-                      borderRadius="full">
+                      borderRadius="full"
+                    >
                       <Icon
                         as={
                           order.repairStatus === "Completed"
@@ -255,7 +296,8 @@ export default function JobOrderTable() {
                       gap={1}
                       px={3}
                       py={1}
-                      borderRadius="full">
+                      borderRadius="full"
+                    >
                       <Icon
                         as={
                           order.deliveryStatus === "Yes"
@@ -277,7 +319,8 @@ export default function JobOrderTable() {
                     borderRadius="lg"
                     mt={2}
                     border="1px dashed"
-                    borderColor="gray.200">
+                    borderColor="gray.200"
+                  >
                     <HStack spacing={4} justify="flex-end">
                       <Button
                         leftIcon={<FaFileAlt />}
@@ -287,7 +330,8 @@ export default function JobOrderTable() {
                         variant="outline"
                         onClick={() =>
                           handleActionClick(order.id, "registration")
-                        }>
+                        }
+                      >
                         View Customer Order
                       </Button>
                       <Button
@@ -296,7 +340,8 @@ export default function JobOrderTable() {
                         as="a"
                         colorScheme="green"
                         variant="outline"
-                        onClick={() => handleActionClick(order.id, "estimate")}>
+                        onClick={() => handleActionClick(order.id, "estimate")}
+                      >
                         Estimate Form
                       </Button>
                       <Button
@@ -305,7 +350,8 @@ export default function JobOrderTable() {
                         as="a"
                         colorScheme="red"
                         variant="outline"
-                        onClick={() => handleActionClick(order.id, "stockist")}>
+                        onClick={() => handleActionClick(order.id, "stockist")}
+                      >
                         Stockist Form
                       </Button>
                       <Button
@@ -314,7 +360,8 @@ export default function JobOrderTable() {
                         as="a"
                         colorScheme="purple"
                         variant="outline"
-                        onClick={() => handleActionClick(order.id, "invoice")}>
+                        onClick={() => handleActionClick(order.id, "invoice")}
+                      >
                         Invoice
                       </Button>
                     </HStack>
