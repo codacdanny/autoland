@@ -1,201 +1,252 @@
 "use client";
-import { useState } from "react";
 import {
   Box,
-  Heading,
   Text,
-  Button,
-  useToast,
   Table,
   Thead,
   Tbody,
   Tr,
   Th,
   Td,
+  VStack,
+  HStack,
+  Heading,
+  Flex,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
-
-// Styled Components
+import Image from "next/image";
+import logoBlue from "../../../assets/logoWhite.webp";
 const FormContainer = styled(Box)`
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  background: white;
   padding: 2rem;
-  max-width: 700px;
+  max-width: 1000px;
   margin: auto;
 `;
 
-interface EstimateItem {
-  id: number;
-  service: string;
-  price: number;
-}
+// interface InvoiceItem {
+//   description: string;
+//   qty: number;
+//   discountPercentage?: number;
+//   unitPrice: number;
+//   amount: number;
+// }
 
-export default function InvoicePage({ params }: { params: { id: string } }) {
-  const toast = useToast();
-  const [estimateData] = useState<EstimateItem[]>([
-    { id: 1, service: "Oil Change", price: 50 },
-    { id: 2, service: "Tire Rotation", price: 30 },
-    { id: 3, service: "Brake Inspection", price: 70 },
-    { id: 4, service: "Battery Replacement", price: 120 },
-    { id: 5, service: "Transmission Fluid Change", price: 90 },
-    { id: 6, service: "Air Filter Replacement", price: 25 },
-    { id: 7, service: "Coolant Flush", price: 60 },
-    { id: 8, service: "Spark Plug Replacement", price: 40 },
-  ]);
-  // const [isEditable, setIsEditable] = useState(false);
-  // const [newService, setNewService] = useState("");
-  // const [newPrice, setNewPrice] = useState("");
-  // const [editIndex, setEditIndex] = useState<number | null>(null);
-
-  const totalPrice = estimateData.reduce(
-    (total, item) => total + item.price,
-    0
-  );
-
-  // const handleEditToggle = () => {
-  //   setIsEditable(!isEditable);
-  // };
-
-  // const handleAddItem = () => {
-  //   if (newService && newPrice) {
-  //     const newItem: EstimateItem = {
-  //       id: estimateData.length + 1,
-  //       service: newService,
-  //       price: parseFloat(newPrice),
-  //     };
-  //     setEstimateData([...estimateData, newItem]);
-  //     setNewService("");
-  //     setNewPrice("");
-  //     toast({
-  //       title: "Item added.",
-  //       description: "New service has been added successfully.",
-  //       position: "top-right",
-  //       status: "success",
-  //       duration: 5000,
-  //       isClosable: true,
-  //     });
-  //   } else {
-  //     toast({
-  //       title: "Error adding item.",
-  //       description: "Please fill in both fields.",
-  //       position: "top-right",
-
-  //       status: "error",
-  //       duration: 5000,
-  //       isClosable: true,
-  //     });
-  //   }
-  // };
-
-  // const handleEditItem = (index: number) => {
-  //   const item = estimateData[index];
-  //   setNewService(item.service);
-  //   setNewPrice(item.price.toString());
-  //   setEditIndex(index);
-  // };
-
-  // const handleUpdateItem = () => {
-  //   if (editIndex !== null && newService && newPrice) {
-  //     const updatedData = estimateData.map((item, index) =>
-  //       index === editIndex
-  //         ? { ...item, service: newService, price: parseFloat(newPrice) }
-  //         : item
-  //     );
-  //     setEstimateData(updatedData);
-  //     setNewService("");
-  //     setNewPrice("");
-  //     setEditIndex(null);
-  //     toast({
-  //       title: "Item updated.",
-  //       description: "Service has been updated successfully.",
-  //       position: "top-right",
-
-  //       status: "success",
-  //       duration: 5000,
-  //       isClosable: true,
-  //     });
-  //   }
-  // };
-
-  // const handleDeleteItem = (index: number) => {
-  //   const updatedData = estimateData.filter((_, i) => i !== index);
-  //   setEstimateData(updatedData);
-  //   toast({
-  //     title: "Item deleted.",
-  //     description: "Service has been removed successfully.",
-  //     position: "top-right",
-
-  //     status: "success",
-  //     duration: 5000,
-  //     isClosable: true,
-  //   });
-  // };
-  const handleSend = () => {
-    toast({
-      title: "Sent",
-      description: "Invoice has been sent to user",
-      position: "top-right",
-
-      status: "success",
-      duration: 5000,
-      isClosable: true,
-    });
+export default function InvoicePage({}: { params: { id: string } }) {
+  const invoiceData = {
+    customerName: "MR. TONY",
+    date: "07/01/25",
+    contactPerson: "070 84142179",
+    location: "OWERRI, IMO STATE",
+    vehicleDetails: {
+      modelMake: "LEXUS GX 460",
+      modelCode: "",
+      chassisNo: "JTJBM7FX3A5003292",
+      mileage: "",
+      color: "",
+      regNo: "ABU 315 AG",
+      year: "2010",
+    },
+    items: [
+      {
+        description: "FRONT SEAT BELTS LH & RH",
+        qty: 1,
+        unitPrice: 45000,
+        amount: 45000,
+      },
+      {
+        description: "BACK SEAT BELTS LH & RH",
+        qty: 1,
+        unitPrice: 45000,
+        amount: 45000,
+      },
+      {
+        description: "STEP BOARD SET",
+        qty: 1,
+        unitPrice: 280000,
+        amount: 280000,
+      },
+      {
+        description: "CURTAIN AIRBAGS LH & RH",
+        qty: 1,
+        unitPrice: 900000,
+        amount: 900000,
+      },
+      {
+        description: "SPARE TYRE 265/60 R18",
+        qty: 1,
+        unitPrice: 140000,
+        amount: 140000,
+      },
+      {
+        description: "LOWER ARM RH",
+        qty: 1,
+        unitPrice: 190000,
+        amount: 190000,
+      },
+      {
+        description: "SUSPENSION ALIGNMENT",
+        qty: 1,
+        unitPrice: 30000,
+        amount: 30000,
+      },
+      { description: "BALL JOINTS", qty: 2, unitPrice: 45000, amount: 90000 },
+      { description: "FIXING OF TYRES", qty: 1, unitPrice: 3000, amount: 3000 },
+      {
+        description: "PANEL BEAT WORK, SPRAYING OF -",
+        qty: 0,
+        unitPrice: 0,
+        amount: 0,
+      },
+      {
+        description: "FRONT BUMPER & COMPLETE RIGHT SIDE",
+        qty: 1,
+        unitPrice: 480000,
+        amount: 480000,
+      },
+      { description: "SUNDRIES", qty: 1, unitPrice: 45000, amount: 45000 },
+    ],
+    totalExclVAT: 2248000,
+    vat: 3375,
+    totalInclVAT: 2251375,
   };
+
+  const disclaimers = [
+    "1. Estimates must be customer-approved within seven (7) days, else they will be removed from the company premises.",
+    "2. Upon estimate approval, make an 80% down payment, or incure daily ₦1,000 demurrage charges after seven (7)days.",
+    "3. Vehicles left unclaimed for six (6) months will be auctioned without further notice.",
+    "4. If additional spares are required during repairs, a separate estimate will be generated.",
+    "5. We have a non-refund policy which states that unused funds may only be applied to subsequent repairs.",
+    "6. Accepting our estimate gives us permission to utilize your car in promotional digital and social media content.",
+  ];
+
   return (
     <FormContainer>
-      <Heading size="lg">Invoice</Heading>
-      <Text fontSize="md" color="gray.600" mb={4}>
-        Job Order ID: {params.id}
-      </Text>
-      <Table variant="simple">
-        <Thead>
-          <Tr>
-            <Th>Service</Th>
-            <Th isNumeric>Price ($)</Th>
-            {/* {isEditable && <Th>Edit</Th>}
-            {isEditable && <Th>Delete</Th>} */}
-          </Tr>
-        </Thead>
-        <Tbody>
-          {estimateData.map((item) => (
-            <Tr key={item.id}>
-              <Td>{item.service}</Td>
-              <Td isNumeric>{item.price.toFixed(2)}</Td>
-              {/* {isEditable && (
-                <>
-                  <Td>
-                    <Button
-                      colorScheme="blue"
-                      color="white"
-                      bgColor="#002050"
-                      size="sm"
-                      onClick={() => handleEditItem(index)}
-                    >
-                      Edit
-                    </Button>
-                  </Td>
-                  <Td>
-                    <Button
-                      size="sm"
-                      colorScheme="red"
-                      onClick={() => handleDeleteItem(index)}
-                    >
-                      Delete
-                    </Button>
-                  </Td>
-                </>
-              )} */}
+      <VStack align="stretch" spacing={6}>
+        {/* Header */}
+        <Flex justifyContent="center" alignContent="center">
+          <Image src={logoBlue} alt="logo" />
+        </Flex>
+        <Box my={6}>
+          <Heading fontSize="xl" fontWeight="bold">
+            INVOICE
+          </Heading>
+        </Box>
+
+        {/* Customer Info */}
+        <Box border="1px" borderColor="gray.200">
+          <Table variant="simple" size="sm">
+            <Tbody>
+              <Tr>
+                <Td fontWeight="bold" width="200px">
+                  Customer Name:
+                </Td>
+                <Td>{invoiceData.customerName}</Td>
+                <Td rowSpan={2} textAlign="right">
+                  {invoiceData.location}
+                </Td>
+              </Tr>
+              <Tr>
+                <Td fontWeight="bold">Date:</Td>
+                <Td>{invoiceData.date}</Td>
+              </Tr>
+              <Tr>
+                <Td fontWeight="bold">Contact Person:</Td>
+                <Td>{invoiceData.contactPerson}</Td>
+              </Tr>
+            </Tbody>
+          </Table>
+        </Box>
+
+        {/* Vehicle Details */}
+        <Box border="1px" borderColor="gray.200">
+          <Text p={2} fontWeight="bold" bg="gray.50">
+            VEHICLE DETAILS
+          </Text>
+          <Table variant="simple" size="sm">
+            <Tbody>
+              <Tr>
+                <Td fontWeight="bold">Model Make:</Td>
+                <Td>{invoiceData.vehicleDetails.modelMake}</Td>
+                <Td fontWeight="bold">Mileage:</Td>
+                <Td>{invoiceData.vehicleDetails.mileage}</Td>
+              </Tr>
+              <Tr>
+                <Td fontWeight="bold">Chassis No:</Td>
+                <Td>{invoiceData.vehicleDetails.chassisNo}</Td>
+                <Td fontWeight="bold">Reg. No:</Td>
+                <Td>{invoiceData.vehicleDetails.regNo}</Td>
+                <Td fontWeight="bold">YEAR</Td>
+                <Td>{invoiceData.vehicleDetails.year}</Td>
+              </Tr>
+            </Tbody>
+          </Table>
+        </Box>
+
+        {/* Items Table */}
+        <Table variant="simple" size="sm" border="1px" borderColor="gray.200">
+          <Thead bg="gray.50">
+            <Tr>
+              <Th>Description</Th>
+              <Th isNumeric>Qty</Th>
+              <Th isNumeric>Disc %</Th>
+              <Th isNumeric>Unit Price (₦)</Th>
+              <Th isNumeric>Amount (₦)</Th>
             </Tr>
+          </Thead>
+          <Tbody>
+            {invoiceData.items.map((item, index) => (
+              <Tr key={index}>
+                <Td>{item.description}</Td>
+                <Td isNumeric>{item.qty}</Td>
+                <Td isNumeric></Td>
+                <Td isNumeric>{item.unitPrice.toLocaleString()}</Td>
+                <Td isNumeric>{item.amount.toLocaleString()}</Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+
+        {/* Totals */}
+        <Box alignSelf="flex-end">
+          <HStack spacing={8} justify="flex-end">
+            <Text fontWeight="bold">Total Excl. VAT</Text>
+            <Text>₦{invoiceData.totalExclVAT.toLocaleString()}</Text>
+          </HStack>
+          <HStack spacing={8} justify="flex-end">
+            <Text fontWeight="bold">VAT (7.5%)</Text>
+            <Text>₦{invoiceData.vat.toLocaleString()}</Text>
+          </HStack>
+          <HStack spacing={8} justify="flex-end">
+            <Text fontWeight="bold">Total Incl. VAT</Text>
+            <Text>₦{invoiceData.totalInclVAT.toLocaleString()}</Text>
+          </HStack>
+        </Box>
+
+        {/* Disclaimers */}
+        <Box>
+          <Text fontWeight="bold" mb={2}>
+            DISCLAIMER:
+          </Text>
+          {disclaimers.map((disclaimer, index) => (
+            <Text key={index} fontSize="sm">
+              {disclaimer}
+            </Text>
           ))}
-        </Tbody>
-      </Table>
-      <Text fontSize="lg" fontWeight="bold" mt={4}>
-        Total: ${totalPrice.toFixed(2)}
-      </Text>
-      <Button size="sm" colorScheme="blue" mt={4} onClick={handleSend}>
-        Send to Client
-      </Button>
+        </Box>
+
+        {/* Footer */}
+        <Box textAlign="center" mt={4}>
+          <Text fontWeight="bold">FOR YOUR NEXT SERVICE APPOINTMENT</Text>
+          <Text>
+            PLEASE CALL: 08115004000 or send a message to @pamtechgroup on
+            social media
+          </Text>
+          <Text fontWeight="bold" mt={4}>
+            Extra Care for your car
+          </Text>
+          <Text fontWeight="bold">Extra Mile for you</Text>
+        </Box>
+      </VStack>
     </FormContainer>
   );
 }

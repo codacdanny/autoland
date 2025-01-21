@@ -72,6 +72,7 @@ const StyledTable = styled(Table)`
 interface Customer {
   name: string;
   email: string;
+  plateNumber: string;
   phoneNo: string;
   cars: number;
   debt: string;
@@ -93,6 +94,7 @@ const enhancedCustomersData: Customer[] = [
   {
     name: "Esther Howard",
     email: "test@gmail.com",
+    plateNumber: "ABV 13 AL",
     phoneNo: "08156438520",
     cars: 2,
     debt: "$250.00",
@@ -166,7 +168,7 @@ export default function CustomersPage() {
     onOpen();
   };
 
-  const handleCreateJobOrder = () => {
+  const handleCustomerOrder = () => {
     if (!selectedVehicle) {
       toast({
         title: "Please select a vehicle",
@@ -175,6 +177,13 @@ export default function CustomersPage() {
       });
       return;
     }
+    // Navigate to create job order page with customer and vehicle data
+    router.push(
+      `/create-job-order?customer=${selectedCustomer?.name}&vehicle=${selectedVehicle}`
+    );
+  };
+
+  const handleNewCustomerOrder = () => {
     // Navigate to create job order page with customer and vehicle data
     router.push(
       `/create-job-order?customer=${selectedCustomer?.name}&vehicle=${selectedVehicle}`
@@ -204,6 +213,7 @@ export default function CustomersPage() {
                 <Tr>
                   <Th color="gray.600">Customer</Th>
                   <Th color="gray.600">Contact</Th>
+                  <Th color="gray.600">Plate Number</Th>
                   <Th color="gray.600">Vehicles</Th>
                   <Th color="gray.600">Outstanding</Th>
                   <Th color="gray.600">Status</Th>
@@ -228,6 +238,7 @@ export default function CustomersPage() {
                       </HStack>
                     </Td>
                     <Td>{customer.phoneNo}</Td>
+                    <Td>{customer.plateNumber}</Td>
                     <Td>
                       <Badge colorScheme="blue" borderRadius="full">
                         {customer.cars} vehicles
@@ -414,17 +425,29 @@ export default function CustomersPage() {
                         />
                       </HStack>
                     </Box>
-
-                    <Button
-                      width="fit-content"
-                      colorScheme="blue"
-                      size="sm"
-                      leftIcon={<FaCar fontSize="sm" />}
-                      onClick={handleCreateJobOrder}
-                      mt={4}
-                    >
-                      Create Job Order
-                    </Button>
+                    <Flex gap={6} mb={4}>
+                      <Button
+                        width="fit-content"
+                        colorScheme="blue"
+                        size="sm"
+                        leftIcon={<FaCar fontSize="sm" />}
+                        onClick={handleCustomerOrder}
+                        mt={4}
+                      >
+                        Customer Order
+                      </Button>
+                      <Button
+                        width="fit-content"
+                        colorScheme="purple"
+                        // bgColor="secondaryBlue"
+                        size="sm"
+                        leftIcon={<FaCar fontSize="sm" />}
+                        onClick={handleNewCustomerOrder}
+                        mt={4}
+                      >
+                        New Car Order
+                      </Button>
+                    </Flex>
                   </VStack>
                 )}
               </DrawerBody>

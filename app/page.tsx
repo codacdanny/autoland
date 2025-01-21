@@ -1,13 +1,5 @@
 "use client";
-import {
-  Box,
-  VStack,
-  Select,
-  Input,
-  Button,
-  Heading,
-  Flex,
-} from "@chakra-ui/react";
+import { Box, Select, Input, Button, Heading, Flex } from "@chakra-ui/react";
 import bgLogin from "./assets/login_bg.jpg";
 import GlassCard from "./components/minor/GlassCard";
 import theme from "./theme";
@@ -27,7 +19,8 @@ export default function Home() {
       minH="100vh"
       bgImage={bgLogin.src}
       bgSize="cover"
-      bgRepeat="no-repeat">
+      bgRepeat="no-repeat"
+    >
       <GlassCard>
         <Flex flexDir="column" gap={6} align="stretch">
           <Heading color="white" size="md" textAlign="center" mb={2}>
@@ -38,23 +31,27 @@ export default function Home() {
             placeholder="Select Role"
             bg={theme.glassBg}
             borderColor="rgba(255, 255, 255, 0.05)"
-            size="md">
+            size="md"
+          >
             <option
               style={{ backgroundColor: "rgba(4, 50, 119, 0.8)" }}
               color="white"
-              value="workshop">
+              value="workshop"
+            >
               Workshop Manager
             </option>
             <option
               color="white"
               style={{ backgroundColor: "rgba(4, 50, 119, 0.8)" }}
-              value="accountant">
+              value="accountant"
+            >
               Accountant
             </option>
             <option
               style={{ backgroundColor: "rgba(4, 50, 119, 0.8)" }}
               color="white"
-              value="frontdesk">
+              value="frontdesk"
+            >
               Front Desk
             </option>
           </Select>
@@ -80,12 +77,13 @@ export default function Home() {
           <Button
             colorScheme="blue"
             bgColor="primaryBlue"
-            color="gray.600"
+            color="gray.300"
             size="md"
             borderRadius="lg"
             w="100%"
             mt={4}
-            onClick={handleLogin}>
+            onClick={handleLogin}
+          >
             Sign In
           </Button>
         </Flex>

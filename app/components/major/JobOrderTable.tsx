@@ -358,6 +358,16 @@ export default function JobOrderTable() {
                         leftIcon={<FaFileInvoice />}
                         size="sm"
                         as="a"
+                        colorScheme="orange"
+                        variant="outline"
+                        onClick={() => handleActionClick(order.id, "account")}
+                      >
+                        Account
+                      </Button>
+                      <Button
+                        leftIcon={<FaFileInvoice />}
+                        size="sm"
+                        as="a"
                         colorScheme="purple"
                         variant="outline"
                         onClick={() => handleActionClick(order.id, "invoice")}

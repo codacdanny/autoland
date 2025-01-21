@@ -22,7 +22,7 @@ import {
   Grid,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
-import { FaCar, FaUser, FaFileInvoice, FaPlus, FaTrash } from "react-icons/fa";
+import { FaUser, FaFileInvoice, FaPlus, FaTrash } from "react-icons/fa";
 import { motion } from "framer-motion";
 
 const StyledContainer = styled(Box)`
@@ -81,7 +81,7 @@ const SectionTitle = styled(Heading)`
 export default function EstimatePage() {
   const [formData, setFormData] = useState({
     name: "",
-    regNo: "",
+    plateNumber: "",
     workshop: "",
     vehMake: "",
     email: "",
@@ -187,12 +187,12 @@ export default function EstimatePage() {
             </VStack>
             <VStack align="stretch">
               <FormLabel color="gray.600" fontSize="sm">
-                Reg No
+                Plate Number{" "}
               </FormLabel>
               <StyledInput
-                name="regNo"
+                name="plateNumber"
                 placeholder="Enter registration number"
-                value={formData.regNo}
+                value={formData.plateNumber}
                 onChange={handleInputChange}
               />
             </VStack>
@@ -288,60 +288,6 @@ export default function EstimatePage() {
         </Box>
 
         {/* Vehicle Information */}
-        <Box mb={8}>
-          <SectionTitle>
-            <Icon as={FaCar} fontSize="sm" color="blue.500" />
-            <Heading as="h3" size="xs">
-              Vehicle Information
-            </Heading>
-          </SectionTitle>
-          <Grid templateColumns="repeat(2, 1fr)" gap={4}>
-            <VStack align="stretch">
-              <FormLabel color="gray.600" fontSize="sm">
-                Vehicle Make
-              </FormLabel>
-              <StyledInput
-                name="vehMake"
-                placeholder="Enter vehicle make"
-                value={formData.vehMake}
-                onChange={handleInputChange}
-              />
-            </VStack>
-            <VStack align="stretch">
-              <FormLabel color="gray.600" fontSize="sm">
-                Model No
-              </FormLabel>
-              <StyledInput
-                name="modelNo"
-                placeholder="Enter model number"
-                value={formData.modelNo}
-                onChange={handleInputChange}
-              />
-            </VStack>
-            <VStack align="stretch">
-              <FormLabel color="gray.600" fontSize="sm">
-                Chassis No
-              </FormLabel>
-              <StyledInput
-                name="chassisNo"
-                placeholder="Enter chassis number"
-                value={formData.chassisNo}
-                onChange={handleInputChange}
-              />
-            </VStack>
-            <VStack align="stretch">
-              <FormLabel color="gray.600" fontSize="sm">
-                Reg No
-              </FormLabel>
-              <StyledInput
-                name="regNo"
-                placeholder="Enter registration number"
-                value={formData.regNo}
-                onChange={handleInputChange}
-              />
-            </VStack>
-          </Grid>
-        </Box>
 
         {/* Parts Table */}
         <Box mb={8}>
@@ -463,6 +409,10 @@ export default function EstimatePage() {
               <Text color="gray.600">VAT:</Text>
               <StyledInput w="200px" placeholder="0.00" />
             </HStack>
+            <HStack justify="space-between">
+              <Text color="gray.600">Estimator Name:</Text>
+              <StyledInput w="200px" placeholder="Anozie Ikechi" />
+            </HStack>
           </VStack>
         </Box>
 
@@ -479,6 +429,14 @@ export default function EstimatePage() {
             leftIcon={<FaFileInvoice />}
           >
             Generate Estimate
+          </Button>
+          <Button
+            colorScheme="purple"
+            size="sm"
+            onClick={handleSubmit}
+            leftIcon={<FaFileInvoice />}
+          >
+            Send to client
           </Button>
         </Flex>
       </StyledContainer>
