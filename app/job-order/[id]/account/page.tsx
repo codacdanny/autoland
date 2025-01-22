@@ -281,17 +281,17 @@ export default function CustomerJobOrderAccount() {
                     Payment Summary:
                   </Text>
                   <Grid templateColumns="repeat(2, 1fr)" gap={2} fontSize="sm">
-                    <Text color="gray.600">Total Job Amount:</Text>
+                    <Text color="gray.300">Total Job Amount:</Text>
                     <Text fontWeight="bold">
                       ₦{totalJobAmount.toLocaleString()}
                     </Text>
-                    <Text color="gray.600">Previously Paid:</Text>
+                    <Text color="gray.300">Previously Paid:</Text>
                     <Text fontWeight="bold">₦{totalPaid.toLocaleString()}</Text>
-                    <Text color="gray.600">Current Payment:</Text>
+                    <Text color="gray.300">Current Payment:</Text>
                     <Text fontWeight="bold">
                       ₦{(Number(paymentForm.amount) || 0).toLocaleString()}
                     </Text>
-                    <Text color="gray.600">Remaining Balance:</Text>
+                    <Text color="gray.300">Remaining Balance:</Text>
                     <Text
                       fontWeight="bold"
                       color={balance === 0 ? "green.500" : "orange.500"}

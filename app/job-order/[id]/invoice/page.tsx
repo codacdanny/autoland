@@ -37,6 +37,7 @@ export default function InvoicePage({}: { params: { id: string } }) {
     date: "07/01/25",
     contactPerson: "070 84142179",
     location: "OWERRI, IMO STATE",
+    staff: "Akachi Nwekwo",
     vehicleDetails: {
       modelMake: "LEXUS GX 460",
       modelCode: "",
@@ -136,6 +137,12 @@ export default function InvoicePage({}: { params: { id: string } }) {
         <Box border="1px" borderColor="gray.200">
           <Table variant="simple" size="sm">
             <Tbody>
+              <Tr>
+                <Td fontWeight="bold" width="200px">
+                  Staff Name:
+                </Td>
+                <Td>{invoiceData.staff}</Td>
+              </Tr>
               <Tr>
                 <Td fontWeight="bold" width="200px">
                   Customer Name:
