@@ -44,7 +44,7 @@ export default function InvoicePage({}: { params: { id: string } }) {
       chassisNo: "JTJBM7FX3A5003292",
       mileage: "",
       color: "",
-      regNo: "ABU 315 AG",
+      plateNo: "ABU 315 AG",
       year: "2010",
     },
     items: [
@@ -180,8 +180,8 @@ export default function InvoicePage({}: { params: { id: string } }) {
               <Tr>
                 <Td fontWeight="bold">Chassis No:</Td>
                 <Td>{invoiceData.vehicleDetails.chassisNo}</Td>
-                <Td fontWeight="bold">Reg. No:</Td>
-                <Td>{invoiceData.vehicleDetails.regNo}</Td>
+                <Td fontWeight="bold">Plate. No:</Td>
+                <Td>{invoiceData.vehicleDetails.plateNo}</Td>
                 <Td fontWeight="bold">YEAR</Td>
                 <Td>{invoiceData.vehicleDetails.year}</Td>
               </Tr>
