@@ -140,49 +140,44 @@ export default function CustomerJobOrderAccount() {
   ];
 
   return (
-    <>
-      <Flex>
-        <Box display={{ base: "none", lg: "block" }}>
-          <Sidebar />
-        </Box>
+    <Flex>
+      <Sidebar />
+      <Box flex="1" p={{ base: 4, md: 8 }} ml={{ base: 0, md: "250px" }}>
+        <Header />
+        <MetricCards metrics={dashboardMetrics} />
 
-        <Box flex="2" p={8}>
-          <Header />
-          <MetricCards metrics={dashboardMetrics} />
+        <VStack spacing={6} align="stretch" mt={8}>
+          <Flex justify="space-between" align="center">
+            <Text fontSize="md" fontWeight="bold">
+              Payment History
+            </Text>
+            <Button size="sm" colorScheme="blue" onClick={onOpen}>
+              Record New Payment
+            </Button>
+          </Flex>
 
-          <VStack spacing={6} align="stretch" mt={8}>
-            <Flex justify="space-between" align="center">
-              <Text fontSize="md" fontWeight="bold">
-                Payment History
-              </Text>
-              <Button size="sm" colorScheme="blue" onClick={onOpen}>
-                Record New Payment
-              </Button>
-            </Flex>
-
-            <Table variant="simple">
-              <Thead>
-                <Tr>
-                  <Th>Payment Phase</Th>
-                  <Th>Date</Th>
-                  <Th>Amount</Th>
-                  <Th>Payment Method</Th>
+          <Table variant="simple">
+            <Thead>
+              <Tr>
+                <Th>Payment Phase</Th>
+                <Th>Date</Th>
+                <Th>Amount</Th>
+                <Th>Payment Method</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {payments.map((payment) => (
+                <Tr key={payment.id}>
+                  <Td>{payment.phase}</Td>
+                  <Td>{payment.date}</Td>
+                  <Td>₦{payment.amount.toLocaleString()}</Td>
+                  <Td>{payment.paymentMethod}</Td>
                 </Tr>
-              </Thead>
-              <Tbody>
-                {payments.map((payment) => (
-                  <Tr key={payment.id}>
-                    <Td>{payment.phase}</Td>
-                    <Td>{payment.date}</Td>
-                    <Td>₦{payment.amount.toLocaleString()}</Td>
-                    <Td>{payment.paymentMethod}</Td>
-                  </Tr>
-                ))}
-              </Tbody>
-            </Table>
-          </VStack>
-        </Box>
-      </Flex>
+              ))}
+            </Tbody>
+          </Table>
+        </VStack>
+      </Box>
       {/* Payment Modal */}
       <Modal isOpen={isOpen} onClose={onClose} size="xl">
         <ModalOverlay />
@@ -333,6 +328,6 @@ export default function CustomerJobOrderAccount() {
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </>
+    </Flex>
   );
 }

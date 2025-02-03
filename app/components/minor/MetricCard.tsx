@@ -19,6 +19,7 @@ export default function MetricCard({
 }: MetricCardProps) {
   return (
     <Box
+      zIndex={0}
       as={motion.div}
       whileHover={{ scale: 1.02 }}
       p={6}
@@ -28,7 +29,8 @@ export default function MetricCard({
       position="relative"
       overflow="hidden"
       animate={{ opacity: 1, y: 0 }}
-      initial={{ opacity: 0, y: 20 }}>
+      initial={{ opacity: 0, y: 20 }}
+    >
       <Box
         position="absolute"
         top={0}
@@ -46,7 +48,8 @@ export default function MetricCard({
           borderRadius="xl"
           bg={bgGradient}
           color="gray.600"
-          boxShadow="lg">
+          boxShadow="lg"
+        >
           <Icon size={18} />
         </Box>
         {change && (
@@ -58,7 +61,8 @@ export default function MetricCard({
             display="flex"
             alignItems="center"
             fontSize="sm"
-            fontWeight="bold">
+            fontWeight="bold"
+          >
             {isIncrease ? <FaCaretUp /> : <FaCaretDown />}
             {change}
           </Badge>

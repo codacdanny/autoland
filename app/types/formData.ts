@@ -15,5 +15,5 @@ export interface FormData {
   secondPayment: string;
   debt: string;
   customerRequest: string;
-  jobStatus?: string; // Optional field for job status
+  jobStatus?: string;
 }

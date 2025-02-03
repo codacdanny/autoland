@@ -57,7 +57,7 @@ export default function Dashboard() {
 
   return (
     <Flex bgGradient={bgGradient} minH="100vh">
-      <Box display={{ base: "none", lg: "block" }}>
+      <Box display={{ base: "none", xl: "block" }}>
         <Sidebar />
       </Box>
       <MainContent>
@@ -65,10 +65,10 @@ export default function Dashboard() {
           {/* Header */}
           <Header />
 
-          {/*  Metrics Grid */}
+          {/* Metrics Grid */}
           <MetricCards metrics={dashboardMetrics} />
 
-          {/*  Recent Job Orders Table */}
+          {/* Recent Job Orders Table */}
           <JobOrderTable />
         </Box>
       </MainContent>

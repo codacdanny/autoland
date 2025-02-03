@@ -80,7 +80,8 @@ const SubMenuItem = ({ label, path, active = false, onClick }: any) => (
         bg: "rgba(255, 255, 255, 0.1)",
       }}
       color="white"
-      transition="all 0.3s ease">
+      transition="all 0.3s ease"
+    >
       <Text fontWeight="medium">{label}</Text>
     </HStack>
   </Link>
@@ -121,7 +122,8 @@ const SidebarItem = ({
             }}
             color="white"
             transition="all 0.3s ease"
-            onClick={onClick}>
+            onClick={onClick}
+          >
             <Icon as={icon} />
             <Text fontWeight="medium" fontSize="sm">
               {label}
@@ -147,7 +149,8 @@ const SidebarItem = ({
           color="white"
           transition="all 0.3s ease"
           onClick={handleClick}
-          justify="space-between">
+          justify="space-between"
+        >
           <HStack>
             <Icon as={icon} />
             <Text fontWeight="medium" fontSize="sm">
@@ -170,7 +173,8 @@ const SidebarItem = ({
               <Link
                 key={item.path}
                 href={item.path}
-                style={{ textDecoration: "none" }}>
+                style={{ textDecoration: "none" }}
+              >
                 <SubMenuItem
                   {...item}
                   active={pathname === item.path}
@@ -304,7 +308,8 @@ const SidebarContent = ({ onClose }: SidebarContentProps) => {
           onClick={() => {
             handleLogout();
             onClose?.();
-          }}>
+          }}
+        >
           <Icon as={FaSignOutAlt} />
           <Text fontWeight="medium">Logout</Text>
         </HStack>

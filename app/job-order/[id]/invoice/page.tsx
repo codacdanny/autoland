@@ -16,6 +16,9 @@ import {
 import styled from "@emotion/styled";
 import Image from "next/image";
 import logoBlue from "../../../assets/logoWhite.webp";
+import Sidebar from "../../../components/major/Sidebar";
+import Header from "../../../components/minor/Header";
+
 const FormContainer = styled(Box)`
   background: white;
   padding: 2rem;
@@ -121,139 +124,150 @@ export default function InvoicePage({}: { params: { id: string } }) {
   ];
 
   return (
-    <FormContainer>
-      <VStack align="stretch" spacing={6}>
-        {/* Header */}
-        <Flex justifyContent="center" alignContent="center">
-          <Image src={logoBlue} alt="logo" />
-        </Flex>
-        <Box my={6}>
-          <Heading fontSize="xl" fontWeight="bold">
-            INVOICE
-          </Heading>
-        </Box>
+    <Flex>
+      <Sidebar />
+      <Box flex="1" p={{ base: 4, md: 8 }} ml={{ base: 0, md: "250px" }}>
+        <Header />
+        <FormContainer>
+          <VStack align="stretch" spacing={6}>
+            {/* Header */}
+            <Flex justifyContent="center" alignContent="center">
+              <Image src={logoBlue} alt="logo" />
+            </Flex>
+            <Box my={6}>
+              <Heading fontSize="xl" fontWeight="bold">
+                INVOICE
+              </Heading>
+            </Box>
 
-        {/* Customer Info */}
-        <Box border="1px" borderColor="gray.200">
-          <Table variant="simple" size="sm">
-            <Tbody>
-              <Tr>
-                <Td fontWeight="bold" width="200px">
-                  Staff Name:
-                </Td>
-                <Td>{invoiceData.staff}</Td>
-              </Tr>
-              <Tr>
-                <Td fontWeight="bold" width="200px">
-                  Customer Name:
-                </Td>
-                <Td>{invoiceData.customerName}</Td>
-                <Td rowSpan={2} textAlign="right">
-                  {invoiceData.location}
-                </Td>
-              </Tr>
-              <Tr>
-                <Td fontWeight="bold">Date:</Td>
-                <Td>{invoiceData.date}</Td>
-              </Tr>
-              <Tr>
-                <Td fontWeight="bold">Contact Person:</Td>
-                <Td>{invoiceData.contactPerson}</Td>
-              </Tr>
-            </Tbody>
-          </Table>
-        </Box>
+            {/* Customer Info */}
+            <Box border="1px" borderColor="gray.200">
+              <Table variant="simple" size="sm">
+                <Tbody>
+                  <Tr>
+                    <Td fontWeight="bold" width="200px">
+                      Staff Name:
+                    </Td>
+                    <Td>{invoiceData.staff}</Td>
+                  </Tr>
+                  <Tr>
+                    <Td fontWeight="bold" width="200px">
+                      Customer Name:
+                    </Td>
+                    <Td>{invoiceData.customerName}</Td>
+                    <Td rowSpan={2} textAlign="right">
+                      {invoiceData.location}
+                    </Td>
+                  </Tr>
+                  <Tr>
+                    <Td fontWeight="bold">Date:</Td>
+                    <Td>{invoiceData.date}</Td>
+                  </Tr>
+                  <Tr>
+                    <Td fontWeight="bold">Contact Person:</Td>
+                    <Td>{invoiceData.contactPerson}</Td>
+                  </Tr>
+                </Tbody>
+              </Table>
+            </Box>
 
-        {/* Vehicle Details */}
-        <Box border="1px" borderColor="gray.200">
-          <Text p={2} fontWeight="bold" bg="gray.50">
-            VEHICLE DETAILS
-          </Text>
-          <Table variant="simple" size="sm">
-            <Tbody>
-              <Tr>
-                <Td fontWeight="bold">Model Make:</Td>
-                <Td>{invoiceData.vehicleDetails.modelMake}</Td>
-                <Td fontWeight="bold">Mileage:</Td>
-                <Td>{invoiceData.vehicleDetails.mileage}</Td>
-              </Tr>
-              <Tr>
-                <Td fontWeight="bold">Chassis No:</Td>
-                <Td>{invoiceData.vehicleDetails.chassisNo}</Td>
-                <Td fontWeight="bold">Plate. No:</Td>
-                <Td>{invoiceData.vehicleDetails.plateNo}</Td>
-                <Td fontWeight="bold">YEAR</Td>
-                <Td>{invoiceData.vehicleDetails.year}</Td>
-              </Tr>
-            </Tbody>
-          </Table>
-        </Box>
+            {/* Vehicle Details */}
+            <Box border="1px" borderColor="gray.200">
+              <Text p={2} fontWeight="bold" bg="gray.50">
+                VEHICLE DETAILS
+              </Text>
+              <Table variant="simple" size="sm">
+                <Tbody>
+                  <Tr>
+                    <Td fontWeight="bold">Model Make:</Td>
+                    <Td>{invoiceData.vehicleDetails.modelMake}</Td>
+                    <Td fontWeight="bold">Mileage:</Td>
+                    <Td>{invoiceData.vehicleDetails.mileage}</Td>
+                  </Tr>
+                  <Tr>
+                    <Td fontWeight="bold">Chassis No:</Td>
+                    <Td>{invoiceData.vehicleDetails.chassisNo}</Td>
+                    <Td fontWeight="bold">Plate. No:</Td>
+                    <Td>{invoiceData.vehicleDetails.plateNo}</Td>
+                    <Td fontWeight="bold">YEAR</Td>
+                    <Td>{invoiceData.vehicleDetails.year}</Td>
+                  </Tr>
+                </Tbody>
+              </Table>
+            </Box>
 
-        {/* Items Table */}
-        <Table variant="simple" size="sm" border="1px" borderColor="gray.200">
-          <Thead bg="gray.50">
-            <Tr>
-              <Th>Description</Th>
-              <Th isNumeric>Qty</Th>
-              <Th isNumeric>Disc %</Th>
-              <Th isNumeric>Unit Price (₦)</Th>
-              <Th isNumeric>Amount (₦)</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {invoiceData.items.map((item, index) => (
-              <Tr key={index}>
-                <Td>{item.description}</Td>
-                <Td isNumeric>{item.qty}</Td>
-                <Td isNumeric></Td>
-                <Td isNumeric>{item.unitPrice.toLocaleString()}</Td>
-                <Td isNumeric>{item.amount.toLocaleString()}</Td>
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
+            {/* Items Table */}
+            <Table
+              variant="simple"
+              size="sm"
+              border="1px"
+              borderColor="gray.200"
+            >
+              <Thead bg="gray.50">
+                <Tr>
+                  <Th>Description</Th>
+                  <Th isNumeric>Qty</Th>
+                  <Th isNumeric>Disc %</Th>
+                  <Th isNumeric>Unit Price (₦)</Th>
+                  <Th isNumeric>Amount (₦)</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {invoiceData.items.map((item, index) => (
+                  <Tr key={index}>
+                    <Td>{item.description}</Td>
+                    <Td isNumeric>{item.qty}</Td>
+                    <Td isNumeric></Td>
+                    <Td isNumeric>{item.unitPrice.toLocaleString()}</Td>
+                    <Td isNumeric>{item.amount.toLocaleString()}</Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            </Table>
 
-        {/* Totals */}
-        <Box alignSelf="flex-end">
-          <HStack spacing={8} justify="flex-end">
-            <Text fontWeight="bold">Total Excl. VAT</Text>
-            <Text>₦{invoiceData.totalExclVAT.toLocaleString()}</Text>
-          </HStack>
-          <HStack spacing={8} justify="flex-end">
-            <Text fontWeight="bold">VAT (7.5%)</Text>
-            <Text>₦{invoiceData.vat.toLocaleString()}</Text>
-          </HStack>
-          <HStack spacing={8} justify="flex-end">
-            <Text fontWeight="bold">Total Incl. VAT</Text>
-            <Text>₦{invoiceData.totalInclVAT.toLocaleString()}</Text>
-          </HStack>
-        </Box>
+            {/* Totals */}
+            <Box alignSelf="flex-end">
+              <HStack spacing={8} justify="flex-end">
+                <Text fontWeight="bold">Total Excl. VAT</Text>
+                <Text>₦{invoiceData.totalExclVAT.toLocaleString()}</Text>
+              </HStack>
+              <HStack spacing={8} justify="flex-end">
+                <Text fontWeight="bold">VAT (7.5%)</Text>
+                <Text>₦{invoiceData.vat.toLocaleString()}</Text>
+              </HStack>
+              <HStack spacing={8} justify="flex-end">
+                <Text fontWeight="bold">Total Incl. VAT</Text>
+                <Text>₦{invoiceData.totalInclVAT.toLocaleString()}</Text>
+              </HStack>
+            </Box>
 
-        {/* Disclaimers */}
-        <Box>
-          <Text fontWeight="bold" mb={2}>
-            DISCLAIMER:
-          </Text>
-          {disclaimers.map((disclaimer, index) => (
-            <Text key={index} fontSize="sm">
-              {disclaimer}
-            </Text>
-          ))}
-        </Box>
+            {/* Disclaimers */}
+            <Box>
+              <Text fontWeight="bold" mb={2}>
+                DISCLAIMER:
+              </Text>
+              {disclaimers.map((disclaimer, index) => (
+                <Text key={index} fontSize="sm">
+                  {disclaimer}
+                </Text>
+              ))}
+            </Box>
 
-        {/* Footer */}
-        <Box textAlign="center" mt={4}>
-          <Text fontWeight="bold">FOR YOUR NEXT SERVICE APPOINTMENT</Text>
-          <Text>
-            PLEASE CALL: 08115004000 or send a message to @pamtechgroup on
-            social media
-          </Text>
-          <Text fontWeight="bold" mt={4}>
-            Extra Care for your car
-          </Text>
-          <Text fontWeight="bold">Extra Mile for you</Text>
-        </Box>
-      </VStack>
-    </FormContainer>
+            {/* Footer */}
+            <Box textAlign="center" mt={4}>
+              <Text fontWeight="bold">FOR YOUR NEXT SERVICE APPOINTMENT</Text>
+              <Text>
+                PLEASE CALL: 08115004000 or send a message to @pamtechgroup on
+                social media
+              </Text>
+              <Text fontWeight="bold" mt={4}>
+                Extra Care for your car
+              </Text>
+              <Text fontWeight="bold">Extra Mile for you</Text>
+            </Box>
+          </VStack>
+        </FormContainer>
+      </Box>
+    </Flex>
   );
 }
