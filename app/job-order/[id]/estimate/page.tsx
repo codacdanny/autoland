@@ -156,6 +156,7 @@ export default function EstimatePage() {
       animate={{ opacity: 1 }}
       bg="gray.50"
       minH="100vh"
+      width="100%"
     >
       <StyledContainer>
         <Flex align="center" mb={6}>

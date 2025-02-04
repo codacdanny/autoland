@@ -101,7 +101,7 @@ export default function CreateJobOrderPage() {
 
   return (
     <Flex minH="100vh" bg="gray.50">
-      <Box display={{ base: "none", lg: "block" }}>
+      <Box>
         <Sidebar />
       </Box>
       <MainContent>
@@ -109,7 +109,12 @@ export default function CreateJobOrderPage() {
           as={motion.div}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          p={6}
+          p={{
+            base: 2,
+            md: 4,
+            xl: 8,
+          }}
+          mt={{ base: 10, xl: 4 }}
         >
           <FormContainer>
             <Flex align="center" mb={8}>

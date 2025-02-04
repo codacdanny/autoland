@@ -52,7 +52,7 @@ export default function OnlineBooking() {
   return (
     <>
       <Flex>
-        <Box display={{ base: "none", lg: "block" }}>
+        <Box >
           <Sidebar />
         </Box>
         <MainContent>

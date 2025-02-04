@@ -161,7 +161,7 @@ export default function StockistPage() {
         <Flex align="center" mb={6}>
           <Icon as={FaFileInvoice} fontSize="sm" color="blue.500" mr={3} />
           <Heading size="sm" color="gray.700">
-            Estimate Form
+            Stockist Form
           </Heading>
         </Flex>
 

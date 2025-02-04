@@ -146,13 +146,27 @@ export default function AppointmentsPage() {
 
   return (
     <Flex>
-      <Box display={{ base: "none", lg: "block" }}>
+      <Box>
         <Sidebar />
       </Box>
       <MainContent>
-        <Box flex="1" p={8}>
+        <Box
+          flex="1"
+          p={{
+            base: 2,
+            md: 4,
+            xl: 8,
+          }}
+          mt={{ base: 10, xl: 4 }}
+        >
           <Header />
-          <Flex justify="space-between" align="center" mb={6}>
+          <Flex
+            justify="space-between"
+            gap={4}
+            wrap="wrap"
+            align="center"
+            mb={6}
+          >
             <Heading size="sm" color="gray.700">
               Appointments
             </Heading>

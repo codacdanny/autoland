@@ -271,11 +271,19 @@ export default function TechniciansPage() {
 
   return (
     <Flex>
-      <Box display={{ base: "none", lg: "block" }}>
+      <Box>
         <Sidebar />
       </Box>
       <MainContent>
-        <Box flex="1" p={8}>
+        <Box
+          flex="1"
+          p={{
+            base: 2,
+            md: 4,
+            xl: 8,
+          }}
+          mt={{ base: 10, xl: 4 }}
+        >
           <Header />
           <Flex justify="space-between" align="center" mb={4}>
             <Heading size="sm">Technicians</Heading>
@@ -285,7 +293,8 @@ export default function TechniciansPage() {
                 color="white"
                 leftIcon={<FaPlus />}
                 onClick={onModalOpen}
-                size="sm">
+                size="sm"
+              >
                 Add Technician
               </Button>
             </Flex>
@@ -310,7 +319,8 @@ export default function TechniciansPage() {
                   background: "#a0aec0",
                 },
               },
-            }}>
+            }}
+          >
             <Box minWidth="1200px">
               <StyledTable>
                 <Thead>
@@ -338,7 +348,8 @@ export default function TechniciansPage() {
                         <Badge
                           colorScheme={
                             technician.status === "On Duty" ? "green" : "red"
-                          }>
+                          }
+                        >
                           {technician.status}
                         </Badge>
                       </Td>
@@ -349,7 +360,8 @@ export default function TechniciansPage() {
                             colorScheme="blue"
                             variant="ghost"
                             onClick={() => handleEdit(technician)}
-                            leftIcon={<FaEdit />}>
+                            leftIcon={<FaEdit />}
+                          >
                             Edit
                           </Button>
                           <Button
@@ -357,7 +369,8 @@ export default function TechniciansPage() {
                             colorScheme="red"
                             variant="ghost"
                             onClick={() => handleDelete(technician)}
-                            leftIcon={<FaTrash />}>
+                            leftIcon={<FaTrash />}
+                          >
                             Delete
                           </Button>
                         </HStack>
@@ -380,7 +393,8 @@ export default function TechniciansPage() {
             borderColor="gray.100"
             py={4}
             fontSize="lg"
-            color="gray.700">
+            color="gray.700"
+          >
             {isEditMode ? "Edit Technician" : "Add New Technician"}
           </ModalHeader>
           <ModalCloseButton color="gray.800" />
@@ -434,15 +448,18 @@ export default function TechniciansPage() {
                     name="workshop"
                     value={formData.workshop}
                     onChange={handleInputChange}
-                    placeholder="Select workshop">
+                    placeholder="Select workshop"
+                  >
                     <option
                       style={{ backgroundColor: "#fdfdfd" }}
-                      value="Port-Harcourt">
+                      value="Port-Harcourt"
+                    >
                       Port-Harcourt
                     </option>
                     <option
                       style={{ backgroundColor: "#fdfdfd" }}
-                      value="Owerri">
+                      value="Owerri"
+                    >
                       Owerri
                     </option>
                   </StyledSelect>
@@ -457,20 +474,24 @@ export default function TechniciansPage() {
                     name="speciality"
                     value={formData.speciality}
                     onChange={handleInputChange}
-                    placeholder="Select speciality">
+                    placeholder="Select speciality"
+                  >
                     <option
                       style={{ backgroundColor: "#fdfdfd" }}
-                      value="German">
+                      value="German"
+                    >
                       German
                     </option>
                     <option
                       style={{ backgroundColor: "#fdfdfd" }}
-                      value="Japanese">
+                      value="Japanese"
+                    >
                       Japanese
                     </option>
                     <option
                       style={{ backgroundColor: "#fdfdfd" }}
-                      value="American">
+                      value="American"
+                    >
                       American
                     </option>
                   </StyledSelect>
@@ -486,7 +507,8 @@ export default function TechniciansPage() {
                   name="team"
                   value={formData.team}
                   onChange={handleInputChange}
-                  placeholder="Select team">
+                  placeholder="Select team"
+                >
                   <option style={{ backgroundColor: "#fdfdfd" }} value="Alpha">
                     Alpha
                   </option>
@@ -507,7 +529,8 @@ export default function TechniciansPage() {
                   value={formData.status}
                   onChange={(value) =>
                     setFormData((prev) => ({ ...prev, status: value }))
-                  }>
+                  }
+                >
                   <Stack direction="row" spacing={4}>
                     <Radio
                       value="On Duty"
@@ -521,7 +544,8 @@ export default function TechniciansPage() {
                             borderColor: "blue.500",
                           },
                         },
-                      }}>
+                      }}
+                    >
                       <Text fontSize="sm" color="gray.800">
                         On Duty
                       </Text>
@@ -538,7 +562,8 @@ export default function TechniciansPage() {
                             borderColor: "red.500",
                           },
                         },
-                      }}>
+                      }}
+                    >
                       <Text fontSize="sm" color="gray.800">
                         On Leave
                       </Text>
@@ -556,7 +581,8 @@ export default function TechniciansPage() {
                 size="sm"
                 fontSize="sm"
                 onClick={handleSubmit}
-                width="full">
+                width="full"
+              >
                 {isEditMode ? "Update Technician" : "Add Technician"}
               </Button>
             </Stack>

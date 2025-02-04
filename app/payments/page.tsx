@@ -14,7 +14,6 @@ import {
   ModalCloseButton,
   FormControl,
   FormLabel,
-
   Select,
   Textarea,
   VStack,
@@ -27,6 +26,8 @@ import {
   Badge,
   Text,
   HStack,
+  TableContainer,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import {
   FaPlus,
@@ -98,6 +99,7 @@ interface Expense {
 
 export default function PaymentsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const isMobile = useBreakpointValue({ base: true, md: false });
   const [expenses] = useState<Expense[]>([
     {
       id: "EXP001",
@@ -159,30 +161,45 @@ export default function PaymentsPage() {
 
   return (
     <Flex>
-      <Box display={{ base: "none", lg: "block" }}>
-        <Sidebar />
-      </Box>
+      <Sidebar />
       <MainContent>
-        <Box flex="1" p={8}>
+        <Box
+          flex="1"
+          p={{
+            base: 2,
+            md: 4,
+            xl: 8,
+          }}
+          mt={{ base: 10, xl: 4 }}
+          w="full"
+        >
           <Header />
           <MetricCards metrics={JobOrderMetrics} />
 
           {/* Quick Actions */}
           <Grid
-            templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }}
-            gap={6}
-            mb={8}
+            templateColumns={{
+              base: "1fr",
+              lg: "repeat(2, 1fr)",
+              xl: "repeat(3, 1fr)",
+            }}
+            gap={{ base: 3, md: 6 }}
+            mb={{ base: 4, md: 8 }}
           >
             <ExpenseCard>
-              <VStack align="stretch" spacing={4}>
-                <Icon as={FaWallet} color="blue.500" boxSize={6} />
-                <Text fontWeight="medium" fontSize="sm">
+              <VStack align="stretch" spacing={{ base: 2, md: 4 }}>
+                <Icon
+                  as={FaWallet}
+                  color="blue.500"
+                  boxSize={{ base: 5, md: 6 }}
+                />
+                <Text fontWeight="medium" fontSize={{ base: "xs", md: "sm" }}>
                   Quick Add Expense
                 </Text>
                 <Button
                   colorScheme="blue"
                   leftIcon={<FaPlus />}
-                  size="sm"
+                  size={{ base: "xs", md: "sm" }}
                   onClick={onOpen}
                 >
                   Add New Expense
@@ -191,34 +208,42 @@ export default function PaymentsPage() {
             </ExpenseCard>
 
             <ExpenseCard>
-              <VStack align="stretch" spacing={4}>
+              <VStack align="stretch" spacing={{ base: 2, md: 4 }}>
                 <Icon
                   as={FaFileInvoice}
                   fontSize="sm"
                   color="purple.500"
-                  boxSize={6}
+                  boxSize={{ base: 5, md: 6 }}
                 />
-                <Text fontWeight="medium" fontSize="sm">
+                <Text fontWeight="medium" fontSize={{ base: "xs", md: "sm" }}>
                   Generate Report
                 </Text>
-                <Button colorScheme="purple" variant="outline" size="sm">
+                <Button
+                  colorScheme="purple"
+                  variant="outline"
+                  size={{ base: "xs", md: "sm" }}
+                >
                   Download Report
                 </Button>
               </VStack>
             </ExpenseCard>
 
             <ExpenseCard>
-              <VStack align="stretch" spacing={4}>
+              <VStack align="stretch" spacing={{ base: 2, md: 4 }}>
                 <Icon
                   as={FaChartLine}
                   fontSize="sm"
                   color="green.500"
-                  boxSize={6}
+                  boxSize={{ base: 5, md: 6 }}
                 />
-                <Text fontWeight="medium" fontSize="sm">
+                <Text fontWeight="medium" fontSize={{ base: "xs", md: "sm" }}>
                   Analytics
                 </Text>
-                <Button colorScheme="green" variant="outline" size="sm">
+                <Button
+                  colorScheme="green"
+                  variant="outline"
+                  size={{ base: "xs", md: "sm" }}
+                >
                   View Analytics
                 </Button>
               </VStack>
@@ -226,16 +251,36 @@ export default function PaymentsPage() {
           </Grid>
 
           {/* Expenses Table */}
-          <Box bg="white" rounded="lg" shadow="sm" overflow="hidden">
-            <Flex p={4} justify="space-between" align="center">
-              <Text fontSize="lg" fontWeight="bold">
+          <Box
+            bg="white"
+            rounded="lg"
+            shadow="sm"
+            overflow="hidden"
+            mx={{ base: -2, md: 0 }} // Negative margin on mobile to allow full-width scroll
+          >
+            <Flex
+              p={{ base: 3, md: 4 }}
+              justify="space-between"
+              align="center"
+              direction={{ base: "column", sm: "row" }}
+              gap={3}
+            >
+              <Text fontSize={{ base: "sm", md: "lg" }} fontWeight="bold">
                 Recent Expenses
               </Text>
-              <HStack>
-                <Button leftIcon={<FaFilter />} size="sm" variant="ghost">
+              <HStack spacing={2}>
+                <Button
+                  leftIcon={<FaFilter />}
+                  size={{ base: "xs", md: "sm" }}
+                  variant="ghost"
+                >
                   Filter
                 </Button>
-                <Select placeholder="Category" size="sm" maxW="200px">
+                <Select
+                  placeholder="Category"
+                  size={{ base: "xs", md: "sm" }}
+                  maxW={{ base: "150px", md: "200px" }}
+                >
                   <option
                     style={{
                       backgroundColor: "#eee",
@@ -272,61 +317,77 @@ export default function PaymentsPage() {
               </HStack>
             </Flex>
 
-            <Table variant="simple">
-              <Thead bg="gray.50">
-                <Tr>
-                  <Th>ID</Th>
-                  <Th>Category</Th>
-                  <Th>Description</Th>
-                  <Th isNumeric>Amount</Th>
-                  <Th>Date</Th>
-                  <Th>Payment Method</Th>
-                  <Th>Status</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {expenses.map((expense) => (
-                  <Tr key={expense.id}>
-                    <Td fontWeight="medium">{expense.id}</Td>
-                    <Td>{expense.category}</Td>
-                    <Td>{expense.description}</Td>
-                    <Td isNumeric fontWeight="bold">
-                      ₦{expense.amount}
-                    </Td>
-                    <Td>{expense.date}</Td>
-                    <Td>{expense.paymentMethod}</Td>
-                    <Td>
-                      <Badge
-                        colorScheme={
-                          expense.status === "approved"
-                            ? "green"
-                            : expense.status === "rejected"
-                            ? "red"
-                            : "yellow"
-                        }
-                      >
-                        {expense.status}
-                      </Badge>
-                    </Td>
+            <TableContainer overflowX="auto">
+              <Table variant="simple" size={{ base: "sm", md: "md" }}>
+                <Thead bg="gray.50">
+                  <Tr>
+                    {!isMobile && <Th>ID</Th>}
+                    <Th>Category</Th>
+                    {!isMobile && <Th>Description</Th>}
+                    <Th isNumeric>Amount</Th>
+                    <Th>Date</Th>
+                    {!isMobile && <Th>Payment Method</Th>}
+                    <Th>Status</Th>
                   </Tr>
-                ))}
-              </Tbody>
-            </Table>
+                </Thead>
+                <Tbody>
+                  {expenses.map((expense) => (
+                    <Tr key={expense.id}>
+                      {!isMobile && <Td fontWeight="medium">{expense.id}</Td>}
+                      <Td>{expense.category}</Td>
+                      {!isMobile && <Td>{expense.description}</Td>}
+                      <Td isNumeric fontWeight="bold">
+                        ₦{expense.amount}
+                      </Td>
+                      <Td>{expense.date}</Td>
+                      {!isMobile && <Td>{expense.paymentMethod}</Td>}
+                      <Td>
+                        <Badge
+                          colorScheme={
+                            expense.status === "approved"
+                              ? "green"
+                              : expense.status === "rejected"
+                              ? "red"
+                              : "yellow"
+                          }
+                          fontSize={{ base: "2xs", md: "xs" }}
+                          px={{ base: 1, md: 2 }}
+                        >
+                          {expense.status}
+                        </Badge>
+                      </Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            </TableContainer>
           </Box>
 
           {/* Add Expense Modal */}
-          <Modal isOpen={isOpen} onClose={onClose} size="xl">
+          <Modal
+            isOpen={isOpen}
+            onClose={onClose}
+            size={{ base: "full", md: "xl" }}
+          >
             <ModalOverlay backdropFilter="blur(10px)" />
             <StyledModal>
-              <ModalHeader borderBottom="1px solid" borderColor="gray.100">
+              <ModalHeader
+                borderBottom="1px solid"
+                borderColor="gray.100"
+                fontSize={{ base: "lg", md: "xl" }}
+                py={{ base: 3, md: 4 }}
+              >
                 Add New Expense
               </ModalHeader>
               <ModalCloseButton />
-              <ModalBody py={6}>
-                <VStack spacing={4}>
+              <ModalBody py={{ base: 4, md: 6 }}>
+                <VStack spacing={{ base: 3, md: 4 }}>
                   <FormControl>
-                    <FormLabel>Category</FormLabel>
+                    <FormLabel fontSize={{ base: "sm", md: "md" }}>
+                      Category
+                    </FormLabel>
                     <Select
+                      size={{ base: "sm", md: "md" }}
                       placeholder="Select category"
                       value={newExpense.category}
                       onChange={(e) =>
@@ -376,7 +437,9 @@ export default function PaymentsPage() {
                   </FormControl>
 
                   <FormControl>
-                    <FormLabel>Amount</FormLabel>
+                    <FormLabel fontSize={{ base: "sm", md: "md" }}>
+                      Amount
+                    </FormLabel>
                     <StyledInput
                       type="number"
                       placeholder="Enter amount"
@@ -391,7 +454,9 @@ export default function PaymentsPage() {
                   </FormControl>
 
                   <FormControl>
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel fontSize={{ base: "sm", md: "md" }}>
+                      Description
+                    </FormLabel>
                     <Textarea
                       background=" rgba(247, 250, 252, 0.8)"
                       border=" 1px solid #e2e8f0"
@@ -409,8 +474,11 @@ export default function PaymentsPage() {
                   </FormControl>
 
                   <FormControl>
-                    <FormLabel>Payment Method</FormLabel>
+                    <FormLabel fontSize={{ base: "sm", md: "md" }}>
+                      Payment Method
+                    </FormLabel>
                     <Select
+                      size={{ base: "sm", md: "md" }}
                       placeholder="Select payment method"
                       value={newExpense.paymentMethod}
                       onChange={(e) =>
@@ -450,7 +518,11 @@ export default function PaymentsPage() {
                     </Select>
                   </FormControl>
 
-                  <Button colorScheme="blue" size="sm" width="full">
+                  <Button
+                    colorScheme="blue"
+                    size={{ base: "sm", md: "md" }}
+                    width="full"
+                  >
                     Add Expense
                   </Button>
                 </VStack>

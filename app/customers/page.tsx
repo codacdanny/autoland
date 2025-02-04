@@ -192,11 +192,19 @@ export default function CustomersPage() {
 
   return (
     <Flex>
-      <Box display={{ base: "none", lg: "block" }}>
+      <Box>
         <Sidebar />
       </Box>
       <MainContent>
-        <Box flex="1" p={8}>
+        <Box
+          flex="1"
+          p={{
+            base: 2,
+            md: 4,
+            xl: 8,
+          }}
+          mt={{ base: 10, xl: 4 }}
+        >
           <Header />
 
           {/* Search and Title Section */}
@@ -280,7 +288,11 @@ export default function CustomersPage() {
             <DrawerOverlay />
             <DrawerContent bgColor="gray.100" color="gray.600">
               <DrawerCloseButton />
-              <DrawerHeader fontSize="medium" borderBottomWidth="1px">
+              <DrawerHeader
+                fontSize="medium"
+                fontWeight="extrabold"
+                borderBottomWidth="1px"
+              >
                 Customer Details
               </DrawerHeader>
               <DrawerBody>
@@ -323,6 +335,7 @@ export default function CustomersPage() {
                         Vehicles
                       </Heading>
                       <Select
+                        size="sm"
                         placeholder="Select vehicle for job order"
                         onChange={(e) => setSelectedVehicle(e.target.value)}
                         mb={4}
@@ -332,6 +345,7 @@ export default function CustomersPage() {
                             style={{
                               backgroundColor: "#eee",
                               color: "gray.500",
+                              fontSize: "14px",
                             }}
                             key={idx}
                             value={vehicle.model}

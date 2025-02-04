@@ -35,9 +35,11 @@ import {
   InputLeftAddon,
   Badge,
   Stack,
+  TableContainer,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { FaCheckCircle, FaClipboardList } from "react-icons/fa";
-import { FaClock, FaWallet } from "react-icons/fa6";
+import { FaWallet } from "react-icons/fa6";
 import { useState } from "react";
 
 interface Payment {
@@ -51,6 +53,7 @@ interface Payment {
 export default function CustomerJobOrderAccount() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
+  const isMobile = useBreakpointValue({ base: true, md: false });
   const [payments, setPayments] = useState<Payment[]>([]);
   const [totalJobAmount] = useState(2251375); // This should come from the job order
 
@@ -128,75 +131,112 @@ export default function CustomerJobOrderAccount() {
       color: "green.500",
       bgGradient: "linear(to-r, green.400, green.600)",
     },
-    {
-      title: "Payment Status",
-      value: balance === 0 ? "Completed" : "Pending",
-      change: balance === 0 ? "100%" : "In Progress",
-      isIncrease: balance === 0,
-      icon: FaClock,
-      color: "orange.500",
-      bgGradient: "linear(to-r, orange.400, orange.600)",
-    },
   ];
 
   return (
     <Flex>
-      <Sidebar />
+      <Box>
+        <Sidebar />
+      </Box>
+
       <Box
         flex="1"
-        p={{ base: 4, md: 8 }}
-        // ml={{ base: 0, xl: "250px" }}
+        p={{
+          base: 2,
+          md: 4,
+          xl: 0,
+        }}
+        mt={{ base: 10, xl: 4 }}
+        width="100%"
       >
         <Header />
         <MetricCards metrics={dashboardMetrics} />
 
-        <VStack spacing={6} align="stretch" mt={8}>
-          <Flex justify="space-between" align="center">
-            <Text fontSize="md" fontWeight="bold">
+        <VStack
+          spacing={{ base: 4, md: 6 }}
+          align="stretch"
+          mt={{ base: 6, md: 8 }}
+        >
+          <Flex
+            justify="space-between"
+            align="center"
+            direction={{ base: "column", sm: "row" }}
+            gap={{ base: 2 }}
+            wrap="wrap"
+          >
+            <Text fontSize={{ base: "sm", md: "md" }} fontWeight="bold">
               Payment History
             </Text>
-            <Button size="sm" colorScheme="blue" onClick={onOpen}>
+            <Button
+              size={{ base: "xs", md: "sm" }}
+              colorScheme="blue"
+              onClick={onOpen}
+              w={{ base: "full", sm: "auto" }}
+            >
               Record New Payment
             </Button>
           </Flex>
 
-          <Table variant="simple">
-            <Thead>
-              <Tr>
-                <Th>Payment Phase</Th>
-                <Th>Date</Th>
-                <Th>Amount</Th>
-                <Th>Payment Method</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {payments.map((payment) => (
-                <Tr key={payment.id}>
-                  <Td>{payment.phase}</Td>
-                  <Td>{payment.date}</Td>
-                  <Td>₦{payment.amount.toLocaleString()}</Td>
-                  <Td>{payment.paymentMethod}</Td>
-                </Tr>
-              ))}
-            </Tbody>
-          </Table>
+          <Box
+            bg="white"
+            rounded="lg"
+            shadow="sm"
+            overflow="hidden"
+            mx={{ base: -2, md: 0 }}
+          >
+            <TableContainer overflowX="auto">
+              <Table variant="simple" size={{ base: "sm", md: "md" }}>
+                <Thead>
+                  <Tr>
+                    {!isMobile && <Th>Payment Phase</Th>}
+                    <Th>Date</Th>
+                    <Th isNumeric>Amount</Th>
+                    {!isMobile && <Th>Payment Method</Th>}
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {payments.map((payment) => (
+                    <Tr key={payment.id}>
+                      {!isMobile && <Td>{payment.phase}</Td>}
+                      <Td>{payment.date}</Td>
+                      <Td isNumeric>₦{payment.amount.toLocaleString()}</Td>
+                      {!isMobile && <Td>{payment.paymentMethod}</Td>}
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            </TableContainer>
+          </Box>
         </VStack>
       </Box>
+
       {/* Payment Modal */}
-      <Modal isOpen={isOpen} onClose={onClose} size="xl">
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        size={{ base: "full", md: "xl" }}
+      >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader borderBottom="1px solid" borderColor="gray.200">
+          <ModalHeader
+            borderBottom="1px solid"
+            borderColor="gray.200"
+            fontSize={{ base: "md", md: "lg" }}
+            py={{ base: 3, md: 4 }}
+          >
             <Stack
-              mt={6}
-              direction="row"
+              direction={{ base: "column", sm: "row" }}
               justify="space-between"
-              align="center"
+              align={{ base: "start", sm: "center" }}
+              spacing={{ base: 2, sm: 0 }}
             >
-              <Text fontSize="md"> Record New Payment</Text>
+              <Text fontSize={{ base: "sm", md: "md" }}>
+                {" "}
+                Record New Payment
+              </Text>
               <Badge
                 colorScheme={balance === 0 ? "green" : "orange"}
-                fontSize="sm"
+                fontSize={{ base: "2xs", md: "sm" }}
                 px={2}
                 py={1}
                 borderRadius="full"
@@ -207,17 +247,19 @@ export default function CustomerJobOrderAccount() {
           </ModalHeader>
           <ModalCloseButton />
 
-          <ModalBody pb={6}>
-            <Grid templateColumns="repeat(2, 1fr)" gap={4}>
+          <ModalBody pb={{ base: 4, md: 6 }}>
+            <Grid templateColumns="repeat(2, 1fr)" gap={{ base: 3, md: 4 }}>
               <GridItem colSpan={2}>
                 <FormControl isRequired>
-                  <FormLabel fontSize="sm">Payment Phase</FormLabel>
+                  <FormLabel fontSize={{ base: "xs", md: "sm" }}>
+                    Payment Phase
+                  </FormLabel>
                   <Select
                     name="phase"
                     value={paymentForm.phase}
                     onChange={handleInputChange}
                     placeholder="Select phase"
-                    size="sm"
+                    size={{ base: "sm", md: "md" }}
                   >
                     <option value="First Payment">
                       First Payment (Initial)
@@ -234,10 +276,13 @@ export default function CustomerJobOrderAccount() {
                   </Select>
                 </FormControl>
               </GridItem>
+
               <GridItem colSpan={2}>
                 <FormControl isRequired>
-                  <FormLabel fontSize="sm">Total Amount Due</FormLabel>
-                  <InputGroup size="sm">
+                  <FormLabel fontSize={{ base: "xs", md: "sm" }}>
+                    Total Amount Due
+                  </FormLabel>
+                  <InputGroup size={{ base: "sm", md: "md" }}>
                     <InputLeftAddon>₦</InputLeftAddon>
                     <Input
                       name="amount"
@@ -248,26 +293,11 @@ export default function CustomerJobOrderAccount() {
                       max={balance}
                     />
                   </InputGroup>
-                  <Text fontSize="sm" color="gray.300" mt={1}>
-                    Maximum allowed: ₦{balance.toLocaleString()}
-                  </Text>
-                </FormControl>
-              </GridItem>
-              <GridItem colSpan={2}>
-                <FormControl isRequired>
-                  <FormLabel fontSize="sm">Amount Paid</FormLabel>
-                  <InputGroup size="sm">
-                    <InputLeftAddon>₦</InputLeftAddon>
-                    <Input
-                      name="amount"
-                      type="number"
-                      value={paymentForm.amount}
-                      onChange={handleInputChange}
-                      placeholder="Enter payment amount"
-                      max={balance}
-                    />
-                  </InputGroup>
-                  <Text fontSize="sm" color="gray.300" mt={1}>
+                  <Text
+                    fontSize={{ base: "2xs", md: "sm" }}
+                    color="gray.300"
+                    mt={1}
+                  >
                     Maximum allowed: ₦{balance.toLocaleString()}
                   </Text>
                 </FormControl>
@@ -275,13 +305,41 @@ export default function CustomerJobOrderAccount() {
 
               <GridItem colSpan={2}>
                 <FormControl isRequired>
-                  <FormLabel fontSize="sm">Payment Method</FormLabel>
+                  <FormLabel fontSize={{ base: "xs", md: "sm" }}>
+                    Amount Paid
+                  </FormLabel>
+                  <InputGroup size={{ base: "sm", md: "md" }}>
+                    <InputLeftAddon>₦</InputLeftAddon>
+                    <Input
+                      name="amount"
+                      type="number"
+                      value={paymentForm.amount}
+                      onChange={handleInputChange}
+                      placeholder="Enter payment amount"
+                      max={balance}
+                    />
+                  </InputGroup>
+                  <Text
+                    fontSize={{ base: "2xs", md: "sm" }}
+                    color="gray.300"
+                    mt={1}
+                  >
+                    Maximum allowed: ₦{balance.toLocaleString()}
+                  </Text>
+                </FormControl>
+              </GridItem>
+
+              <GridItem colSpan={2}>
+                <FormControl isRequired>
+                  <FormLabel fontSize={{ base: "xs", md: "sm" }}>
+                    Payment Method
+                  </FormLabel>
                   <Select
                     name="paymentMethod"
                     value={paymentForm.paymentMethod}
                     onChange={handleInputChange}
                     placeholder="Select method"
-                    size="sm"
+                    size={{ base: "sm", md: "md" }}
                   >
                     <option value="Cash">💵 Cash</option>
                     <option value="Bank Transfer">🏦 Bank Transfer</option>
@@ -292,12 +350,16 @@ export default function CustomerJobOrderAccount() {
               </GridItem>
 
               <GridItem colSpan={2}>
-                <Divider my={4} />
-                <Stack spacing={2}>
-                  <Text fontSize="sm" fontWeight="medium">
+                <Divider my={{ base: 3, md: 4 }} />
+                <Stack spacing={{ base: 2, md: 3 }}>
+                  <Text fontSize={{ base: "xs", md: "sm" }} fontWeight="medium">
                     Payment Summary:
                   </Text>
-                  <Grid templateColumns="repeat(2, 1fr)" gap={2} fontSize="sm">
+                  <Grid
+                    templateColumns="repeat(2, 1fr)"
+                    gap={{ base: 1, md: 2 }}
+                    fontSize={{ base: "xs", md: "sm" }}
+                  >
                     <Text color="gray.300">Total Job Amount:</Text>
                     <Text fontWeight="bold">
                       ₦{totalJobAmount.toLocaleString()}
@@ -328,25 +390,31 @@ export default function CustomerJobOrderAccount() {
             justifyContent="left"
             borderTop="1px solid"
             borderColor="gray.200"
+            flexDir={{ base: "column", sm: "row" }}
+            gap={{ base: 2, sm: 4 }}
           >
-            <Flex gap={4}>
-              <Button
-                colorScheme="blue"
-                onClick={handleSubmitPayment}
-                isDisabled={
-                  !paymentForm.phase ||
-                  !paymentForm.amount ||
-                  !paymentForm.paymentMethod ||
-                  Number(paymentForm.amount) > balance
-                }
-                size="sm"
-              >
-                Save Payment
-              </Button>
-              <Button onClick={onClose} size="sm" variant="outline">
-                Cancel
-              </Button>
-            </Flex>
+            <Button
+              colorScheme="blue"
+              onClick={handleSubmitPayment}
+              isDisabled={
+                !paymentForm.phase ||
+                !paymentForm.amount ||
+                !paymentForm.paymentMethod ||
+                Number(paymentForm.amount) > balance
+              }
+              size={{ base: "sm", md: "md" }}
+              w={{ base: "full", sm: "auto" }}
+            >
+              Save Payment
+            </Button>
+            <Button
+              onClick={onClose}
+              size={{ base: "sm", md: "md" }}
+              variant="outline"
+              w={{ base: "full", sm: "auto" }}
+            >
+              Cancel
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
