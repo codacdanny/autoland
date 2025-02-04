@@ -57,11 +57,19 @@ export default function Dashboard() {
 
   return (
     <Flex bgGradient={bgGradient} minH="100vh">
-      <Box display={{ base: "none", xl: "block" }}>
+      <Box>
         <Sidebar />
       </Box>
       <MainContent>
-        <Box flex="1" p={8}>
+        <Box
+          flex="1"
+          p={{
+            base: 2,
+            md: 4,
+            xl: 8,
+          }}
+          mt={{ base: 10, xl: 4 }}
+        >
           {/* Header */}
           <Header />
 

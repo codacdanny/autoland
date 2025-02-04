@@ -17,5 +17,6 @@ export interface MetricsGridProps {
     sm?: number;
     md?: number;
     lg?: number;
+    xl?: number;
   };
 }

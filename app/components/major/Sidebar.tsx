@@ -11,6 +11,10 @@ import {
   useBreakpointValue,
   Collapse,
   Icon as ChakraIcon,
+  Drawer,
+  DrawerContent,
+  DrawerOverlay,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/next-js";
 import {
@@ -24,6 +28,7 @@ import {
   FaTimes,
   FaChevronDown,
   FaChevronRight,
+  FaBars,
 } from "react-icons/fa";
 import {
   FaCarSide,
@@ -41,18 +46,18 @@ const SidebarContainer = styled(Box)`
   background: #002050;
   color: #fff;
   height: 100svh;
-  overflow-y: scroll;
+  overflow-y: auto;
   scrollbar-width: none;
   width: 250px;
-  position: fixed;
-  left: 0;
-  top: 0;
   padding: 2rem 1rem;
   transition: all 0.3s ease-in-out;
 
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
   @media (max-width: 768px) {
     width: 100%;
-    position: relative;
   }
 `;
 
@@ -68,7 +73,19 @@ interface SidebarItemProps {
   }>;
 }
 
-const SubMenuItem = ({ label, path, active = false, onClick }: any) => (
+interface SubMenuItemProps {
+  label: string;
+  path: string;
+  active?: boolean;
+  onClick?: () => void;
+}
+
+const SubMenuItem = ({
+  label,
+  path,
+  active = false,
+  onClick,
+}: SubMenuItemProps) => (
   <Link href={path} style={{ textDecoration: "none" }} onClick={onClick}>
     <HStack
       cursor="pointer"
@@ -259,7 +276,7 @@ const SidebarContent = ({ onClose }: SidebarContentProps) => {
         </Box>
         {onClose && (
           <IconButton
-            display={{ base: "flex", md: "none" }}
+            display={{ base: "flex", xl: "none" }}
             onClick={onClose}
             variant="ghost"
             color="white"
@@ -319,9 +336,59 @@ const SidebarContent = ({ onClose }: SidebarContentProps) => {
 };
 
 export default function Sidebar({ onClose }: SidebarContentProps) {
+  const { isOpen, onOpen, onClose: onDrawerClose } = useDisclosure();
+  const isMobile = useBreakpointValue({ base: true, xl: false });
+
+  const handleDrawerClose = () => {
+    onDrawerClose();
+    onClose?.();
+  };
+
+  if (isMobile) {
+    return (
+      <>
+        <IconButton
+          size="sm"
+          aria-label="Open Menu"
+          icon={<FaBars color="white" />}
+          onClick={onOpen}
+          position="fixed"
+          top="2"
+          left="4"
+          zIndex="overlay"
+          colorScheme="blue"
+          bgColor="primaryBlue"
+          display={{ base: "flex", xl: "none" }}
+        />
+
+        <Drawer
+          isOpen={isOpen}
+          placement="left"
+          onClose={handleDrawerClose}
+          size="full"
+        >
+          <DrawerOverlay />
+          <DrawerContent p={0}>
+            <SidebarContainer>
+              <SidebarContent onClose={handleDrawerClose} />
+            </SidebarContainer>
+          </DrawerContent>
+        </Drawer>
+      </>
+    );
+  }
+
   return (
-    <SidebarContainer>
-      <SidebarContent onClose={onClose} />
-    </SidebarContainer>
+    <Box
+      display={{ base: "none", xl: "block" }}
+      position="fixed"
+      left={0}
+      top={0}
+      h="100vh"
+    >
+      <SidebarContainer>
+        <SidebarContent onClose={onClose} />
+      </SidebarContainer>
+    </Box>
   );
 }

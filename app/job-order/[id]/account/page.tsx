@@ -142,7 +142,11 @@ export default function CustomerJobOrderAccount() {
   return (
     <Flex>
       <Sidebar />
-      <Box flex="1" p={{ base: 4, md: 8 }} ml={{ base: 0, md: "250px" }}>
+      <Box
+        flex="1"
+        p={{ base: 4, md: 8 }}
+        // ml={{ base: 0, xl: "250px" }}
+      >
         <Header />
         <MetricCards metrics={dashboardMetrics} />
 
@@ -230,10 +234,28 @@ export default function CustomerJobOrderAccount() {
                   </Select>
                 </FormControl>
               </GridItem>
-
               <GridItem colSpan={2}>
                 <FormControl isRequired>
-                  <FormLabel fontSize="sm">Amount</FormLabel>
+                  <FormLabel fontSize="sm">Total Amount Due</FormLabel>
+                  <InputGroup size="sm">
+                    <InputLeftAddon>₦</InputLeftAddon>
+                    <Input
+                      name="amount"
+                      type="number"
+                      value={paymentForm.amount}
+                      onChange={handleInputChange}
+                      placeholder="Enter payment amount"
+                      max={balance}
+                    />
+                  </InputGroup>
+                  <Text fontSize="sm" color="gray.300" mt={1}>
+                    Maximum allowed: ₦{balance.toLocaleString()}
+                  </Text>
+                </FormControl>
+              </GridItem>
+              <GridItem colSpan={2}>
+                <FormControl isRequired>
+                  <FormLabel fontSize="sm">Amount Paid</FormLabel>
                   <InputGroup size="sm">
                     <InputLeftAddon>₦</InputLeftAddon>
                     <Input
