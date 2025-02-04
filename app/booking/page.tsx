@@ -8,6 +8,7 @@ import {
   useDisclosure,
   Icon,
   Collapse,
+  VStack,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { FaPlus, FaUserFriends } from "react-icons/fa";
@@ -60,26 +61,32 @@ export default function BookingPage() {
       bgGradient: "linear(to-r, orange.400, orange.600)",
     },
   ];
+
   return (
     <Flex>
-      <Box display={{ base: "none", lg: "block" }}>
-        <Sidebar />
-      </Box>
+      <Sidebar />
       <MainContent>
-        <Box flex="1" p={8}>
+        <Box
+          flex="1"
+          p={{
+            base: 2,
+            md: 4,
+            xl: 8,
+          }}
+          w="full"
+        >
           <Header />
           <MetricCards metrics={JobOrderMetrics} />
 
-          {/* New Section: Walk-in Header */}
+          {/* Walk-in Header Section */}
           <Box
             as={motion.div}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            // transition={{ delay: 0.2 }}
-            mb={8}
-            py={2}
-            px={6}
-            borderRadius="2xl"
+            mb={{ base: 4, md: 8 }} // Responsive margin
+            py={{ base: 3, md: 4 }} // Responsive padding
+            px={{ base: 4, md: 6 }}
+            borderRadius={{ base: "xl", md: "2xl" }}
             bg="white"
             boxShadow="sm"
             border="1px solid"
@@ -92,39 +99,49 @@ export default function BookingPage() {
               top={0}
               right={0}
               bottom={0}
-              width="40%"
+              width={{ base: "30%", md: "40%" }}
               bgGradient="linear(to-r, blue.50, purple.50)"
               opacity={0.1}
             />
 
             <Flex
+              direction={{ base: "column", md: "row" }}
               justify="space-between"
-              align="center"
-              flexWrap={{ base: "wrap", md: "nowrap" }}
-              gap={4}
+              align={{ base: "stretch", md: "center" }}
+              gap={{ base: 3, md: 4 }}
             >
-              <HStack spacing={4}>
-                <Icon as={FaUserFriends} fontSize="md" color="blue.500" />
-                <Box>
-                  <Text fontSize="sm" fontWeight="bold" color="gray.700">
+              <HStack spacing={{ base: 3, md: 4 }} align="flex-start">
+                <Icon
+                  as={FaUserFriends}
+                  fontSize={{ base: "md", md: "lg" }}
+                  color="blue.500"
+                />
+                <VStack align="stretch" spacing={{ base: 0.5, md: 1 }}>
+                  <Text
+                    fontSize={{ base: "sm", md: "md" }}
+                    fontWeight="bold"
+                    color="gray.700"
+                  >
                     Walk-in Customers
                   </Text>
-                  <Text color="gray.500">
+                  <Text fontSize={{ base: "xs", md: "sm" }} color="gray.500">
                     Manage walk-in job orders and customer repairs
                   </Text>
-                </Box>
+                </VStack>
               </HStack>
-              <Flex flexDir="column" gap={2}>
+
+              <Flex flexDir="column" gap={2} w={{ base: "full", md: "auto" }}>
                 <Button
                   as={motion.button}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  size="sm"
+                  size={{ base: "sm", md: "md" }}
                   fontWeight="medium"
                   colorScheme="blue"
                   leftIcon={<FaPlus />}
                   onClick={onToggle}
                   boxShadow="sm"
+                  w={{ base: "full", md: "auto" }}
                   _hover={{
                     transform: "translateY(-2px)",
                     boxShadow: "lg",
@@ -132,27 +149,32 @@ export default function BookingPage() {
                 >
                   Add Job Order
                 </Button>
+
                 <Collapse in={isOpen} animateOpacity>
-                  <Flex justifyContent="space-between" gap={4}>
+                  <Flex
+                    justifyContent={{ base: "stretch", md: "space-between" }}
+                    gap={4}
+                    mt={2}
+                  >
                     <Button
                       as="a"
                       href="/create-job-order"
-                      fontSize="sm"
+                      fontSize={{ base: "xs", md: "sm" }}
                       fontWeight="normal"
-                      size="xs"
+                      size="sm"
                       colorScheme="blue"
-                      p={4}
+                      flex={1}
                     >
                       New
                     </Button>
                     <Button
                       as="a"
                       href="/customers"
+                      fontSize={{ base: "xs", md: "sm" }}
                       fontWeight="normal"
-                      fontSize="sm"
-                      size="xs"
+                      size="sm"
                       colorScheme="blue"
-                      p={4}
+                      flex={1}
                     >
                       Old
                     </Button>

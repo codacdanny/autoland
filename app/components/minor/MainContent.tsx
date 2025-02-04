@@ -11,7 +11,8 @@ export default function MainContent({
       ml={{ base: 0, xl: "250px" }}
       width={{ base: "100%", xl: "calc(100% - 250px)" }}
       bgColor="mainBg"
-      color="gray.900">
+      color="gray.900"
+    >
       <Container maxWidth="container.2xl">{children}</Container>
     </Box>
   );

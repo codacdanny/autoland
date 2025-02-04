@@ -5,22 +5,12 @@ import Header from "@/app/components/minor/Header";
 import MainContent from "@/app/components/minor/MainContent";
 import MetricCards from "@/app/components/minor/MetricCards";
 import { MetricCardData } from "@/app/types/metrics";
-import {
-  Box,
-  Button,
-  Flex,
-  HStack,
-  Icon,
-  Text,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { Box, Flex, HStack, Icon, Text } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import { FaCheckCircle, FaPlus, FaUserFriends } from "react-icons/fa";
+import { FaCheckCircle, FaUserFriends } from "react-icons/fa";
 import { FaClipboardList, FaClock, FaWallet } from "react-icons/fa6";
 
 export default function OnlineBooking() {
-  const { onOpen } = useDisclosure();
-
   const JobOrderMetrics: MetricCardData[] = [
     {
       title: "Total Online Orders",
@@ -66,7 +56,14 @@ export default function OnlineBooking() {
           <Sidebar />
         </Box>
         <MainContent>
-          <Box flex="1" p={8}>
+          <Box
+            flex="1"
+            p={{
+              base: 2,
+              md: 4,
+              xl: 8,
+            }}
+          >
             {/* Header */}
             <Header />
 
@@ -78,14 +75,19 @@ export default function OnlineBooking() {
               animate={{ opacity: 1, y: 0 }}
               // transition={{ delay: 0.2 }}
               mb={8}
-              p={6}
+              p={{
+                base: 2,
+                md: 4,
+                xl: 8,
+              }}
               borderRadius="2xl"
               bg="white"
               boxShadow="sm"
               border="1px solid"
               borderColor="gray.100"
               position="relative"
-              overflow="hidden">
+              overflow="hidden"
+            >
               <Box
                 position="absolute"
                 top={0}
@@ -100,7 +102,8 @@ export default function OnlineBooking() {
                 justify="space-between"
                 align="center"
                 flexWrap={{ base: "wrap", md: "nowrap" }}
-                gap={4}>
+                gap={4}
+              >
                 <HStack spacing={4}>
                   <Icon as={FaUserFriends} fontSize="md" color="blue.500" />
                   <Box>
