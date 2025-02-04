@@ -106,7 +106,11 @@ export default function JobOrderTable() {
       as={motion.div}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      p={8}
+      p={{
+        base: 2,
+        md: 4,
+        xl: 8,
+      }}
       borderRadius="2xl"
       bg="cardBg"
       boxShadow="md"
@@ -115,7 +119,7 @@ export default function JobOrderTable() {
       borderColor="gray.100"
     >
       <Flex justify="space-between" align="center" mb={6}>
-        <Text fontSize="lg" fontWeight="semibold">
+        <Text fontSize={{ base: "md", lg: "lg" }} fontWeight="semibold">
           Customer Orders
         </Text>
         <Link href="/booking">
