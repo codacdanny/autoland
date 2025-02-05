@@ -37,8 +37,9 @@ import {
   Stack,
   TableContainer,
   useBreakpointValue,
+  IconButton,
 } from "@chakra-ui/react";
-import { FaCheckCircle, FaClipboardList } from "react-icons/fa";
+import { FaCheckCircle, FaClipboardList, FaEdit } from "react-icons/fa";
 import { FaWallet } from "react-icons/fa6";
 import { useState } from "react";
 
@@ -223,6 +224,7 @@ export default function CustomerJobOrderAccount() {
             borderColor="gray.200"
             fontSize={{ base: "md", md: "lg" }}
             py={{ base: 3, md: 4 }}
+            mb={8}
           >
             <Stack
               direction={{ base: "column", sm: "row" }}
@@ -279,9 +281,22 @@ export default function CustomerJobOrderAccount() {
 
               <GridItem colSpan={2}>
                 <FormControl isRequired>
-                  <FormLabel fontSize={{ base: "xs", md: "sm" }}>
-                    Total Amount Due
-                  </FormLabel>
+                  <Flex justify="space-between" align="center" mb={1}>
+                    <FormLabel fontSize={{ base: "xs", md: "sm" }} mb={0}>
+                      Total Amount Due
+                    </FormLabel>
+                    <IconButton
+                      aria-label="Edit total amount"
+                      icon={<FaEdit />}
+                      size={{ base: "xs", md: "sm" }}
+                      variant="ghost"
+                      colorScheme="blue"
+                      onClick={() => {
+                        // Add your edit logic here
+                        console.log("Edit total amount");
+                      }}
+                    />
+                  </Flex>
                   <InputGroup size={{ base: "sm", md: "md" }}>
                     <InputLeftAddon>₦</InputLeftAddon>
                     <Input
@@ -291,6 +306,7 @@ export default function CustomerJobOrderAccount() {
                       onChange={handleInputChange}
                       placeholder="Enter payment amount"
                       max={balance}
+                      isReadOnly
                     />
                   </InputGroup>
                   <Text

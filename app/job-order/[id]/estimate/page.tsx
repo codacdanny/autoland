@@ -439,6 +439,14 @@ export default function EstimatePage() {
           >
             Send to client
           </Button>
+          <Button
+            colorScheme="teal"
+            size="sm"
+            onClick={handleSubmit}
+            leftIcon={<FaFileInvoice />}
+          >
+            Download as PDF
+          </Button>
         </Flex>
       </StyledContainer>
     </Box>

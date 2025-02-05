@@ -430,6 +430,22 @@ export default function StockistPage() {
           >
             Generate Invoice
           </Button>
+          <Button
+            colorScheme="purple"
+            size="sm"
+            onClick={handleSubmit}
+            leftIcon={<FaFileInvoice />}
+          >
+            Send to client
+          </Button>
+          <Button
+            colorScheme="teal"
+            size="sm"
+            onClick={handleSubmit}
+            leftIcon={<FaFileInvoice />}
+          >
+            Download as PDF
+          </Button>
         </Flex>
       </StyledContainer>
     </Box>
