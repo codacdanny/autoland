@@ -1,17 +1,32 @@
 import React from "react";
-import { Box, Heading, Icon } from "@chakra-ui/react";
+import { Box, Flex, Heading, Icon, useToast } from "@chakra-ui/react";
 import { FaTools } from "react-icons/fa";
 import { CheckboxGroup } from "./Form";
-import { SectionTitle } from "./styling/sectionTitle";
+import { ActionButton, SectionTitle } from "./styling/sectionTitle";
 
 const TabB = () => {
+    const toast = useToast();
+
+  const handleSubmit = () => {
+    // Handle form submission logic here
+    toast({
+      title: "Job Order Created.",
+      description: "Your job order has been created successfully.",
+      status: "success",
+      duration: 5000,
+      isClosable: true,
+    });
+  };
   return (
     <>
-      {" "}
-      <Box mb={8}>
+      <Box mb={{ base: 4, md: 8 }}>
         <SectionTitle>
-          <Icon as={FaTools} fontSize="sm" color="blue.500" />
-          <Heading as="h3" size="xs">
+          <Icon
+            as={FaTools}
+            fontSize={{ base: "xs", md: "sm" }}
+            color="blue.500"
+          />
+          <Heading as="h3" size={{ base: "xs", md: "sm" }}>
             Exterior
           </Heading>
         </SectionTitle>
@@ -32,12 +47,18 @@ const TabB = () => {
                 "Headlights and directional lights intact and fully functional",
             },
           ]}
+          // size={{ base: "sm", md: "md" }}
+          // spacing={{ base: 2, md: 3 }}
         />
       </Box>
-      <Box mb={8}>
+      <Box mb={{ base: 4, md: 8 }}>
         <SectionTitle>
-          <Icon as={FaTools} fontSize="sm" color="blue.500" />
-          <Heading as="h3" size="xs">
+          <Icon
+            as={FaTools}
+            fontSize={{ base: "xs", md: "sm" }}
+            color="blue.500"
+          />
+          <Heading as="h3" size={{ base: "xs", md: "sm" }}>
             Brake
           </Heading>
         </SectionTitle>
@@ -54,12 +75,18 @@ const TabB = () => {
                 "Wheels do not lock when applying anti-lock brakes (if applicable) ",
             },
           ]}
+          // size={{ base: "sm", md: "md" }}
+          // spacing={{ base: 2, md: 3 }}
         />
       </Box>
-      <Box mb={8}>
+      <Box mb={{ base: 4, md: 8 }}>
         <SectionTitle>
-          <Icon as={FaTools} fontSize="sm" color="blue.500" />
-          <Heading as="h3" size="xs">
+          <Icon
+            as={FaTools}
+            fontSize={{ base: "xs", md: "sm" }}
+            color="blue.500"
+          />
+          <Heading as="h3" size={{ base: "xs", md: "sm" }}>
             Suspension
           </Heading>
         </SectionTitle>
@@ -72,12 +99,18 @@ const TabB = () => {
             },
             { label: "All corners respond the same when bouncing" },
           ]}
+          // size={{ base: "sm", md: "md" }}
+          // spacing={{ base: 2, md: 3 }}
         />
       </Box>
-      <Box mb={8}>
+      <Box mb={{ base: 4, md: 8 }}>
         <SectionTitle>
-          <Icon as={FaTools} fontSize="sm" color="blue.500" />
-          <Heading as="h3" size="xs">
+          <Icon
+            as={FaTools}
+            fontSize={{ base: "xs", md: "sm" }}
+            color="blue.500"
+          />
+          <Heading as="h3" size={{ base: "xs", md: "sm" }}>
             Engine
           </Heading>
         </SectionTitle>
@@ -95,12 +128,18 @@ const TabB = () => {
                 "Exhaust pipe emissions are neither blue (indicates engine burns oil)or black (indicate excessive oil consumption)",
             },
           ]}
+          // size={{ base: "sm", md: "md" }}
+          // spacing={{ base: 2, md: 3 }}
         />
       </Box>
-      <Box mb={8}>
+      <Box mb={{ base: 4, md: 8 }}>
         <SectionTitle>
-          <Icon as={FaTools} fontSize="sm" color="blue.500" />
-          <Heading as="h3" size="xs">
+          <Icon
+            as={FaTools}
+            fontSize={{ base: "xs", md: "sm" }}
+            color="blue.500"
+          />
+          <Heading as="h3" size={{ base: "xs", md: "sm" }}>
             Interior
           </Heading>
         </SectionTitle>
@@ -130,12 +169,18 @@ const TabB = () => {
             { label: "Hazard light functions properly" },
             { label: "Headlight including bright works properly" },
           ]}
+          // size={{ base: "sm", md: "md" }}
+          // spacing={{ base: 2, md: 3 }}
         />
       </Box>
-      <Box mb={8}>
+      <Box mb={{ base: 4, md: 8 }}>
         <SectionTitle>
-          <Icon as={FaTools} fontSize="sm" color="blue.500" />
-          <Heading as="h3" size="xs">
+          <Icon
+            as={FaTools}
+            fontSize={{ base: "xs", md: "sm" }}
+            color="blue.500"
+          />
+          <Heading as="h3" size={{ base: "xs", md: "sm" }}>
             Tyres
           </Heading>
         </SectionTitle>
@@ -155,12 +200,18 @@ const TabB = () => {
               label: "Spare tire inflated",
             },
           ]}
+          // size={{ base: "sm", md: "md" }}
+          // spacing={{ base: 2, md: 3 }}
         />
       </Box>
-      <Box mb={8}>
+      <Box mb={{ base: 4, md: 8 }}>
         <SectionTitle>
-          <Icon as={FaTools} fontSize="sm" color="blue.500" />
-          <Heading as="h3" size="xs">
+          <Icon
+            as={FaTools}
+            fontSize={{ base: "xs", md: "sm" }}
+            color="blue.500"
+          />
+          <Heading as="h3" size={{ base: "xs", md: "sm" }}>
             Automatic Transmission
           </Heading>
         </SectionTitle>
@@ -171,12 +222,18 @@ const TabB = () => {
                 "Transmission fluid looks clean, not dirty or gritty (no indicates possible internal transmission problem)",
             },
           ]}
+          // size={{ base: "sm", md: "md" }}
+          // spacing={{ base: 2, md: 3 }}
         />
       </Box>
-      <Box mb={8}>
+      <Box mb={{ base: 4, md: 8 }}>
         <SectionTitle>
-          <Icon as={FaTools} fontSize="sm" color="blue.500" />
-          <Heading as="h3" size="xs">
+          <Icon
+            as={FaTools}
+            fontSize={{ base: "xs", md: "sm" }}
+            color="blue.500"
+          />
+          <Heading as="h3" size={{ base: "xs", md: "sm" }}>
             Steering
           </Heading>
         </SectionTitle>
@@ -189,23 +246,35 @@ const TabB = () => {
               label: "No clicking or clunking when turning ",
             },
           ]}
+          // size={{ base: "sm", md: "md" }}
+          // spacing={{ base: 2, md: 3 }}
         />
       </Box>
-      <Box mb={8}>
+      <Box mb={{ base: 4, md: 8 }}>
         <SectionTitle>
-          <Icon as={FaTools} fontSize="sm" color="blue.500" />
-          <Heading as="h3" size="xs">
+          <Icon
+            as={FaTools}
+            fontSize={{ base: "xs", md: "sm" }}
+            color="blue.500"
+          />
+          <Heading as="h3" size={{ base: "xs", md: "sm" }}>
             Battery
           </Heading>
         </SectionTitle>
         <CheckboxGroup
           options={[{ label: "Battery Present " }, { label: "Battery level" }]}
+          // size={{ base: "sm", md: "md" }}
+          // spacing={{ base: 2, md: 3 }}
         />
       </Box>
-      <Box mb={8}>
+      <Box mb={{ base: 4, md: 8 }}>
         <SectionTitle>
-          <Icon as={FaTools} fontSize="sm" color="blue.500" />
-          <Heading as="h3" size="xs">
+          <Icon
+            as={FaTools}
+            fontSize={{ base: "xs", md: "sm" }}
+            color="blue.500"
+          />
+          <Heading as="h3" size={{ base: "xs", md: "sm" }}>
             Miscellanous
           </Heading>
         </SectionTitle>
@@ -218,12 +287,18 @@ const TabB = () => {
               label: "Owner has title",
             },
           ]}
+          // size={{ base: "sm", md: "md" }}
+          // spacing={{ base: 2, md: 3 }}
         />
       </Box>
-      <Box mb={8}>
+      <Box mb={{ base: 4, md: 8 }}>
         <SectionTitle>
-          <Icon as={FaTools} fontSize="sm" color="blue.500" />
-          <Heading as="h3" size="xs">
+          <Icon
+            as={FaTools}
+            fontSize={{ base: "xs", md: "sm" }}
+            color="blue.500"
+          />
+          <Heading as="h3" size={{ base: "xs", md: "sm" }}>
             Under Hood *{" "}
           </Heading>
         </SectionTitle>
@@ -236,8 +311,29 @@ const TabB = () => {
               label: "Air filter",
             },
           ]}
+          // size={{ base: "sm", md: "md" }}
+          // spacing={3}
         />
       </Box>
+      <Flex
+        justify="flex-end"
+        gap={{ base: 2, md: 4 }}
+        direction={{ base: "column", sm: "row" }}
+        mb={{ base: 6, md: 0 }}
+      >
+        <ActionButton
+          onClick={() => {}}
+          color="gray.600"
+          border="1px solid"
+          borderColor="gray.300"
+          w={{ base: "full", sm: "auto" }}
+        >
+          Cancel
+        </ActionButton>
+        <ActionButton onClick={handleSubmit} w={{ base: "full", sm: "auto" }}>
+          Save
+        </ActionButton>
+      </Flex>
     </>
   );
 };
