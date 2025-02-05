@@ -456,43 +456,11 @@ export default function UsersPage() {
                     </option>
                   </StyledSelect>
                 </FormControl>
-
-                <FormControl flex={1}>
-                  <FormLabel fontSize="sm" color="gray.600">
-                    Speciality
-                  </FormLabel>
-                  <StyledSelect
-                    color="gray.800"
-                    name="speciality"
-                    value={formData.speciality}
-                    onChange={handleInputChange}
-                    placeholder="Select speciality"
-                  >
-                    <option
-                      style={{ backgroundColor: "#fdfdfd" }}
-                      value="German"
-                    >
-                      Service Advisor
-                    </option>
-                    <option
-                      style={{ backgroundColor: "#fdfdfd" }}
-                      value="Japanese"
-                    >
-                      Expenses
-                    </option>
-                    <option
-                      style={{ backgroundColor: "#fdfdfd" }}
-                      value="American"
-                    >
-                      Accounting{" "}
-                    </option>
-                  </StyledSelect>
-                </FormControl>
               </HStack>
 
               <FormControl>
                 <FormLabel fontSize="sm" color="gray.600">
-                  Team
+                  Roles
                 </FormLabel>
                 <StyledSelect
                   color="gray.800"

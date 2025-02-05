@@ -22,8 +22,6 @@ import {
   FaCalendarAlt,
   FaCreditCard,
   FaBell,
-  FaUserCog,
-  FaQuestionCircle,
   FaSignOutAlt,
   FaTimes,
   FaChevronDown,
@@ -251,12 +249,12 @@ const SidebarContent = ({ onClose }: SidebarContentProps) => {
       label: "Notifications",
       path: "/notification",
     },
-    { icon: FaUserCog, label: "Settings", path: "/profile" },
-    {
-      icon: FaQuestionCircle,
-      label: "Help & Support",
-      path: "/support",
-    },
+    // { icon: FaUserCog, label: "Settings", path: "/profile" },
+    // {
+    //   icon: FaQuestionCircle,
+    //   label: "Help & Support",
+    //   path: "/support",
+    // },
   ];
 
   const handleLogout = () => {

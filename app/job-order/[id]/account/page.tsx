@@ -135,13 +135,13 @@ export default function CustomerJobOrderAccount() {
   ];
 
   return (
-    <Flex>
+    <Flex width="100%" padding={0}>
       <Box>
         <Sidebar />
       </Box>
 
       <Box
-        flex="1"
+        flex={1}
         p={{
           base: 2,
           md: 4,
