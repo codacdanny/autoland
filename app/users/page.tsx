@@ -108,7 +108,7 @@ const usersData = [
     phone: "0807 4999 5108",
     workshop: "Port-Harcourt",
     email: "info@dannycode.com",
-    speciality: "expenses",
+
     role: "Account",
     status: "On Duty",
   },
@@ -117,7 +117,7 @@ const usersData = [
     phone: "0807 4999 5108",
     workshop: "Port-Harcourt",
     email: "info@dannycode.com",
-    speciality: "Stockist",
+
     role: "Front Desk",
     status: "On Duty",
   },
@@ -126,7 +126,7 @@ const usersData = [
     phone: "0807 4999 5108",
     workshop: "Port-Harcourt",
     email: "info@dannycode.com",
-    speciality: "Service Advisor",
+
     role: "Front Desk",
     status: "On Leave",
   },
@@ -138,7 +138,6 @@ interface UserFormData {
   phone: string;
   workshop: string;
   email: string;
-  speciality: string;
   role: string;
   status: string;
 }
@@ -157,7 +156,7 @@ export default function UsersPage() {
     phone: "",
     workshop: "",
     email: "",
-    speciality: "",
+
     role: "",
     status: "On Duty",
   });
@@ -209,7 +208,7 @@ export default function UsersPage() {
       phone: "",
       workshop: "",
       email: "",
-      speciality: "",
+
       role: "",
       status: "On Duty",
     });
@@ -321,7 +320,6 @@ export default function UsersPage() {
                     <Th>Phone</Th>
                     <Th>Workshop</Th>
                     <Th>Email</Th>
-                    <Th>Speciality</Th>
                     <Th>Role</Th>
                     <Th>Status</Th>
                     <Th>Actions</Th>
@@ -334,7 +332,7 @@ export default function UsersPage() {
                       <Td>{users.phone}</Td>
                       <Td>{users.workshop}</Td>
                       <Td>{users.email}</Td>
-                      <Td>{users.speciality}</Td>
+
                       <Td>{users.role}</Td>
                       <Td>
                         <Badge
