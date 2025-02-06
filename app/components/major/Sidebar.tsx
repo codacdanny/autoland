@@ -54,8 +54,9 @@ const SidebarContainer = styled(Box)`
     display: none;
   }
 
-  @media (max-width: 450px) {
+  @media (max-width: 900px) {
     width: 100%;
+    height: 100%;
   }
 `;
 
@@ -366,7 +367,7 @@ export default function Sidebar({ onClose }: SidebarContentProps) {
           size="xs"
         >
           <DrawerOverlay />
-          <DrawerContent width="inherit" height="100svh">
+          <DrawerContent>
             <SidebarContainer>
               <SidebarContent onClose={handleDrawerClose} />
             </SidebarContainer>
