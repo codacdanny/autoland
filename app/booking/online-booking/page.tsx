@@ -52,7 +52,7 @@ export default function OnlineBooking() {
   return (
     <>
       <Flex>
-        <Box >
+        <Box>
           <Sidebar />
         </Box>
         <MainContent>
@@ -63,6 +63,7 @@ export default function OnlineBooking() {
               md: 4,
               xl: 8,
             }}
+            mt={{ base: 10, xl: 4 }}
           >
             {/* Header */}
             <Header />

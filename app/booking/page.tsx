@@ -73,6 +73,7 @@ export default function BookingPage() {
             md: 4,
             xl: 8,
           }}
+          mt={{ base: 10, xl: 4 }}
           w="full"
         >
           <Header />

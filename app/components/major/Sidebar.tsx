@@ -247,7 +247,7 @@ const SidebarContent = ({ onClose }: SidebarContentProps) => {
     {
       icon: FaBell,
       label: "Notifications",
-      path: "/notification",
+      path: "#",
     },
     // { icon: FaUserCog, label: "Settings", path: "/profile" },
     // {
