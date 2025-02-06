@@ -2,7 +2,7 @@
 import Sidebar from "@/app/components/major/Sidebar";
 import Header from "@/app/components/minor/Header";
 import MetricCards from "@/app/components/minor/MetricCards";
-import { MetricCardData } from "@/app/types/metrics";
+import { MetricCardData } from "@/app/utils/types/metrics";
 import {
   Box,
   Flex,

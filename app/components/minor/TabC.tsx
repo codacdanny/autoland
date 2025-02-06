@@ -15,7 +15,7 @@ import { FaTools } from "react-icons/fa";
 import { SelectField, StyledInput } from "./Form";
 import { ActionButton, SectionTitle } from "./styling/sectionTitle";
 import CustomRadioGroup from "./CustomRadioGroup";
-import { FormData } from "@/app/types/formData";
+import { FormData } from "@/app/utils/types/formData";
 
 interface TabCProps {
   formData: FormData;

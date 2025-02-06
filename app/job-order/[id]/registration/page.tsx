@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 
 import { FaClipboard } from "react-icons/fa";
-import { FormData } from "@/app/types/formData";
+import { FormData } from "@/app/utils/types/formData";
 import Sidebar from "@/app/components/major/Sidebar";
 import TabA from "@/app/components/minor/TabA";
 import TabB from "@/app/components/minor/TabB";

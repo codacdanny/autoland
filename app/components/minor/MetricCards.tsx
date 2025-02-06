@@ -1,5 +1,5 @@
 import { Grid } from "@chakra-ui/react";
-import { MetricsGridProps } from "@/app/types/metrics";
+import { MetricsGridProps } from "@/app/utils/types/metrics";
 import MetricCard from "./MetricCard";
 
 export default function MetricCards({

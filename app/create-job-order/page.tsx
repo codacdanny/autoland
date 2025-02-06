@@ -24,7 +24,7 @@ import TabA from "../components/minor/TabA";
 import TabB from "../components/minor/TabB";
 import TabC from "../components/minor/TabC";
 import TabD from "../components/minor/TabD";
-import { FormData } from "../types/formData";
+import { FormData } from "../utils/types/formData";
 
 // Updated styled components
 const FormContainer = styled(Box)`

@@ -19,7 +19,7 @@ import MetricCards from "../components/minor/MetricCards";
 import JobOrderTable from "../components/major/JobOrderTable";
 import { FaClipboardList, FaClock, FaWallet } from "react-icons/fa6";
 import { FaCheckCircle } from "react-icons/fa";
-import { MetricCardData } from "../types/metrics";
+import { MetricCardData } from "../utils/types/metrics";
 
 export default function BookingPage() {
   const { isOpen, onToggle } = useDisclosure();

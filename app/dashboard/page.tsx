@@ -9,7 +9,7 @@ import {
 import Sidebar from "../components/major/Sidebar";
 import MainContent from "../components/minor/MainContent";
 import Header from "../components/minor/Header";
-import { MetricCardData } from "../types/metrics";
+import { MetricCardData } from "../utils/types/metrics";
 import MetricCards from "../components/minor/MetricCards";
 import JobOrderTable from "../components/major/JobOrderTable";
 

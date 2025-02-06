@@ -3,7 +3,7 @@ import Sidebar from "@/app/components/major/Sidebar";
 import Header from "@/app/components/minor/Header";
 import MainContent from "@/app/components/minor/MainContent";
 import MetricCards from "@/app/components/minor/MetricCards";
-import { MetricCardData } from "@/app/types/metrics";
+import { MetricCardData } from "@/app/utils/types/metrics";
 import { Box, Flex } from "@chakra-ui/react";
 import { FaCheckCircle } from "react-icons/fa";
 import { FaClipboardList, FaClock, FaWallet } from "react-icons/fa6";

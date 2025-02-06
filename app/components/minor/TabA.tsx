@@ -14,7 +14,7 @@ import {
 import { FaUser, FaCar, FaTools } from "react-icons/fa";
 import { InputField, SelectField, TextAreaField } from "./Form";
 import { ActionButton, SectionTitle } from "./styling/sectionTitle";
-import { FormData } from "@/app/types/formData";
+import { FormData } from "@/app/utils/types/formData";
 
 interface TabAProps {
   formData: FormData;

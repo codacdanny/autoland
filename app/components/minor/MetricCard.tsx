@@ -1,7 +1,7 @@
 import { Badge, Box, Flex, Text } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { FaCaretDown, FaCaretUp } from "react-icons/fa";
-import { MetricCardData } from "@/app/types/metrics";
+import { MetricCardData } from "@/app/utils/types/metrics";
 
 interface MetricCardProps extends MetricCardData {
   animationDelay?: number;
