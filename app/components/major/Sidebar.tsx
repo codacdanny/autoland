@@ -366,7 +366,7 @@ export default function Sidebar({ onClose }: SidebarContentProps) {
           size="xs"
         >
           <DrawerOverlay />
-          <DrawerContent width="inherit">
+          <DrawerContent width="inherit" height="100svh">
             <SidebarContainer>
               <SidebarContent onClose={handleDrawerClose} />
             </SidebarContainer>
