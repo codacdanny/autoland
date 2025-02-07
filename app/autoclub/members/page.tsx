@@ -106,31 +106,29 @@ const usersData = [
   {
     name: "Danny Praise",
     phone: "0807 4999 5108",
-    workshop: "Port-Harcourt",
+
     email: "info@dannycode.com",
     password: "",
-    role: "Account",
-    status: "On Duty",
+    subscription: "Gold",
+    status: "active",
   },
   {
     name: "Danny Praise",
     phone: "0807 4999 5108",
-    workshop: "Port-Harcourt",
+
     email: "info@dannycode.com",
     password: "",
-
-    role: "Front Desk",
-    status: "On Duty",
+    subscription: "Platinum",
+    status: "expired",
   },
   {
     name: "Danny Praise",
     phone: "0807 4999 5108",
-    workshop: "Port-Harcourt",
+
     email: "info@dannycode.com",
     password: "",
-
-    role: "Front Desk",
-    status: "On Leave",
+    subscription: "Silver",
+    status: "inactive",
   },
   // Add more technician data as needed
 ];
@@ -138,10 +136,10 @@ const usersData = [
 interface UserFormData {
   name: string;
   phone: string;
-  workshop: string;
+
   email: string;
   password: string;
-  role: string;
+  subscription: string;
   status: string;
 }
 
@@ -157,10 +155,10 @@ export default function UsersPage() {
   const [formData, setFormData] = useState<UserFormData>({
     name: "",
     phone: "",
-    workshop: "",
+
     email: "",
     password: "",
-    role: "",
+    subscription: "",
     status: "On Duty",
   });
   const [editingUser, setEditingUser] = useState<UserFormData | null>(null);
@@ -209,10 +207,10 @@ export default function UsersPage() {
     setFormData({
       name: "",
       phone: "",
-      workshop: "",
+
       email: "",
       password: "",
-      role: "",
+      subscription: "",
       status: "On Duty",
     });
     onModalClose();
@@ -280,7 +278,7 @@ export default function UsersPage() {
         >
           <Header />
           <Flex justify="space-between" align="center" mb={4}>
-            <Heading size="sm">Users</Heading>
+            <Heading size="sm">AutoClub Members</Heading>
             <Flex>
               <Button
                 colorScheme="blue"
@@ -289,7 +287,7 @@ export default function UsersPage() {
                 onClick={onModalOpen}
                 size="sm"
               >
-                Add User
+                Add Member
               </Button>
             </Flex>
           </Flex>
@@ -321,10 +319,9 @@ export default function UsersPage() {
                   <Tr>
                     <Th>Name</Th>
                     <Th>Phone</Th>
-                    <Th>Workshop</Th>
                     <Th>Email</Th>
 
-                    <Th>Role</Th>
+                    <Th>Subscription</Th>
                     <Th>Status</Th>
                     <Th>Actions</Th>
                   </Tr>
@@ -334,10 +331,9 @@ export default function UsersPage() {
                     <Tr key={index}>
                       <Td>{users.name}</Td>
                       <Td>{users.phone}</Td>
-                      <Td>{users.workshop}</Td>
                       <Td>{users.email}</Td>
 
-                      <Td>{users.role}</Td>
+                      <Td>{users.subscription}</Td>
                       <Td>
                         <Badge
                           colorScheme={
@@ -353,7 +349,7 @@ export default function UsersPage() {
                             size="sm"
                             colorScheme="blue"
                             variant="ghost"
-                            onClick={() => handleEdit(users)}
+                            onClick={() => handleEdit({ ...users })}
                             leftIcon={<FaEdit />}
                           >
                             Edit
@@ -444,53 +440,34 @@ export default function UsersPage() {
                 />
               </FormControl>
 
-              <HStack spacing={4}>
-                <FormControl flex={1}>
-                  <FormLabel fontSize="sm" color="gray.600">
-                    Workshop
-                  </FormLabel>
-                  <StyledSelect
-                    color="gray.800"
-                    name="workshop"
-                    value={formData.workshop}
-                    onChange={handleInputChange}
-                    placeholder="Select workshop"
-                  >
-                    <option
-                      style={{ backgroundColor: "#fdfdfd" }}
-                      value="Port-Harcourt"
-                    >
-                      Port-Harcourt
-                    </option>
-                    <option
-                      style={{ backgroundColor: "#fdfdfd" }}
-                      value="Owerri"
-                    >
-                      Owerri
-                    </option>
-                  </StyledSelect>
-                </FormControl>
-              </HStack>
-
               <FormControl>
                 <FormLabel fontSize="sm" color="gray.600">
-                  Roles
+                  Subscription
                 </FormLabel>
                 <StyledSelect
                   color="gray.800"
                   name="role"
-                  value={formData.role}
+                  value={formData.subscription}
                   onChange={handleInputChange}
                   placeholder="Select role"
                 >
-                  <option style={{ backgroundColor: "#fdfdfd" }} value="Alpha">
-                    Front Desk
+                  <option
+                    style={{ backgroundColor: "#fdfdfd" }}
+                    value="Plantinum"
+                  >
+                    Platinum
                   </option>
-                  <option style={{ backgroundColor: "#fdfdfd" }} value="Beta">
-                    Accounts
+                  <option style={{ backgroundColor: "#fdfdfd" }} value="Gold">
+                    Gold
                   </option>
-                  <option style={{ backgroundColor: "#fdfdfd" }} value="Delta">
-                    Manager
+                  <option style={{ backgroundColor: "#fdfdfd" }} value="Silver">
+                    Silver
+                  </option>
+                  <option
+                    style={{ backgroundColor: "#fdfdfd" }}
+                    value="Diamond"
+                  >
+                    Diamond
                   </option>
                 </StyledSelect>
               </FormControl>
@@ -521,7 +498,7 @@ export default function UsersPage() {
                       }}
                     >
                       <Text fontSize="sm" color="gray.800">
-                        On Duty
+                        Active
                       </Text>
                     </Radio>
                     <Radio
@@ -539,7 +516,7 @@ export default function UsersPage() {
                       }}
                     >
                       <Text fontSize="sm" color="gray.800">
-                        On Leave
+                        Inactive
                       </Text>
                     </Radio>
                   </Stack>

@@ -30,6 +30,7 @@ import {
 } from "react-icons/fa";
 import {
   FaCarSide,
+  FaIdCard,
   FaPeopleGroup,
   FaPersonCirclePlus,
   FaScrewdriverWrench,
@@ -242,6 +243,14 @@ const SidebarContent = ({ onClose }: SidebarContentProps) => {
     // },
     { icon: FaPersonCirclePlus, label: "Users", path: "/users" },
     { icon: FaScrewdriverWrench, label: "Technicians", path: "/technicians" },
+    {
+      icon: FaIdCard,
+      label: "Autoclub",
+      subItems: [
+        { label: "Members", path: "/autoclub/members" }, // Updated path
+        { label: "Settings", path: "/autoclub/members" },
+      ],
+    },
   ];
 
   const bottomMenuItems = [
