@@ -14,6 +14,7 @@ import {
   ModalCloseButton,
   FormControl,
   FormLabel,
+
   Select,
   Textarea,
   VStack,
@@ -23,20 +24,16 @@ import {
   Tr,
   Th,
   Td,
+  Badge,
   Text,
   HStack,
-  TableContainer,
-  useBreakpointValue,
-  IconButton,
-  useToast,
 } from "@chakra-ui/react";
 import {
   FaPlus,
   FaWallet,
   FaFileInvoice,
+  FaChartLine,
   FaFilter,
-  FaEdit,
-  FaTrash,
 } from "react-icons/fa";
 import styled from "@emotion/styled";
 
@@ -46,7 +43,7 @@ import Header from "../components/minor/Header";
 import MetricCards from "../components/minor/MetricCards";
 import { FaClipboardList, FaClock } from "react-icons/fa6";
 import { FaCheckCircle } from "react-icons/fa";
-import { MetricCardData } from "../utils/types/metrics";
+import { MetricCardData } from "../types/metrics";
 import { useState } from "react";
 
 const StyledModal = styled(ModalContent)`
@@ -99,15 +96,9 @@ interface Expense {
   paymentMethod: string;
 }
 
-interface EditExpense extends Expense {
-  isEditing?: boolean;
-}
-
 export default function PaymentsPage() {
-  const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const isMobile = useBreakpointValue({ base: true, md: false });
-  const [expenses, setExpenses] = useState<EditExpense[]>([
+  const [expenses] = useState<Expense[]>([
     {
       id: "EXP001",
       category: "Fuel",
@@ -116,7 +107,6 @@ export default function PaymentsPage() {
       date: "2024-02-20",
       status: "approved",
       paymentMethod: "Cash",
-      isEditing: false,
     },
     // Add more mock data...
   ]);
@@ -167,76 +157,32 @@ export default function PaymentsPage() {
     },
   ];
 
-  const handleDelete = (id: string) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this expense?"
-    );
-    if (confirmDelete) {
-      setExpenses(expenses.filter((expense) => expense.id !== id));
-      toast({
-        title: "Expense deleted",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
-    }
-  };
-
-  const handleEdit = (id: string) => {
-    const expenseToEdit = expenses.find((exp) => exp.id === id);
-    if (expenseToEdit) {
-      setNewExpense({
-        category: expenseToEdit.category,
-        amount: expenseToEdit.amount,
-        description: expenseToEdit.description,
-        paymentMethod: expenseToEdit.paymentMethod,
-      });
-      onOpen();
-    }
-  };
-
   return (
     <Flex>
-      <Sidebar />
+      <Box display={{ base: "none", lg: "block" }}>
+        <Sidebar />
+      </Box>
       <MainContent>
-        <Box
-          flex="1"
-          p={{
-            base: 2,
-            md: 4,
-            xl: 8,
-          }}
-          mt={{ base: 10, xl: 4 }}
-          w="full"
-          overflowX={{ base: "scroll", xl: "hidden" }}
-        >
+        <Box flex="1" p={8}>
           <Header />
           <MetricCards metrics={JobOrderMetrics} />
 
           {/* Quick Actions */}
           <Grid
-            templateColumns={{
-              base: "1fr",
-              lg: "repeat(2, 1fr)",
-              xl: "repeat(3, 1fr)",
-            }}
-            gap={{ base: 3, md: 6 }}
-            mb={{ base: 4, md: 8 }}
+            templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }}
+            gap={6}
+            mb={8}
           >
             <ExpenseCard>
-              <VStack align="stretch" spacing={{ base: 2, md: 4 }}>
-                <Icon
-                  as={FaWallet}
-                  color="blue.500"
-                  boxSize={{ base: 5, md: 6 }}
-                />
-                <Text fontWeight="medium" fontSize={{ base: "xs", md: "sm" }}>
+              <VStack align="stretch" spacing={4}>
+                <Icon as={FaWallet} color="blue.500" boxSize={6} />
+                <Text fontWeight="medium" fontSize="sm">
                   Quick Add Expense
                 </Text>
                 <Button
                   colorScheme="blue"
                   leftIcon={<FaPlus />}
-                  size={{ base: "xs", md: "sm" }}
+                  size="sm"
                   onClick={onOpen}
                 >
                   Add New Expense
@@ -245,79 +191,51 @@ export default function PaymentsPage() {
             </ExpenseCard>
 
             <ExpenseCard>
-              <VStack align="stretch" spacing={{ base: 2, md: 4 }}>
+              <VStack align="stretch" spacing={4}>
                 <Icon
                   as={FaFileInvoice}
                   fontSize="sm"
                   color="purple.500"
-                  boxSize={{ base: 5, md: 6 }}
+                  boxSize={6}
                 />
-                <Text fontWeight="medium" fontSize={{ base: "xs", md: "sm" }}>
+                <Text fontWeight="medium" fontSize="sm">
                   Generate Report
                 </Text>
-                <Button
-                  colorScheme="purple"
-                  variant="outline"
-                  size={{ base: "xs", md: "sm" }}
-                >
+                <Button colorScheme="purple" variant="outline" size="sm">
                   Download Report
                 </Button>
               </VStack>
             </ExpenseCard>
 
-            {/* <ExpenseCard>
-              <VStack align="stretch" spacing={{ base: 2, md: 4 }}>
+            <ExpenseCard>
+              <VStack align="stretch" spacing={4}>
                 <Icon
                   as={FaChartLine}
                   fontSize="sm"
                   color="green.500"
-                  boxSize={{ base: 5, md: 6 }}
+                  boxSize={6}
                 />
-                <Text fontWeight="medium" fontSize={{ base: "xs", md: "sm" }}>
+                <Text fontWeight="medium" fontSize="sm">
                   Analytics
                 </Text>
-                <Button
-                  colorScheme="green"
-                  variant="outline"
-                  size={{ base: "xs", md: "sm" }}
-                >
+                <Button colorScheme="green" variant="outline" size="sm">
                   View Analytics
                 </Button>
               </VStack>
-            </ExpenseCard> */}
+            </ExpenseCard>
           </Grid>
 
           {/* Expenses Table */}
-          <Box
-            bg="white"
-            rounded="lg"
-            shadow="sm"
-            overflow="hidden"
-            mx={{ base: -2, md: 0 }} // Negative margin on mobile to allow full-width scroll
-          >
-            <Flex
-              p={{ base: 3, md: 4 }}
-              justify="space-between"
-              align="center"
-              direction={{ base: "column", sm: "row" }}
-              gap={3}
-            >
-              <Text fontSize={{ base: "sm", md: "lg" }} fontWeight="bold">
+          <Box bg="white" rounded="lg" shadow="sm" overflow="hidden">
+            <Flex p={4} justify="space-between" align="center">
+              <Text fontSize="lg" fontWeight="bold">
                 Recent Expenses
               </Text>
-              <HStack spacing={2}>
-                <Button
-                  leftIcon={<FaFilter />}
-                  size={{ base: "xs", md: "sm" }}
-                  variant="ghost"
-                >
+              <HStack>
+                <Button leftIcon={<FaFilter />} size="sm" variant="ghost">
                   Filter
                 </Button>
-                <Select
-                  placeholder="Category"
-                  size={{ base: "xs", md: "sm" }}
-                  maxW={{ base: "150px", md: "200px" }}
-                >
+                <Select placeholder="Category" size="sm" maxW="200px">
                   <option
                     style={{
                       backgroundColor: "#eee",
@@ -354,112 +272,61 @@ export default function PaymentsPage() {
               </HStack>
             </Flex>
 
-            <TableContainer minW="900px" overflowX="auto">
-              <Table variant="simple" size={{ base: "sm", md: "md" }}>
-                <Thead bg="gray.50">
-                  <Tr>
-                    <Th color="gray.600">Date</Th>
-                    <Th color="gray.600">Category</Th>
-                    {!isMobile && <Th color="gray.600">Description</Th>}
-                    <Th color="gray.600" isNumeric>
-                      Amount
-                    </Th>
-                    {!isMobile && <Th color="gray.600">Payment Method</Th>}
-                    {/* <Th color="gray.600">Status</Th> */}
-                    <Th color="gray.600" width="100px">
-                      Actions
-                    </Th>
+            <Table variant="simple">
+              <Thead bg="gray.50">
+                <Tr>
+                  <Th>ID</Th>
+                  <Th>Category</Th>
+                  <Th>Description</Th>
+                  <Th isNumeric>Amount</Th>
+                  <Th>Date</Th>
+                  <Th>Payment Method</Th>
+                  <Th>Status</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {expenses.map((expense) => (
+                  <Tr key={expense.id}>
+                    <Td fontWeight="medium">{expense.id}</Td>
+                    <Td>{expense.category}</Td>
+                    <Td>{expense.description}</Td>
+                    <Td isNumeric fontWeight="bold">
+                      ₦{expense.amount}
+                    </Td>
+                    <Td>{expense.date}</Td>
+                    <Td>{expense.paymentMethod}</Td>
+                    <Td>
+                      <Badge
+                        colorScheme={
+                          expense.status === "approved"
+                            ? "green"
+                            : expense.status === "rejected"
+                            ? "red"
+                            : "yellow"
+                        }
+                      >
+                        {expense.status}
+                      </Badge>
+                    </Td>
                   </Tr>
-                </Thead>
-                <Tbody>
-                  {expenses.map((expense) => (
-                    <Tr key={expense.id}>
-                      <Td fontSize={{ base: "xs", md: "sm" }}>
-                        {expense.date}
-                      </Td>
-                      <Td fontSize={{ base: "xs", md: "sm" }}>
-                        {expense.category}
-                      </Td>
-                      {!isMobile && (
-                        <Td fontSize={{ base: "xs", md: "sm" }}>
-                          {expense.description}
-                        </Td>
-                      )}
-                      <Td fontSize={{ base: "xs", md: "sm" }} isNumeric>
-                        ₦{expense.amount.toLocaleString()}
-                      </Td>
-                      {!isMobile && (
-                        <Td fontSize={{ base: "xs", md: "sm" }}>
-                          {expense.paymentMethod}
-                        </Td>
-                      )}
-                      {/* <Td>
-                        <Badge
-                          colorScheme={
-                            expense.status === "approved"
-                              ? "green"
-                              : expense.status === "pending"
-                              ? "yellow"
-                              : "red"
-                          }
-                          fontSize={{ base: "2xs", md: "xs" }}
-                          px={{ base: 1, md: 2 }}
-                        >
-                          {expense.status}
-                        </Badge>
-                      </Td> */}
-                      <Td>
-                        <HStack spacing={2}>
-                          <IconButton
-                            aria-label="Edit expense"
-                            icon={<FaEdit />}
-                            size={{ base: "xs", md: "sm" }}
-                            colorScheme="blue"
-                            variant="ghost"
-                            onClick={() => handleEdit(expense.id)}
-                          />
-                          <IconButton
-                            aria-label="Delete expense"
-                            icon={<FaTrash />}
-                            size={{ base: "xs", md: "sm" }}
-                            colorScheme="red"
-                            variant="ghost"
-                            onClick={() => handleDelete(expense.id)}
-                          />
-                        </HStack>
-                      </Td>
-                    </Tr>
-                  ))}
-                </Tbody>
-              </Table>
-            </TableContainer>
+                ))}
+              </Tbody>
+            </Table>
           </Box>
 
           {/* Add Expense Modal */}
-          <Modal
-            isOpen={isOpen}
-            onClose={onClose}
-            size={{ base: "full", md: "xl" }}
-          >
+          <Modal isOpen={isOpen} onClose={onClose} size="xl">
             <ModalOverlay backdropFilter="blur(10px)" />
             <StyledModal>
-              <ModalHeader
-                borderBottom="1px solid"
-                borderColor="gray.100"
-                fontSize={{ base: "lg", md: "xl" }}
-                py={{ base: 3, md: 4 }}
-              >
+              <ModalHeader borderBottom="1px solid" borderColor="gray.100">
                 Add New Expense
               </ModalHeader>
               <ModalCloseButton />
-              <ModalBody py={{ base: 4, md: 6 }}>
-                <VStack spacing={{ base: 3, md: 4 }}>
+              <ModalBody py={6}>
+                <VStack spacing={4}>
                   <FormControl>
-                    <FormLabel fontSize={{ base: "sm", md: "md" }}>
-                      Category
-                    </FormLabel>
+                    <FormLabel>Category</FormLabel>
                     <Select
-                      size={{ base: "sm", md: "md" }}
                       placeholder="Select category"
                       value={newExpense.category}
                       onChange={(e) =>
@@ -509,9 +376,7 @@ export default function PaymentsPage() {
                   </FormControl>
 
                   <FormControl>
-                    <FormLabel fontSize={{ base: "sm", md: "md" }}>
-                      Amount
-                    </FormLabel>
+                    <FormLabel>Amount</FormLabel>
                     <StyledInput
                       type="number"
                       placeholder="Enter amount"
@@ -526,9 +391,7 @@ export default function PaymentsPage() {
                   </FormControl>
 
                   <FormControl>
-                    <FormLabel fontSize={{ base: "sm", md: "md" }}>
-                      Description
-                    </FormLabel>
+                    <FormLabel>Description</FormLabel>
                     <Textarea
                       background=" rgba(247, 250, 252, 0.8)"
                       border=" 1px solid #e2e8f0"
@@ -546,11 +409,8 @@ export default function PaymentsPage() {
                   </FormControl>
 
                   <FormControl>
-                    <FormLabel fontSize={{ base: "sm", md: "md" }}>
-                      Payment Method
-                    </FormLabel>
+                    <FormLabel>Payment Method</FormLabel>
                     <Select
-                      size={{ base: "sm", md: "md" }}
                       placeholder="Select payment method"
                       value={newExpense.paymentMethod}
                       onChange={(e) =>
@@ -590,11 +450,7 @@ export default function PaymentsPage() {
                     </Select>
                   </FormControl>
 
-                  <Button
-                    colorScheme="blue"
-                    size={{ base: "sm", md: "md" }}
-                    width="full"
-                  >
+                  <Button colorScheme="blue" size="sm" width="full">
                     Add Expense
                   </Button>
                 </VStack>

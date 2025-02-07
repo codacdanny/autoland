@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useState } from "react";
 import {
@@ -6,12 +7,6 @@ import {
   Flex,
   Heading,
   Input,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
   useDisclosure,
   Text,
   Badge,
@@ -29,39 +24,19 @@ import {
   RadioGroup,
   Radio,
   HStack,
+  IconButton,
+  VStack,
+  Collapse,
 } from "@chakra-ui/react";
-import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
+import { FaPlus, FaEdit, FaTrash, FaDownload } from "react-icons/fa";
 import Sidebar from "@/app/components/major/Sidebar";
 import MainContent from "@/app/components/minor/MainContent";
 import Header from "@/app/components/minor/Header";
 import styled from "@emotion/styled";
+import { motion } from "framer-motion";
+import { CarDetail } from "@/app/utils/types/autoclub";
 
-const StyledTable = styled(Table)`
-  th {
-    background: #f7fafc;
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    letter-spacing: 0.05em;
-    color: gray.600;
-  }
-
-  tr {
-    transition: all 0.2s;
-    cursor: pointer;
-
-    &:hover {
-      background: #edf2f7;
-      transform: translateY(-2px);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    }
-  }
-
-  td {
-    font-size: 0.875rem;
-  }
-`;
-
-const StyledModal = styled(ModalContent)`
+export const StyledModal = styled(ModalContent)`
   background: linear-gradient(
     145deg,
     rgba(255, 255, 255, 0.95),
@@ -106,28 +81,32 @@ const usersData = [
   {
     name: "Danny Praise",
     phone: "0807 4999 5108",
-
     email: "info@dannycode.com",
     password: "",
     subscription: "Gold",
-    status: "active",
+    servicesUsed: "2 / 3",
+    status: "Active",
+    cars: [
+      { carModel: "Toyota Camry", plateNumber: "ABC 123" },
+      { carModel: "Honda Civic", plateNumber: "XYZ 789" },
+    ],
   },
   {
     name: "Danny Praise",
     phone: "0807 4999 5108",
-
     email: "info@dannycode.com",
     password: "",
     subscription: "Platinum",
+    servicesUsed: "2 / 3",
     status: "expired",
   },
   {
     name: "Danny Praise",
     phone: "0807 4999 5108",
-
     email: "info@dannycode.com",
     password: "",
     subscription: "Silver",
+    servicesUsed: "2 / 3",
     status: "inactive",
   },
   // Add more technician data as needed
@@ -136,12 +115,24 @@ const usersData = [
 interface UserFormData {
   name: string;
   phone: string;
-
   email: string;
   password: string;
   subscription: string;
   status: string;
+  servicesUsed: string;
+  cars: CarDetail[];
 }
+
+const GridHeader = ({ children }: { children: React.ReactNode }) => (
+  <Text
+    fontSize="xs"
+    fontWeight="semibold"
+    color="gray.600"
+    textTransform="uppercase"
+    p={4}>
+    {children}
+  </Text>
+);
 
 export default function UsersPage() {
   const [searchTerm] = useState("");
@@ -155,14 +146,20 @@ export default function UsersPage() {
   const [formData, setFormData] = useState<UserFormData>({
     name: "",
     phone: "",
-
     email: "",
     password: "",
     subscription: "",
-    status: "On Duty",
+    servicesUsed: "",
+    status: "Active",
+    cars: [],
   });
   const [editingUser, setEditingUser] = useState<UserFormData | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [newCar, setNewCar] = useState<CarDetail>({
+    carModel: "",
+    plateNumber: "",
+  });
+  const [expandedRow, setExpandedRow] = useState<string | null>(null);
 
   // const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   setSearchTerm(e.target.value);
@@ -207,11 +204,12 @@ export default function UsersPage() {
     setFormData({
       name: "",
       phone: "",
-
       email: "",
       password: "",
       subscription: "",
-      status: "On Duty",
+      servicesUsed: "",
+      status: "Active",
+      cars: [],
     });
     onModalClose();
   };
@@ -227,34 +225,70 @@ export default function UsersPage() {
       return;
     }
 
-    if (isEditMode && editingUser) {
-      // Update existing User
-      const userIndex = usersData.findIndex(
-        (tech) => tech.email === editingUser.email
+    if (isEditMode) {
+      // Update existing user
+      const updatedUsers = usersData.map((user) =>
+        user.email === editingUser?.email ? formData : user
       );
-      if (userIndex !== -1) {
-        usersData[userIndex] = formData;
-      }
+      usersData.length = 0;
+      usersData.push(...updatedUsers);
       toast({
         title: "Success",
-        description: "User updated successfully",
+        description: "Member updated successfully",
         status: "success",
         duration: 3000,
       });
     } else {
-      // Add new User
-      const newUser = { ...formData };
-      usersData.push(newUser);
-
+      // Add new user
+      usersData.push(formData);
       toast({
         title: "Success",
-        description: "User added successfully",
+        description: "New member added successfully",
         status: "success",
         duration: 3000,
       });
     }
 
     handleModalClose();
+  };
+
+  const handleAddCar = () => {
+    if (newCar.carModel && newCar.plateNumber) {
+      setFormData((prev) => ({
+        ...prev,
+        cars: [...prev.cars, newCar],
+      }));
+      setNewCar({ carModel: "", plateNumber: "" });
+    } else {
+      toast({
+        title: "Error",
+        description: "Please fill in both car model and plate number",
+        status: "error",
+        duration: 3000,
+      });
+    }
+  };
+
+  const handleRemoveCar = (index: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      cars: prev.cars.filter((_, i) => i !== index),
+    }));
+  };
+
+  const handleRowClick = (userId: string) => {
+    setExpandedRow(expandedRow === userId ? null : userId);
+  };
+
+  const handleDownloadQR = (email?: string) => {
+    // QR code download logic here
+    email;
+    toast({
+      title: "QR Code Downloaded",
+      description: "Member's QR code has been downloaded successfully",
+      status: "success",
+      duration: 3000,
+    });
   };
 
   const filteredUsers = usersData.filter((user) =>
@@ -274,8 +308,7 @@ export default function UsersPage() {
             md: 4,
             xl: 8,
           }}
-          mt={{ base: 10, xl: 4 }}
-        >
+          mt={{ base: 10, xl: 4 }}>
           <Header />
           <Flex justify="space-between" align="center" mb={4}>
             <Heading size="sm">AutoClub Members</Heading>
@@ -285,90 +318,215 @@ export default function UsersPage() {
                 color="white"
                 leftIcon={<FaPlus />}
                 onClick={onModalOpen}
-                size="sm"
-              >
+                size="sm">
                 Add Member
               </Button>
             </Flex>
           </Flex>
           <Box
-            overflowX="auto"
-            shadow="sm"
-            rounded="lg"
+            as={motion.div}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            borderRadius="2xl"
             bg="white"
-            css={{
-              "&::-webkit-scrollbar": {
-                height: "8px",
-              },
-              "&::-webkit-scrollbar-track": {
-                background: "#f1f1f1",
-                borderRadius: "4px",
-              },
-              "&::-webkit-scrollbar-thumb": {
-                background: "#cbd5e0",
-                borderRadius: "4px",
-                "&:hover": {
-                  background: "#a0aec0",
-                },
-              },
-            }}
-          >
-            <Box minWidth="1200px">
-              <StyledTable>
-                <Thead>
-                  <Tr>
-                    <Th>Name</Th>
-                    <Th>Phone</Th>
-                    <Th>Email</Th>
+            boxShadow="md">
+            <Box overflowX="auto">
+              <Box minWidth="1200px">
+                <Box
+                  display="grid"
+                  gridTemplateColumns="repeat(8, 1fr)"
+                  gap={4}
+                  bg="gray.50"
+                  borderRadius="lg"
+                  mb={2}>
+                  <GridHeader>Member Name</GridHeader>
+                  <GridHeader>Phone</GridHeader>
+                  <GridHeader>Email</GridHeader>
+                  <GridHeader>Cars</GridHeader>
+                  <GridHeader>Subscription</GridHeader>
+                  <GridHeader>Services Used</GridHeader>
+                  <GridHeader>Status</GridHeader>
+                  <GridHeader>Actions</GridHeader>
+                </Box>
 
-                    <Th>Subscription</Th>
-                    <Th>Status</Th>
-                    <Th>Actions</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {filteredUsers.map((users, index) => (
-                    <Tr key={index}>
-                      <Td>{users.name}</Td>
-                      <Td>{users.phone}</Td>
-                      <Td>{users.email}</Td>
+                <VStack spacing={2} align="stretch">
+                  {filteredUsers.map((user) => (
+                    <Box key={user.email}>
+                      <Box
+                        display="grid"
+                        gridTemplateColumns="repeat(8, 1fr)"
+                        gap={4}
+                        p={4}
+                        bg="white"
+                        borderRadius="lg"
+                        onClick={() => handleRowClick(user.email)}
+                        _hover={{
+                          transform: "translateY(-2px)",
+                          boxShadow: "sm",
+                          bg: "gray.50",
+                        }}
+                        transition="all 0.2s"
+                        cursor="pointer">
+                        <Flex align="center">
+                          <Text fontWeight="medium">{user.name}</Text>
+                        </Flex>
 
-                      <Td>{users.subscription}</Td>
-                      <Td>
-                        <Badge
-                          colorScheme={
-                            users.status === "On Duty" ? "green" : "red"
-                          }
-                        >
-                          {users.status}
-                        </Badge>
-                      </Td>
-                      <Td>
-                        <HStack spacing={2}>
-                          <Button
+                        <Flex align="center">
+                          <Text>{user.phone}</Text>
+                        </Flex>
+
+                        <Flex align="center">
+                          <Text color="gray.600" fontSize="sm">
+                            {user.email}
+                          </Text>
+                        </Flex>
+
+                        <Flex align="center">
+                          <Badge
+                            colorScheme="blue"
+                            variant="subtle"
+                            px={3}
+                            py={1}
+                            borderRadius="full">
+                            {user.cars?.length || 0} Cars
+                          </Badge>
+                        </Flex>
+
+                        <Flex align="center">
+                          <Badge
+                            colorScheme={
+                              user.subscription === "Platinum"
+                                ? "purple"
+                                : user.subscription === "Gold"
+                                ? "yellow"
+                                : "gray"
+                            }
+                            variant="subtle"
+                            px={3}
+                            py={1}
+                            borderRadius="full">
+                            {user.subscription}
+                          </Badge>
+                        </Flex>
+                        <Flex align="center">
+                          <Text color="gray.600" fontSize="sm">
+                            {user.servicesUsed}
+                          </Text>
+                        </Flex>
+
+                        <Flex align="center">
+                          <Badge
+                            colorScheme={
+                              user.status === "Active" ? "green" : "red"
+                            }
+                            variant="subtle"
+                            px={3}
+                            py={1}
+                            borderRadius="full">
+                            {user.status}
+                          </Badge>
+                        </Flex>
+
+                        <Flex gap={2}>
+                          <IconButton
+                            aria-label="Edit member"
+                            icon={<FaEdit />}
                             size="sm"
                             colorScheme="blue"
                             variant="ghost"
-                            onClick={() => handleEdit({ ...users })}
-                            leftIcon={<FaEdit />}
-                          >
-                            Edit
-                          </Button>
-                          <Button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEdit({ ...user, cars: user.cars || [] });
+                            }}
+                          />
+                          <IconButton
+                            aria-label="Delete member"
+                            icon={<FaTrash />}
                             size="sm"
                             colorScheme="red"
                             variant="ghost"
-                            onClick={() => handleDelete(users)}
-                            leftIcon={<FaTrash />}
-                          >
-                            Delete
-                          </Button>
-                        </HStack>
-                      </Td>
-                    </Tr>
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDelete({ ...user, cars: user.cars || [] });
+                            }}
+                          />
+                          <IconButton
+                            aria-label="Download member QR Code"
+                            icon={<FaDownload />}
+                            size="sm"
+                            colorScheme="teal"
+                            variant="ghost"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDownloadQR(user.email);
+                            }}
+                            alignSelf="flex-end"
+                            w={{ base: "full", sm: "auto" }}
+                          />
+                        </Flex>
+                      </Box>
+
+                      <Collapse in={expandedRow === user.email}>
+                        <Box
+                          ml={4}
+                          p={4}
+                          bg="gray.50"
+                          borderRadius="lg"
+                          mt={2}
+                          border="1px dashed"
+                          borderColor="gray.200">
+                          <VStack align="stretch" spacing={4}>
+                            <Box>
+                              <Text
+                                fontSize="sm"
+                                fontWeight="medium"
+                                color="gray.700"
+                                mb={3}>
+                                Registered Vehicles ({user.cars?.length || 0})
+                              </Text>
+                              {user.cars && user.cars.length > 0 ? (
+                                <VStack align="stretch" spacing={2}>
+                                  {user.cars.map((car, idx) => (
+                                    <HStack
+                                      key={idx}
+                                      justify="space-between"
+                                      bg="white"
+                                      p={3}
+                                      borderRadius="md"
+                                      boxShadow="sm">
+                                      <HStack spacing={4}>
+                                        <Text fontSize="sm" fontWeight="medium">
+                                          {car.carModel}
+                                        </Text>
+                                        <Badge colorScheme="blue" fontSize="xs">
+                                          {car.plateNumber}
+                                        </Badge>
+                                      </HStack>
+                                      <Badge
+                                        colorScheme="green"
+                                        variant="subtle"
+                                        px={2}
+                                        py={1}
+                                        borderRadius="full"
+                                        fontSize="xs">
+                                        Active
+                                      </Badge>
+                                    </HStack>
+                                  ))}
+                                </VStack>
+                              ) : (
+                                <Text fontSize="sm" color="gray.500">
+                                  No vehicles registered
+                                </Text>
+                              )}
+                            </Box>
+                          </VStack>
+                        </Box>
+                      </Collapse>
+                    </Box>
                   ))}
-                </Tbody>
-              </StyledTable>
+                </VStack>
+              </Box>
             </Box>
           </Box>
         </Box>
@@ -383,8 +541,7 @@ export default function UsersPage() {
             borderColor="gray.100"
             py={4}
             fontSize="lg"
-            color="gray.700"
-          >
+            color="gray.700">
             {isEditMode ? "Edit Member" : "Add New Member"}
           </ModalHeader>
           <ModalCloseButton color="gray.800" />
@@ -446,15 +603,13 @@ export default function UsersPage() {
                 </FormLabel>
                 <StyledSelect
                   color="gray.800"
-                  name="role"
+                  name="subscription"
                   value={formData.subscription}
                   onChange={handleInputChange}
-                  placeholder="Select role"
-                >
+                  placeholder="Select subscription">
                   <option
                     style={{ backgroundColor: "#fdfdfd" }}
-                    value="Plantinum"
-                  >
+                    value="Plantinum">
                     Platinum
                   </option>
                   <option style={{ backgroundColor: "#fdfdfd" }} value="Gold">
@@ -465,8 +620,7 @@ export default function UsersPage() {
                   </option>
                   <option
                     style={{ backgroundColor: "#fdfdfd" }}
-                    value="Diamond"
-                  >
+                    value="Diamond">
                     Diamond
                   </option>
                 </StyledSelect>
@@ -480,8 +634,7 @@ export default function UsersPage() {
                   value={formData.status}
                   onChange={(value) =>
                     setFormData((prev) => ({ ...prev, status: value }))
-                  }
-                >
+                  }>
                   <Stack direction="row" spacing={4}>
                     <Radio
                       value="Active"
@@ -495,8 +648,7 @@ export default function UsersPage() {
                             borderColor: "blue.500",
                           },
                         },
-                      }}
-                    >
+                      }}>
                       <Text fontSize="sm" color="gray.800">
                         Active
                       </Text>
@@ -513,8 +665,7 @@ export default function UsersPage() {
                             borderColor: "red.500",
                           },
                         },
-                      }}
-                    >
+                      }}>
                       <Text fontSize="sm" color="gray.800">
                         Inactive
                       </Text>
@@ -522,6 +673,71 @@ export default function UsersPage() {
                   </Stack>
                 </RadioGroup>
               </FormControl>
+
+              {/* Add Car Section */}
+              <Box borderWidth="1px" borderRadius="lg" p={4}>
+                <FormControl mb={4} color="gray.800">
+                  <FormLabel fontSize="sm" color="gray.600">
+                    {`   Add Member's Cars`}
+                  </FormLabel>
+                  <Stack spacing={4}>
+                    <Flex gap={4} flexDir="column">
+                      <HStack>
+                        <StyledInput
+                          placeholder="Car Model (e.g., Toyota Camry)"
+                          value={newCar.carModel}
+                          onChange={(e) =>
+                            setNewCar((prev: any) => ({
+                              ...prev,
+                              carModel: e.target.value,
+                            }))
+                          }
+                        />
+                        <StyledInput
+                          placeholder="Plate Number"
+                          value={newCar.plateNumber}
+                          onChange={(e) =>
+                            setNewCar((prev: any) => ({
+                              ...prev,
+                              plateNumber: e.target.value,
+                            }))
+                          }
+                        />
+                      </HStack>
+                      <Button
+                        colorScheme="blue"
+                        onClick={handleAddCar}
+                        size="sm"
+                        width="fit-content"
+                        leftIcon={<FaPlus />}>
+                        Add
+                      </Button>
+                    </Flex>
+
+                    {/* Display added cars */}
+                    {formData.cars.map((car, index) => (
+                      <HStack
+                        key={index}
+                        justify="space-between"
+                        bg="gray.50"
+                        p={2}
+                        borderRadius="md">
+                        <Text fontSize="sm">
+                          {car.carModel} - {car.plateNumber}
+                        </Text>
+                        <IconButton
+                          aria-label="Remove car"
+                          icon={<FaTrash />}
+                          size="sm"
+                          colorScheme="red"
+                          variant="ghost"
+                          onClick={() => handleRemoveCar(index)}
+                        />
+                      </HStack>
+                    ))}
+                  </Stack>
+                </FormControl>
+              </Box>
 
               <Button
                 colorScheme="blue"
@@ -532,8 +748,7 @@ export default function UsersPage() {
                 size="sm"
                 fontSize="sm"
                 onClick={handleSubmit}
-                width="full"
-              >
+                width="full">
                 {isEditMode ? "Update User" : "Add User"}
               </Button>
             </Stack>
