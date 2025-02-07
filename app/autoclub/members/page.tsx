@@ -385,7 +385,7 @@ export default function UsersPage() {
             fontSize="lg"
             color="gray.700"
           >
-            {isEditMode ? "Edit User" : "Add New User"}
+            {isEditMode ? "Edit Member" : "Add New Member"}
           </ModalHeader>
           <ModalCloseButton color="gray.800" />
           <ModalBody py={6}>
@@ -427,7 +427,7 @@ export default function UsersPage() {
                   placeholder="Enter email address"
                 />
               </FormControl>
-              <FormControl isRequired>
+              {/* <FormControl isRequired>
                 <FormLabel fontSize="sm" color="gray.600">
                   Password
                 </FormLabel>
@@ -438,7 +438,7 @@ export default function UsersPage() {
                   onChange={handleInputChange}
                   placeholder="Enter Password"
                 />
-              </FormControl>
+              </FormControl> */}
 
               <FormControl>
                 <FormLabel fontSize="sm" color="gray.600">
@@ -484,12 +484,12 @@ export default function UsersPage() {
                 >
                   <Stack direction="row" spacing={4}>
                     <Radio
-                      value="On Duty"
+                      value="Active"
                       colorScheme="blue"
                       color="gray.800"
                       sx={{
                         "span.chakra-radio__control": {
-                          borderColor: "gray.300",
+                          borderColor: "yellow",
                           _checked: {
                             bg: "blue.500",
                             borderColor: "blue.500",
@@ -502,7 +502,7 @@ export default function UsersPage() {
                       </Text>
                     </Radio>
                     <Radio
-                      value="On Leave"
+                      value="inactive"
                       colorScheme="red"
                       color="gray.800"
                       sx={{

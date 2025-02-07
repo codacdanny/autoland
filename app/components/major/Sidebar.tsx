@@ -248,7 +248,7 @@ const SidebarContent = ({ onClose }: SidebarContentProps) => {
       label: "Autoclub",
       subItems: [
         { label: "Members", path: "/autoclub/members" }, // Updated path
-        { label: "Settings", path: "/autoclub/members" },
+        { label: "Settings", path: "/autoclub/settings" },
       ],
     },
   ];
