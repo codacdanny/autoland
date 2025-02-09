@@ -14,7 +14,6 @@ import {
   ModalCloseButton,
   FormControl,
   FormLabel,
-
   Select,
   Textarea,
   VStack,
@@ -43,8 +42,8 @@ import Header from "../components/minor/Header";
 import MetricCards from "../components/minor/MetricCards";
 import { FaClipboardList, FaClock } from "react-icons/fa6";
 import { FaCheckCircle } from "react-icons/fa";
-import { MetricCardData } from "../types/metrics";
 import { useState } from "react";
+import { MetricCardData } from "../utils/types/metrics";
 
 const StyledModal = styled(ModalContent)`
   background: linear-gradient(
