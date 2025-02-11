@@ -15,6 +15,7 @@ import JobOrderTable from "../components/major/JobOrderTable";
 
 export default function Dashboard() {
   const bgGradient = "linear(to-br, blue.50, purple.50, pink.50)";
+  // console.log("API_BASE_URL", API_BASE_URL);
 
   const dashboardMetrics: MetricCardData[] = [
     {

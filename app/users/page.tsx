@@ -483,13 +483,28 @@ export default function UsersPage() {
                   onChange={handleInputChange}
                   placeholder="Select role"
                 >
-                  <option style={{ backgroundColor: "#fdfdfd" }} value="Alpha">
+                  <option
+                    style={{ backgroundColor: "#fdfdfd" }}
+                    value="frontdesk"
+                  >
                     Front Desk
                   </option>
-                  <option style={{ backgroundColor: "#fdfdfd" }} value="Beta">
+                  <option
+                    style={{ backgroundColor: "#fdfdfd" }}
+                    value="accounts"
+                  >
                     Accounts
                   </option>
-                  <option style={{ backgroundColor: "#fdfdfd" }} value="Delta">
+                  <option
+                    style={{ backgroundColor: "#fdfdfd" }}
+                    value="autoclub"
+                  >
+                    Autoclub
+                  </option>
+                  <option
+                    style={{ backgroundColor: "#fdfdfd" }}
+                    value="workshopManager"
+                  >
                     Manager
                   </option>
                 </StyledSelect>
