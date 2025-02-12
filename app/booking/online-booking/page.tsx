@@ -4,13 +4,14 @@ import Sidebar from "@/app/components/major/Sidebar";
 import Header from "@/app/components/minor/Header";
 import MainContent from "@/app/components/minor/MainContent";
 import MetricCards from "@/app/components/minor/MetricCards";
+import { withAuth } from "@/app/utils/services/hoc";
 import { MetricCardData } from "@/app/utils/types/metrics";
 import { Box, Flex, HStack, Icon, Text } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { FaCheckCircle, FaUserFriends } from "react-icons/fa";
 import { FaClipboardList, FaClock, FaWallet } from "react-icons/fa6";
 
-export default function OnlineBooking() {
+function OnlineBooking() {
   const JobOrderMetrics: MetricCardData[] = [
     {
       title: "Total Online Orders",
@@ -63,8 +64,7 @@ export default function OnlineBooking() {
               md: 4,
               xl: 8,
             }}
-            mt={{ base: 10, xl: 4 }}
-          >
+            mt={{ base: 10, xl: 4 }}>
             {/* Header */}
             <Header />
 
@@ -87,8 +87,7 @@ export default function OnlineBooking() {
               border="1px solid"
               borderColor="gray.100"
               position="relative"
-              overflow="hidden"
-            >
+              overflow="hidden">
               <Box
                 position="absolute"
                 top={0}
@@ -103,8 +102,7 @@ export default function OnlineBooking() {
                 justify="space-between"
                 align="center"
                 flexWrap={{ base: "wrap", md: "nowrap" }}
-                gap={4}
-              >
+                gap={4}>
                 <HStack spacing={4}>
                   <Icon as={FaUserFriends} fontSize="md" color="blue.500" />
                   <Box>
@@ -126,3 +124,4 @@ export default function OnlineBooking() {
     </>
   );
 }
+export default withAuth(OnlineBooking);

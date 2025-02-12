@@ -18,6 +18,7 @@ import Image from "next/image";
 import logoBlue from "../../../assets/logoWhite.webp";
 import Sidebar from "../../../components/major/Sidebar";
 import Header from "../../../components/minor/Header";
+import { withAuth } from "@/app/utils/services/hoc";
 
 const FormContainer = styled(Box)`
   background: white;
@@ -34,7 +35,7 @@ const FormContainer = styled(Box)`
 //   amount: number;
 // }
 
-export default function InvoicePage({}: { params: { id: string } }) {
+function InvoicePage({}: { params: { id: string } }) {
   const invoiceData = {
     customerName: "MR. TONY",
     date: "07/01/25",
@@ -201,8 +202,7 @@ export default function InvoicePage({}: { params: { id: string } }) {
               variant="simple"
               size="sm"
               border="1px"
-              borderColor="gray.200"
-            >
+              borderColor="gray.200">
               <Thead bg="gray.50">
                 <Tr>
                   <Th>Description</Th>
@@ -271,3 +271,4 @@ export default function InvoicePage({}: { params: { id: string } }) {
     </Flex>
   );
 }
+export default withAuth(InvoicePage);

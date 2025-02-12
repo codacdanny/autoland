@@ -34,6 +34,7 @@ import styled from "@emotion/styled";
 import Sidebar from "../components/major/Sidebar";
 import MainContent from "../components/minor/MainContent";
 import Header from "../components/minor/Header";
+import { withAuth } from "../utils/services/hoc";
 
 const StyledTable = styled(Table)`
   th {
@@ -98,7 +99,7 @@ const mockAppointments: Appointment[] = [
   // Add more mock appointments...
 ];
 
-export default function AppointmentsPage() {
+function AppointmentsPage() {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedAppointment, setSelectedAppointment] =
@@ -157,16 +158,14 @@ export default function AppointmentsPage() {
             md: 4,
             xl: 8,
           }}
-          mt={{ base: 10, xl: 4 }}
-        >
+          mt={{ base: 10, xl: 4 }}>
           <Header />
           <Flex
             justify="space-between"
             gap={4}
             wrap="wrap"
             align="center"
-            mb={6}
-          >
+            mb={6}>
             <Heading size="sm" color="gray.700">
               Appointments
             </Heading>
@@ -222,8 +221,7 @@ export default function AppointmentsPage() {
                         colorScheme={getStatusColor(appointment.status)}
                         borderRadius="full"
                         px={3}
-                        py={1}
-                      >
+                        py={1}>
                         {appointment.status}
                       </Badge>
                     </Td>
@@ -234,8 +232,7 @@ export default function AppointmentsPage() {
                           colorScheme="blue"
                           variant="ghost"
                           leftIcon={<FaEdit />}
-                          onClick={() => handleEditClick(appointment)}
-                        >
+                          onClick={() => handleEditClick(appointment)}>
                           Edit
                         </Button>
                         <Button
@@ -244,8 +241,7 @@ export default function AppointmentsPage() {
                           variant="ghost"
                           onClick={() =>
                             handleStatusChange(appointment.id, "approved")
-                          }
-                        >
+                          }>
                           Approve
                         </Button>
                         {appointment.status !== "cancelled" && (
@@ -256,8 +252,7 @@ export default function AppointmentsPage() {
                             leftIcon={<FaTimes />}
                             onClick={() =>
                               handleStatusChange(appointment.id, "cancelled")
-                            }
-                          >
+                            }>
                             Cancel
                           </Button>
                         )}
@@ -281,8 +276,7 @@ export default function AppointmentsPage() {
                 color="white"
                 fontWeight="bold"
                 bgGradient="linear(to-r, blue.400, blue.600)"
-                borderTopRadius="20px"
-              >
+                borderTopRadius="20px">
                 Edit Appointment
               </ModalHeader>
               <ModalCloseButton color="white" />
@@ -290,8 +284,7 @@ export default function AppointmentsPage() {
                 py={6}
                 color="gray.200"
                 bg="gray.800"
-                borderRadius="md"
-              >
+                borderRadius="md">
                 <Stack spacing={4}>
                   <Text fontWeight="bold" fontSize="lg" color="white">
                     Appointment Details
@@ -320,8 +313,7 @@ export default function AppointmentsPage() {
                     <FormLabel
                       htmlFor="edit-date"
                       fontWeight="medium"
-                      color="white"
-                    >
+                      color="white">
                       New Date
                     </FormLabel>
                     <Input
@@ -342,8 +334,7 @@ export default function AppointmentsPage() {
                     <FormLabel
                       htmlFor="edit-description"
                       fontWeight="medium"
-                      color="white"
-                    >
+                      color="white">
                       Description
                     </FormLabel>
                     <Textarea
@@ -369,8 +360,7 @@ export default function AppointmentsPage() {
                     mt={4}
                     bgGradient="linear(to-r, blue.400, blue.600)"
                     _hover={{ bgGradient: "linear(to-r, blue.500, blue.700)" }}
-                    color="white"
-                  >
+                    color="white">
                     Save
                   </Button>
                 </Stack>
@@ -382,3 +372,4 @@ export default function AppointmentsPage() {
     </Flex>
   );
 }
+export default withAuth(AppointmentsPage);

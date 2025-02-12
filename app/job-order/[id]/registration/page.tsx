@@ -21,9 +21,11 @@ import TabB from "@/app/components/minor/TabB";
 import TabD from "@/app/components/minor/TabD";
 import TabC from "@/app/components/minor/TabC";
 
+import { withAuth } from "@/app/utils/services/hoc";
+
 // Updated styled components
 
-export default function RegistrationPage() {
+function RegistrationPage() {
   const [formData, setFormData] = useState<FormData>({
     clientName: "",
     phoneNumber: "",
@@ -72,21 +74,18 @@ export default function RegistrationPage() {
             md: 4,
             xl: 8,
           }}
-          mt={{ base: 10, xl: 4 }}
-        >
+          mt={{ base: 10, xl: 4 }}>
           <Box>
             <Flex
               align="center"
               mb={{ base: 4, md: 8 }}
               direction={{ base: "column", sm: "row" }}
-              gap={2}
-            >
+              gap={2}>
               <Icon as={FaClipboard} fontSize="sm" color="blue.500" mr={3} />
               <Heading
                 size={{ base: "xs", md: "sm" }}
                 color="gray.700"
-                fontWeight="600"
-              >
+                fontWeight="600">
                 New Job Order
               </Heading>
             </Flex>
@@ -95,26 +94,22 @@ export default function RegistrationPage() {
               <TabList display="flex" flexWrap="wrap">
                 <Tab
                   fontSize={{ base: "xs", md: "sm" }}
-                  px={{ base: 2, md: 4 }}
-                >
+                  px={{ base: 2, md: 4 }}>
                   Section A
                 </Tab>
                 <Tab
                   fontSize={{ base: "xs", md: "sm" }}
-                  px={{ base: 2, md: 4 }}
-                >
+                  px={{ base: 2, md: 4 }}>
                   Section B
                 </Tab>
                 <Tab
                   fontSize={{ base: "xs", md: "sm" }}
-                  px={{ base: 2, md: 4 }}
-                >
+                  px={{ base: 2, md: 4 }}>
                   Section C
                 </Tab>
                 <Tab
                   fontSize={{ base: "xs", md: "sm" }}
-                  px={{ base: 2, md: 4 }}
-                >
+                  px={{ base: 2, md: 4 }}>
                   Section D
                 </Tab>
               </TabList>
@@ -142,3 +137,4 @@ export default function RegistrationPage() {
     </Flex>
   );
 }
+export default withAuth(RegistrationPage);

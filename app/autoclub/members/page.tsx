@@ -35,6 +35,7 @@ import Header from "@/app/components/minor/Header";
 import styled from "@emotion/styled";
 import { motion } from "framer-motion";
 import { CarDetail } from "@/app/utils/types/autoclub";
+import { withAuth } from "@/app/utils/services/hoc";
 
 const StyledModal = styled(ModalContent)`
   background: linear-gradient(
@@ -135,7 +136,7 @@ const GridHeader = ({ children }: { children: React.ReactNode }) => (
   </Text>
 );
 
-export default function UsersPage() {
+function UsersPage() {
   const [searchTerm] = useState("");
   // const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
@@ -781,3 +782,4 @@ export default function UsersPage() {
     </Flex>
   );
 }
+export default withAuth(UsersPage);

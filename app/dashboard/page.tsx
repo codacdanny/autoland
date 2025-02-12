@@ -12,8 +12,9 @@ import Header from "../components/minor/Header";
 import { MetricCardData } from "../utils/types/metrics";
 import MetricCards from "../components/minor/MetricCards";
 import JobOrderTable from "../components/major/JobOrderTable";
+import { withAuth } from "../utils/services/hoc";
 
-export default function Dashboard() {
+function Dashboard() {
   const bgGradient = "linear(to-br, blue.50, purple.50, pink.50)";
   // console.log("API_BASE_URL", API_BASE_URL);
 
@@ -69,8 +70,7 @@ export default function Dashboard() {
             md: 4,
             xl: 8,
           }}
-          mt={{ base: 10, xl: 4 }}
-        >
+          mt={{ base: 10, xl: 4 }}>
           {/* Header */}
           <Header />
 
@@ -84,3 +84,4 @@ export default function Dashboard() {
     </Flex>
   );
 }
+export default withAuth(Dashboard);

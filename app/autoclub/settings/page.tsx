@@ -29,6 +29,7 @@ import { FaWallet } from "react-icons/fa6";
 import { useState } from "react";
 import { SubscriptionTierCard } from "@/app/components/autoclub/SubscriptionTierCard";
 import { SubscriptionTierForm } from "@/app/components/autoclub/SubscriptionTierForm";
+import { withAuth } from "@/app/utils/services/hoc";
 
 // Sample subscription tiers data
 const initialTiers: SubscriptionTier[] = [
@@ -112,7 +113,7 @@ const JobOrderMetrics: MetricCardData[] = [
   },
 ];
 
-export default function AutoclubSettings() {
+function AutoclubSettings() {
   const [subscriptionTiers, setSubscriptionTiers] =
     useState<SubscriptionTier[]>(initialTiers);
   const [editingTier, setEditingTier] = useState<
@@ -180,8 +181,7 @@ export default function AutoclubSettings() {
             md: 4,
             xl: 8,
           }}
-          mt={{ base: 10, xl: 4 }}
-        >
+          mt={{ base: 10, xl: 4 }}>
           <Header />
           <MetricCards metrics={JobOrderMetrics} />
 
@@ -194,8 +194,7 @@ export default function AutoclubSettings() {
               leftIcon={<FaPlus />}
               colorScheme="blue"
               onClick={handleAddTier}
-              size="sm"
-            >
+              size="sm">
               Add New Tier
             </Button>
           </Flex>
@@ -206,8 +205,7 @@ export default function AutoclubSettings() {
               md: "repeat(2, 1fr)",
               lg: "repeat(4, 1fr)",
             }}
-            gap={6}
-          >
+            gap={6}>
             {subscriptionTiers.map((tier) => (
               <SubscriptionTierCard
                 key={tier.id}
@@ -241,3 +239,4 @@ export default function AutoclubSettings() {
     </Flex>
   );
 }
+export default withAuth(AutoclubSettings);

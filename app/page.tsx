@@ -5,6 +5,7 @@ import bgLogin from "./assets/login_bg.jpg";
 import GlassCard from "./components/minor/GlassCard";
 import { useRouter } from "next/navigation";
 import { authService } from "./utils/services/auth";
+import { setCookie } from "cookies-next";
 
 export default function Home() {
   const router = useRouter();
@@ -45,13 +46,18 @@ export default function Home() {
         password: formData.password,
       });
 
-      localStorage.setItem("token", response.token);
+      setCookie("token", response.token, {
+        maxAge: 24 * 60 * 60, // 24hours
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+      });
 
       toast({
         title: "Success",
         description: "Login successful",
-        position: "top-right",
         status: "success",
+        position: "top-right",
         duration: 3000,
         isClosable: true,
       });
@@ -79,8 +85,7 @@ export default function Home() {
       minH="100vh"
       bgImage={bgLogin.src}
       bgSize="cover"
-      bgRepeat="no-repeat"
-    >
+      bgRepeat="no-repeat">
       <GlassCard>
         <form onSubmit={handleLogin}>
           <Flex flexDir="column" gap={6} align="stretch">
@@ -124,8 +129,7 @@ export default function Home() {
               w="100%"
               mt={4}
               isLoading={isLoading}
-              loadingText="Signing in..."
-            >
+              loadingText="Signing in...">
               Sign In
             </Button>
           </Flex>

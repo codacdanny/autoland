@@ -26,6 +26,7 @@ import {
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { FaUser, FaFileInvoice, FaPlus, FaTrash } from "react-icons/fa";
+import { withAuth } from "@/app/utils/services/hoc";
 
 const StyledInput = styled(Input)`
   background: rgba(247, 250, 252, 0.8);
@@ -68,7 +69,7 @@ const SectionTitle = styled(Heading)`
   }
 `;
 
-export default function StockistPage() {
+function StockistPage() {
   const [formData, setFormData] = useState({
     name: "",
     regNo: "",
@@ -161,8 +162,7 @@ export default function StockistPage() {
             </SectionTitle>
             <Grid
               templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }}
-              gap={{ base: 3, md: 4 }}
-            >
+              gap={{ base: 3, md: 4 }}>
               <VStack align="stretch">
                 <FormLabel color="gray.600" fontSize={{ base: "xs", md: "sm" }}>
                   Customer Name
@@ -393,8 +393,7 @@ export default function StockistPage() {
               size={{ base: "xs", md: "sm" }}
               variant="ghost"
               onClick={handleAddPart}
-              mt={4}
-            >
+              mt={4}>
               Add Part
             </Button>
           </Box>
@@ -405,8 +404,7 @@ export default function StockistPage() {
             <VStack
               align="stretch"
               spacing={{ base: 3, md: 4 }}
-              maxW={{ base: "100%", md: "400px" }}
-            >
+              maxW={{ base: "100%", md: "400px" }}>
               <HStack justify="space-between">
                 <Text color="gray.600" fontSize={{ base: "sm", md: "md" }}>
                   Labour:
@@ -457,14 +455,12 @@ export default function StockistPage() {
             gap={{ base: 2, md: 4 }}
             direction={{ base: "column", md: "row" }}
             wrap="wrap"
-            mb={{ base: 6, md: 8 }}
-          >
+            mb={{ base: 6, md: 8 }}>
             <Button
               variant="outline"
               size={{ base: "xs", md: "sm" }}
               colorScheme="blue"
-              w={{ base: "full", md: "auto" }}
-            >
+              w={{ base: "full", md: "auto" }}>
               Cancel
             </Button>
             <Button
@@ -472,8 +468,7 @@ export default function StockistPage() {
               size={{ base: "xs", md: "sm" }}
               onClick={handleSubmit}
               leftIcon={<FaFileInvoice />}
-              w={{ base: "full", sm: "auto" }}
-            >
+              w={{ base: "full", sm: "auto" }}>
               Generate Invoice
             </Button>
             <Button
@@ -481,8 +476,7 @@ export default function StockistPage() {
               size={{ base: "xs", md: "sm" }}
               onClick={handleSubmit}
               leftIcon={<FaFileInvoice />}
-              w={{ base: "full", sm: "auto" }}
-            >
+              w={{ base: "full", sm: "auto" }}>
               Send to client
             </Button>
             <Button
@@ -490,8 +484,7 @@ export default function StockistPage() {
               size={{ base: "xs", md: "sm" }}
               onClick={handleSubmit}
               leftIcon={<FaFileInvoice />}
-              w={{ base: "full", sm: "auto" }}
-            >
+              w={{ base: "full", sm: "auto" }}>
               Download as PDF
             </Button>
           </Flex>
@@ -500,3 +493,4 @@ export default function StockistPage() {
     </Flex>
   );
 }
+export default withAuth(StockistPage);

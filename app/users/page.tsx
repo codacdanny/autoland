@@ -35,6 +35,7 @@ import Sidebar from "@/app/components/major/Sidebar";
 import MainContent from "@/app/components/minor/MainContent";
 import Header from "@/app/components/minor/Header";
 import styled from "@emotion/styled";
+import { withAuth } from "../utils/services/hoc";
 
 const StyledTable = styled(Table)`
   th {
@@ -145,7 +146,7 @@ interface UserFormData {
   status: string;
 }
 
-export default function UsersPage() {
+function UsersPage() {
   const [searchTerm] = useState("");
   // const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
@@ -276,8 +277,7 @@ export default function UsersPage() {
             md: 4,
             xl: 8,
           }}
-          mt={{ base: 10, xl: 4 }}
-        >
+          mt={{ base: 10, xl: 4 }}>
           <Header />
           <Flex justify="space-between" align="center" mb={4}>
             <Heading size="sm">Users</Heading>
@@ -287,8 +287,7 @@ export default function UsersPage() {
                 color="white"
                 leftIcon={<FaPlus />}
                 onClick={onModalOpen}
-                size="sm"
-              >
+                size="sm">
                 Add User
               </Button>
             </Flex>
@@ -313,8 +312,7 @@ export default function UsersPage() {
                   background: "#a0aec0",
                 },
               },
-            }}
-          >
+            }}>
             <Box minWidth="1200px">
               <StyledTable>
                 <Thead>
@@ -342,8 +340,7 @@ export default function UsersPage() {
                         <Badge
                           colorScheme={
                             users.status === "On Duty" ? "green" : "red"
-                          }
-                        >
+                          }>
                           {users.status}
                         </Badge>
                       </Td>
@@ -354,8 +351,7 @@ export default function UsersPage() {
                             colorScheme="blue"
                             variant="ghost"
                             onClick={() => handleEdit(users)}
-                            leftIcon={<FaEdit />}
-                          >
+                            leftIcon={<FaEdit />}>
                             Edit
                           </Button>
                           <Button
@@ -363,8 +359,7 @@ export default function UsersPage() {
                             colorScheme="red"
                             variant="ghost"
                             onClick={() => handleDelete(users)}
-                            leftIcon={<FaTrash />}
-                          >
+                            leftIcon={<FaTrash />}>
                             Delete
                           </Button>
                         </HStack>
@@ -387,8 +382,7 @@ export default function UsersPage() {
             borderColor="gray.100"
             py={4}
             fontSize="lg"
-            color="gray.700"
-          >
+            color="gray.700">
             {isEditMode ? "Edit User" : "Add New User"}
           </ModalHeader>
           <ModalCloseButton color="gray.800" />
@@ -454,18 +448,15 @@ export default function UsersPage() {
                     name="workshop"
                     value={formData.workshop}
                     onChange={handleInputChange}
-                    placeholder="Select workshop"
-                  >
+                    placeholder="Select workshop">
                     <option
                       style={{ backgroundColor: "#fdfdfd" }}
-                      value="Port-Harcourt"
-                    >
+                      value="Port-Harcourt">
                       Port-Harcourt
                     </option>
                     <option
                       style={{ backgroundColor: "#fdfdfd" }}
-                      value="Owerri"
-                    >
+                      value="Owerri">
                       Owerri
                     </option>
                   </StyledSelect>
@@ -481,30 +472,25 @@ export default function UsersPage() {
                   name="role"
                   value={formData.role}
                   onChange={handleInputChange}
-                  placeholder="Select role"
-                >
+                  placeholder="Select role">
                   <option
                     style={{ backgroundColor: "#fdfdfd" }}
-                    value="frontdesk"
-                  >
+                    value="frontdesk">
                     Front Desk
                   </option>
                   <option
                     style={{ backgroundColor: "#fdfdfd" }}
-                    value="accounts"
-                  >
+                    value="accounts">
                     Accounts
                   </option>
                   <option
                     style={{ backgroundColor: "#fdfdfd" }}
-                    value="autoclub"
-                  >
+                    value="autoclub">
                     Autoclub
                   </option>
                   <option
                     style={{ backgroundColor: "#fdfdfd" }}
-                    value="workshopManager"
-                  >
+                    value="workshopManager">
                     Manager
                   </option>
                 </StyledSelect>
@@ -518,8 +504,7 @@ export default function UsersPage() {
                   value={formData.status}
                   onChange={(value) =>
                     setFormData((prev) => ({ ...prev, status: value }))
-                  }
-                >
+                  }>
                   <Stack direction="row" spacing={4}>
                     <Radio
                       value="On Duty"
@@ -533,8 +518,7 @@ export default function UsersPage() {
                             borderColor: "blue.500",
                           },
                         },
-                      }}
-                    >
+                      }}>
                       <Text fontSize="sm" color="gray.800">
                         On Duty
                       </Text>
@@ -551,8 +535,7 @@ export default function UsersPage() {
                             borderColor: "red.500",
                           },
                         },
-                      }}
-                    >
+                      }}>
                       <Text fontSize="sm" color="gray.800">
                         On Leave
                       </Text>
@@ -570,8 +553,7 @@ export default function UsersPage() {
                 size="sm"
                 fontSize="sm"
                 onClick={handleSubmit}
-                width="full"
-              >
+                width="full">
                 {isEditMode ? "Update User" : "Add User"}
               </Button>
             </Stack>
@@ -581,3 +563,4 @@ export default function UsersPage() {
     </Flex>
   );
 }
+export default withAuth(UsersPage);

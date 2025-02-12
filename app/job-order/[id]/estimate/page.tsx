@@ -26,6 +26,7 @@ import {
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { FaUser, FaFileInvoice, FaPlus, FaTrash } from "react-icons/fa";
+import { withAuth } from "@/app/utils/services/hoc";
 
 const StyledInput = styled(Input)`
   background: rgba(247, 250, 252, 0.8);
@@ -68,7 +69,7 @@ const SectionTitle = styled(Heading)`
   }
 `;
 
-export default function EstimatePage() {
+function EstimatePage() {
   const [formData, setFormData] = useState({
     name: "",
     plateNumber: "",
@@ -144,8 +145,7 @@ export default function EstimatePage() {
     <Flex
       // padding={{ base: 2, md: 4, xl: 0 }}
       justifyContent="center"
-      overflowX="scroll"
-    >
+      overflowX="scroll">
       <Box width="100%" flex={1}>
         <Box>
           <Flex align="center" mb={{ base: 4, md: 6 }} gap={2}>
@@ -165,8 +165,7 @@ export default function EstimatePage() {
             </SectionTitle>
             <Grid
               templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }}
-              gap={{ base: 3, md: 4 }}
-            >
+              gap={{ base: 3, md: 4 }}>
               <VStack align="stretch">
                 <FormLabel color="gray.600" fontSize="sm">
                   Customer Name
@@ -387,8 +386,7 @@ export default function EstimatePage() {
               size={{ base: "xs", md: "sm" }}
               variant="ghost"
               onClick={handleAddPart}
-              mt={4}
-            >
+              mt={4}>
               Add Part
             </Button>
           </Box>
@@ -399,8 +397,7 @@ export default function EstimatePage() {
             <VStack
               align="stretch"
               spacing={{ base: 3, md: 4 }}
-              maxW={{ base: "100%", md: "400px" }}
-            >
+              maxW={{ base: "100%", md: "400px" }}>
               <HStack justify="space-between">
                 <Text color="gray.600">Labour:</Text>
                 <StyledInput w="200px" placeholder="0.00" />
@@ -427,14 +424,12 @@ export default function EstimatePage() {
             gap={{ base: 2, md: 4 }}
             direction={{ base: "column", md: "row" }}
             wrap="wrap"
-            mb={{ base: 6, md: 8 }}
-          >
+            mb={{ base: 6, md: 8 }}>
             <Button
               variant="outline"
               size={{ base: "xs", md: "sm" }}
               colorScheme="blue"
-              w={{ base: "full", md: "auto" }}
-            >
+              w={{ base: "full", md: "auto" }}>
               Cancel
             </Button>
             <Button
@@ -442,8 +437,7 @@ export default function EstimatePage() {
               size={{ base: "xs", md: "sm" }}
               onClick={handleSubmit}
               leftIcon={<FaFileInvoice />}
-              w={{ base: "full", sm: "auto" }}
-            >
+              w={{ base: "full", sm: "auto" }}>
               Generate Estimate
             </Button>
             <Button
@@ -451,8 +445,7 @@ export default function EstimatePage() {
               size={{ base: "xs", md: "sm" }}
               onClick={handleSubmit}
               leftIcon={<FaFileInvoice />}
-              w={{ base: "full", sm: "auto" }}
-            >
+              w={{ base: "full", sm: "auto" }}>
               Send to client
             </Button>
             <Button
@@ -460,8 +453,7 @@ export default function EstimatePage() {
               size={{ base: "xs", md: "sm" }}
               onClick={handleSubmit}
               leftIcon={<FaFileInvoice />}
-              w={{ base: "full", sm: "auto" }}
-            >
+              w={{ base: "full", sm: "auto" }}>
               Download as PDF
             </Button>
           </Flex>
@@ -470,3 +462,4 @@ export default function EstimatePage() {
     </Flex>
   );
 }
+export default withAuth(EstimatePage);

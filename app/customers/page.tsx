@@ -44,6 +44,7 @@ import MainContent from "@/app/components/minor/MainContent";
 import Header from "@/app/components/minor/Header";
 import { useRouter } from "next/navigation";
 import { FaCakeCandles } from "react-icons/fa6";
+import { withAuth } from "../utils/services/hoc";
 
 const StyledTable = styled(Table)`
   th {
@@ -134,7 +135,7 @@ const enhancedCustomersData: Customer[] = [
   // ...Add similar vehicle data for other customers...
 ];
 
-export default function CustomersPage() {
+function CustomersPage() {
   // const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -203,8 +204,7 @@ export default function CustomersPage() {
             md: 4,
             xl: 8,
           }}
-          mt={{ base: 10, xl: 4 }}
-        >
+          mt={{ base: 10, xl: 4 }}>
           <Header />
 
           {/* Search and Title Section */}
@@ -238,8 +238,7 @@ export default function CustomersPage() {
                           <Text
                             fontSize="xs"
                             fontWeight="semibold"
-                            color="gray.600"
-                          >
+                            color="gray.600">
                             {customer.email}
                           </Text>
                         </Box>
@@ -258,8 +257,7 @@ export default function CustomersPage() {
                           parseFloat(customer.debt.slice(1)) > 0
                             ? "red.500"
                             : "green.500"
-                        }
-                      >
+                        }>
                         {customer.debt}
                       </Text>
                     </Td>
@@ -270,8 +268,7 @@ export default function CustomersPage() {
                             ? "red"
                             : "green"
                         }
-                        borderRadius="full"
-                      >
+                        borderRadius="full">
                         {parseFloat(customer.debt.slice(1)) > 0
                           ? "Pending"
                           : "Clear"}
@@ -291,8 +288,7 @@ export default function CustomersPage() {
               <DrawerHeader
                 fontSize="medium"
                 fontWeight="extrabold"
-                borderBottomWidth="1px"
-              >
+                borderBottomWidth="1px">
                 Customer Details
               </DrawerHeader>
               <DrawerBody>
@@ -338,8 +334,7 @@ export default function CustomersPage() {
                         size="sm"
                         placeholder="Select vehicle for job order"
                         onChange={(e) => setSelectedVehicle(e.target.value)}
-                        mb={4}
-                      >
+                        mb={4}>
                         {selectedCustomer.vehicles?.map((vehicle, idx) => (
                           <option
                             style={{
@@ -348,8 +343,7 @@ export default function CustomersPage() {
                               fontSize: "14px",
                             }}
                             key={idx}
-                            value={vehicle.model}
-                          >
+                            value={vehicle.model}>
                             {vehicle.model} ({vehicle.year})
                           </option>
                         ))}
@@ -404,8 +398,7 @@ export default function CustomersPage() {
                             p={2}
                             bg="white"
                             borderRadius="md"
-                            fontSize="sm"
-                          >
+                            fontSize="sm">
                             <HStack justify="space-between">
                               <Text>Job Order ID: {history.id}</Text>
                               <Text color="gray.600">{history.date}</Text>
@@ -446,8 +439,7 @@ export default function CustomersPage() {
                         size="sm"
                         leftIcon={<FaCar fontSize="sm" />}
                         onClick={handleCustomerOrder}
-                        mt={4}
-                      >
+                        mt={4}>
                         Customer Order
                       </Button>
                       <Button
@@ -457,8 +449,7 @@ export default function CustomersPage() {
                         size="sm"
                         leftIcon={<FaCar fontSize="sm" />}
                         onClick={handleNewCustomerOrder}
-                        mt={4}
-                      >
+                        mt={4}>
                         New Car Order
                       </Button>
                     </Flex>
@@ -472,3 +463,5 @@ export default function CustomersPage() {
     </Flex>
   );
 }
+
+export default withAuth(CustomersPage);

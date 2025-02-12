@@ -42,6 +42,7 @@ import {
 import { FaCheckCircle, FaClipboardList, FaEdit } from "react-icons/fa";
 import { FaWallet } from "react-icons/fa6";
 import { useState } from "react";
+import { withAuth } from "@/app/utils/services/hoc";
 
 interface Payment {
   id: string;
@@ -51,7 +52,7 @@ interface Payment {
   paymentMethod: string;
 }
 
-export default function CustomerJobOrderAccount() {
+function CustomerJobOrderAccount() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
   const isMobile = useBreakpointValue({ base: true, md: false });
@@ -148,23 +149,20 @@ export default function CustomerJobOrderAccount() {
           xl: 0,
         }}
         mt={{ base: 10, xl: 4 }}
-        width="100%"
-      >
+        width="100%">
         <Header />
         <MetricCards metrics={dashboardMetrics} />
 
         <VStack
           spacing={{ base: 4, md: 6 }}
           align="stretch"
-          mt={{ base: 6, md: 8 }}
-        >
+          mt={{ base: 6, md: 8 }}>
           <Flex
             justify="space-between"
             align="center"
             direction={{ base: "column", sm: "row" }}
             gap={{ base: 2 }}
-            wrap="wrap"
-          >
+            wrap="wrap">
             <Text fontSize={{ base: "sm", md: "md" }} fontWeight="bold">
               Payment History
             </Text>
@@ -172,8 +170,7 @@ export default function CustomerJobOrderAccount() {
               size={{ base: "xs", md: "sm" }}
               colorScheme="blue"
               onClick={onOpen}
-              w={{ base: "full", sm: "auto" }}
-            >
+              w={{ base: "full", sm: "auto" }}>
               Record New Payment
             </Button>
           </Flex>
@@ -183,8 +180,7 @@ export default function CustomerJobOrderAccount() {
             rounded="lg"
             shadow="sm"
             overflow="hidden"
-            mx={{ base: -2, md: 0 }}
-          >
+            mx={{ base: -2, md: 0 }}>
             <TableContainer overflowX="auto">
               <Table variant="simple" size={{ base: "sm", md: "md" }}>
                 <Thead>
@@ -215,8 +211,7 @@ export default function CustomerJobOrderAccount() {
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        size={{ base: "full", md: "xl" }}
-      >
+        size={{ base: "full", md: "xl" }}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader
@@ -224,14 +219,12 @@ export default function CustomerJobOrderAccount() {
             borderColor="gray.200"
             fontSize={{ base: "md", md: "lg" }}
             py={{ base: 3, md: 4 }}
-            mb={8}
-          >
+            mb={8}>
             <Stack
               direction={{ base: "column", sm: "row" }}
               justify="space-between"
               align={{ base: "start", sm: "center" }}
-              spacing={{ base: 2, sm: 0 }}
-            >
+              spacing={{ base: 2, sm: 0 }}>
               <Text fontSize={{ base: "sm", md: "md" }}>
                 {" "}
                 Record New Payment
@@ -241,8 +234,7 @@ export default function CustomerJobOrderAccount() {
                 fontSize={{ base: "2xs", md: "sm" }}
                 px={2}
                 py={1}
-                borderRadius="full"
-              >
+                borderRadius="full">
                 Balance: ₦{balance.toLocaleString()}
               </Badge>
             </Stack>
@@ -261,8 +253,7 @@ export default function CustomerJobOrderAccount() {
                     value={paymentForm.phase}
                     onChange={handleInputChange}
                     placeholder="Select phase"
-                    size={{ base: "sm", md: "md" }}
-                  >
+                    size={{ base: "sm", md: "md" }}>
                     <option value="First Payment">
                       First Payment (Initial)
                     </option>
@@ -312,8 +303,7 @@ export default function CustomerJobOrderAccount() {
                   <Text
                     fontSize={{ base: "2xs", md: "sm" }}
                     color="gray.300"
-                    mt={1}
-                  >
+                    mt={1}>
                     Maximum allowed: ₦{balance.toLocaleString()}
                   </Text>
                 </FormControl>
@@ -338,8 +328,7 @@ export default function CustomerJobOrderAccount() {
                   <Text
                     fontSize={{ base: "2xs", md: "sm" }}
                     color="gray.300"
-                    mt={1}
-                  >
+                    mt={1}>
                     Maximum allowed: ₦{balance.toLocaleString()}
                   </Text>
                 </FormControl>
@@ -355,8 +344,7 @@ export default function CustomerJobOrderAccount() {
                     value={paymentForm.paymentMethod}
                     onChange={handleInputChange}
                     placeholder="Select method"
-                    size={{ base: "sm", md: "md" }}
-                  >
+                    size={{ base: "sm", md: "md" }}>
                     <option value="Cash">💵 Cash</option>
                     <option value="Bank Transfer">🏦 Bank Transfer</option>
                     <option value="POS">💳 POS</option>
@@ -374,8 +362,7 @@ export default function CustomerJobOrderAccount() {
                   <Grid
                     templateColumns="repeat(2, 1fr)"
                     gap={{ base: 1, md: 2 }}
-                    fontSize={{ base: "xs", md: "sm" }}
-                  >
+                    fontSize={{ base: "xs", md: "sm" }}>
                     <Text color="gray.300">Total Job Amount:</Text>
                     <Text fontWeight="bold">
                       ₦{totalJobAmount.toLocaleString()}
@@ -389,8 +376,7 @@ export default function CustomerJobOrderAccount() {
                     <Text color="gray.300">Remaining Balance:</Text>
                     <Text
                       fontWeight="bold"
-                      color={balance === 0 ? "green.500" : "orange.500"}
-                    >
+                      color={balance === 0 ? "green.500" : "orange.500"}>
                       ₦
                       {(
                         balance - (Number(paymentForm.amount) || 0)
@@ -407,8 +393,7 @@ export default function CustomerJobOrderAccount() {
             borderTop="1px solid"
             borderColor="gray.200"
             flexDir={{ base: "column", sm: "row" }}
-            gap={{ base: 2, sm: 4 }}
-          >
+            gap={{ base: 2, sm: 4 }}>
             <Button
               colorScheme="blue"
               onClick={handleSubmitPayment}
@@ -419,16 +404,14 @@ export default function CustomerJobOrderAccount() {
                 Number(paymentForm.amount) > balance
               }
               size={{ base: "sm", md: "md" }}
-              w={{ base: "full", sm: "auto" }}
-            >
+              w={{ base: "full", sm: "auto" }}>
               Save Payment
             </Button>
             <Button
               onClick={onClose}
               size={{ base: "sm", md: "md" }}
               variant="outline"
-              w={{ base: "full", sm: "auto" }}
-            >
+              w={{ base: "full", sm: "auto" }}>
               Cancel
             </Button>
           </ModalFooter>
@@ -437,3 +420,4 @@ export default function CustomerJobOrderAccount() {
     </Flex>
   );
 }
+export default withAuth(CustomerJobOrderAccount);

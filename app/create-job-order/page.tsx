@@ -25,6 +25,7 @@ import TabB from "../components/minor/TabB";
 import TabC from "../components/minor/TabC";
 import TabD from "../components/minor/TabD";
 import { FormData } from "../utils/types/formData";
+import { withAuth } from "../utils/services/hoc";
 
 // Updated styled components
 const FormContainer = styled(Box)`
@@ -58,7 +59,7 @@ const ActionButton = styled(Button)`
   }
 `;
 
-export default function CreateJobOrderPage() {
+function CreateJobOrderPage() {
   const toast = useToast();
   const [formData, setFormData] = useState<FormData>({
     clientName: "",
@@ -114,8 +115,7 @@ export default function CreateJobOrderPage() {
             md: 4,
             xl: 8,
           }}
-          mt={{ base: 10, xl: 4 }}
-        >
+          mt={{ base: 10, xl: 4 }}>
           <FormContainer>
             <Flex align="center" mb={8}>
               <Icon as={FaClipboard} fontSize="sm" color="blue.500" mr={3} />
@@ -161,8 +161,7 @@ export default function CreateJobOrderPage() {
                 onClick={() => {}}
                 color="gray.600"
                 border="1px solid"
-                borderColor="gray.300"
-              >
+                borderColor="gray.300">
                 Cancel
               </ActionButton>
               <ActionButton colorScheme="blue" onClick={handleSubmit}>
@@ -175,3 +174,4 @@ export default function CreateJobOrderPage() {
     </Flex>
   );
 }
+export default withAuth(CreateJobOrderPage);

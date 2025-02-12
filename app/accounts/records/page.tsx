@@ -3,12 +3,13 @@ import Sidebar from "@/app/components/major/Sidebar";
 import Header from "@/app/components/minor/Header";
 import MainContent from "@/app/components/minor/MainContent";
 import MetricCards from "@/app/components/minor/MetricCards";
+import { withAuth } from "@/app/utils/services/hoc";
 import { MetricCardData } from "@/app/utils/types/metrics";
 import { Box, Flex } from "@chakra-ui/react";
 import { FaCheckCircle } from "react-icons/fa";
 import { FaClipboardList, FaClock, FaWallet } from "react-icons/fa6";
 
-export default function Records() {
+function Records() {
   const dashboardMetrics: MetricCardData[] = [
     {
       title: "Total Income",
@@ -61,3 +62,4 @@ export default function Records() {
     </Flex>
   );
 }
+export default withAuth(Records);

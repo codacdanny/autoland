@@ -1,42 +1,13 @@
 import axios from "axios";
+import {
+  LoginRequest,
+  LoginResponse,
+  SignupRequest,
+  SignupResponse,
+  UserRole,
+} from "../types/auth";
 
 // Define types
-export enum UserRole {
-  WORKSHOP_MANAGER = "workshopManager",
-  ACCOUNTANT = "accountant",
-  FRONT_DESK = "frontDesk",
-  AUTOCLUB = "autoclub",
-  CUSTOMER = "customer",
-}
-
-interface SignupRequest {
-  fullName: string;
-  email: string;
-  password: string;
-  phoneNumber: string;
-  role?: UserRole;
-  workshop?: string;
-}
-
-interface SignupResponse {
-  message: string;
-  user: {
-    id: string;
-    fullName: string;
-    role: UserRole;
-    email: string;
-  };
-}
-
-interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-interface LoginResponse {
-  message: string;
-  token: string;
-}
 
 // API base URL - you should store this in an environment variable
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -67,7 +38,6 @@ export const authService = {
   },
 
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
-    console.log(API_BASE_URL);
     try {
       const response = await api.post<LoginResponse>(
         "/auths/login",
