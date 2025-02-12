@@ -1,3 +1,4 @@
+import { Flex, Spinner } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { JSX, useEffect, useState } from "react";
 
@@ -25,7 +26,11 @@ export function withAuth<P extends object>(
 
     // Don't render anything until loading is complete
     if (isLoading) {
-      return <div>Loading...</div>; // Show a loading spinner or message
+      return (
+        <Flex justify="center" align="center" h="100vh">
+          <Spinner size="xl" />
+        </Flex>
+      ); // Show a loading spinner or message
     }
 
     // Don't render the wrapped component if not authenticated
