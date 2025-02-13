@@ -6,8 +6,10 @@ import GlassCard from "./components/minor/GlassCard";
 import { useRouter } from "next/navigation";
 import { authService } from "./utils/services/auth";
 import { setCookie } from "cookies-next";
+import { useAuth } from "./utils/services/context";
 
 export default function Home() {
+  const { fetchUserData } = useAuth();
   const router = useRouter();
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(false);
@@ -52,6 +54,8 @@ export default function Home() {
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
       });
+
+      await fetchUserData(); // Add this line
 
       toast({
         title: "Success",

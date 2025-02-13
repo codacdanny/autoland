@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { Providers } from "./providers";
+import { AuthProvider } from "./utils/services/context";
 
 export const metadata: Metadata = {
   title: "Pamtech Autoland Administrator",
@@ -21,7 +22,9 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          <AuthProvider>{children}</AuthProvider>
+        </Providers>
       </body>
     </html>
   );

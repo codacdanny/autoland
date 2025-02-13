@@ -1,5 +1,5 @@
 "use client";
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Flex, Spinner } from "@chakra-ui/react";
 import {
   FaWallet,
   FaClipboardList,
@@ -13,11 +13,17 @@ import { MetricCardData } from "../utils/types/metrics";
 import MetricCards from "../components/minor/MetricCards";
 import JobOrderTable from "../components/major/JobOrderTable";
 import { withAuth } from "../utils/services/hoc";
+import { useAuth } from "../utils/services/context";
+import { useEffect } from "react";
 
 function Dashboard() {
-  const bgGradient = "linear(to-br, blue.50, purple.50, pink.50)";
-  // console.log("API_BASE_URL", API_BASE_URL);
+  const { user, loading, fetchUserData } = useAuth();
 
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
+  const bgGradient = "linear(to-br, blue.50, purple.50, pink.50)";
   const dashboardMetrics: MetricCardData[] = [
     {
       title: "Total Income",
@@ -57,31 +63,47 @@ function Dashboard() {
     },
   ];
 
+  if (loading) {
+    return (
+      <Flex justify="center" align="center" h="100vh">
+        <Spinner size="xl" />
+      </Flex>
+    );
+  }
+
   return (
-    <Flex bgGradient={bgGradient} minH="100vh">
-      <Box>
-        <Sidebar />
-      </Box>
-      <MainContent>
-        <Box
-          flex="1"
-          p={{
-            base: 2,
-            md: 4,
-            xl: 8,
-          }}
-          mt={{ base: 10, xl: 4 }}>
-          {/* Header */}
-          <Header />
+    <>
+      {user ? (
+        <Flex bgGradient={bgGradient} minH="100vh">
+          <Box>
+            <Sidebar />
+          </Box>
+          <MainContent>
+            <Box
+              flex="1"
+              p={{
+                base: 2,
+                md: 4,
+                xl: 8,
+              }}
+              mt={{ base: 10, xl: 4 }}>
+              {/* Header */}
+              <Header />
 
-          {/* Metrics Grid */}
-          <MetricCards metrics={dashboardMetrics} />
+              {/* Metrics Grid */}
+              <MetricCards metrics={dashboardMetrics} />
 
-          {/* Recent Job Orders Table */}
-          <JobOrderTable />
-        </Box>
-      </MainContent>
-    </Flex>
+              {/* Recent Job Orders Table */}
+              <JobOrderTable />
+            </Box>
+          </MainContent>
+        </Flex>
+      ) : (
+        <Flex justify="center" align="center" h="100vh">
+          <Spinner size="xl" />
+        </Flex>
+      )}
+    </>
   );
 }
 export default withAuth(Dashboard);

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { setCookie } from "cookies-next";
 import {
   LoginRequest,
   LoginResponse,
@@ -43,6 +44,7 @@ export const authService = {
         "/auths/login",
         credentials
       );
+      setCookie("token", response.data.token, { maxAge: 24 * 60 * 60 });
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {

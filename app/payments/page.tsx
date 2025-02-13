@@ -42,9 +42,8 @@ import Header from "../components/minor/Header";
 import MetricCards from "../components/minor/MetricCards";
 import { FaClipboardList, FaClock } from "react-icons/fa6";
 import { FaCheckCircle } from "react-icons/fa";
+import { MetricCardData } from "../types/metrics";
 import { useState } from "react";
-import { MetricCardData } from "../utils/types/metrics";
-import { withAuth } from "../utils/services/hoc";
 
 const StyledModal = styled(ModalContent)`
   background: linear-gradient(
@@ -96,7 +95,7 @@ interface Expense {
   paymentMethod: string;
 }
 
-function PaymentsPage() {
+export default function PaymentsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [expenses] = useState<Expense[]>([
     {
@@ -446,4 +445,3 @@ function PaymentsPage() {
     </Flex>
   );
 }
-export default withAuth(PaymentsPage);
