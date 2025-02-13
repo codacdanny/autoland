@@ -14,14 +14,9 @@ import MetricCards from "../components/minor/MetricCards";
 import JobOrderTable from "../components/major/JobOrderTable";
 import { withAuth } from "../utils/services/hoc";
 import { useAuth } from "../utils/services/context";
-import { useEffect } from "react";
 
 function Dashboard() {
-  const { user, loading, fetchUserData } = useAuth();
-
-  useEffect(() => {
-    fetchUserData();
-  }, []);
+  const { user, loading } = useAuth();
 
   const bgGradient = "linear(to-br, blue.50, purple.50, pink.50)";
   const dashboardMetrics: MetricCardData[] = [
@@ -86,7 +81,8 @@ function Dashboard() {
                 md: 4,
                 xl: 8,
               }}
-              mt={{ base: 10, xl: 4 }}>
+              mt={{ base: 10, xl: 4 }}
+            >
               {/* Header */}
               <Header />
 

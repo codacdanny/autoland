@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Flex,
@@ -21,6 +21,8 @@ import {
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { JobOrder } from "@/app/utils/types/jobOrder";
+import { fetchJobOrders } from "@/app/utils/services/jobOrderTableService";
 
 const GridHeader = ({ children }: { children: React.ReactNode }) => (
   <Text
@@ -37,61 +39,20 @@ const GridHeader = ({ children }: { children: React.ReactNode }) => (
 export default function JobOrderTable() {
   const router = useRouter();
   const [expandedRow, setExpandedRow] = useState<string | null>(null);
+  const [orders, setOrders] = useState<JobOrder[]>([]);
 
-  // Sample data - you can replace with your actual data
-  const orders = [
-    {
-      id: "JO-PA1001",
-      date: "Jan 1, 2025",
-      clientName: "Danny Code",
-      email: "info@dannyco.com",
-      issue: "Wheel Alignment",
-      payment: "Completed",
-      team: "Team Warri",
-      customerJobOrderStatus: "Approved",
-      repairStatus: "Ongoing",
-      deliveryStatus: "Yes",
-    },
-    {
-      id: "JO-PA1001",
-      date: "Jan 1, 2025",
-      clientName: "Danny Code",
-      email: "info@dannyco.com",
-      issue: "Wheel Alignment",
-      payment: "Completed",
-      team: "Team Warri",
-      customerJobOrderStatus: "Approved",
+  useEffect(() => {
+    const loadOrders = async () => {
+      try {
+        const fetchedOrders = await fetchJobOrders(1, 10);
+        setOrders(fetchedOrders);
+      } catch (error) {
+        console.error("Failed to load orders:", error);
+      }
+    };
 
-      repairStatus: "Ongoing",
-      deliveryStatus: "Yes",
-    },
-    {
-      id: "JO-PA1001",
-      date: "Jan 1, 2025",
-      clientName: "Danny Code",
-      email: "info@dannyco.com",
-      issue: "Wheel Alignment",
-      payment: "Incomplete",
-      team: "Team Warri",
-      customerJobOrderStatus: "Approved",
-
-      repairStatus: "Ongoing",
-      deliveryStatus: "Yes",
-    },
-    {
-      id: "JO-PA1001",
-      date: "Jan 1, 2025",
-      clientName: "Danny Code",
-      email: "info@dannyco.com",
-      issue: "Wheel Alignment",
-      payment: "Incomplete",
-      team: "Team Warri",
-      customerJobOrderStatus: "Approved",
-
-      repairStatus: "Ongoing",
-      deliveryStatus: "Yes",
-    },
-  ];
+    loadOrders();
+  }, []);
 
   const handleRowClick = (orderId: string) => {
     setExpandedRow(expandedRow === orderId ? null : orderId);
@@ -155,8 +116,7 @@ export default function JobOrderTable() {
           },
         }}
       >
-        <Box minWidth="1400px">
-          {/* Grid Header */}
+        <Box minWidth="1800px">
           <Box
             display="grid"
             gridTemplateColumns="repeat(10, 1fr)"
@@ -177,10 +137,9 @@ export default function JobOrderTable() {
             <GridHeader>Delivery Status</GridHeader>
           </Box>
 
-          {/* Grid Body */}
           <VStack spacing={2} align="stretch">
             {orders.map((order) => (
-              <Box key={order.id}>
+              <Box key={order.jobId}>
                 <Box
                   display="grid"
                   gridTemplateColumns="repeat(10, 1fr)"
@@ -188,7 +147,7 @@ export default function JobOrderTable() {
                   p={4}
                   bg="white"
                   borderRadius="lg"
-                  onClick={() => handleRowClick(order.id)}
+                  onClick={() => handleRowClick(order.jobId)}
                   _hover={{
                     transform: "translateY(-2px)",
                     boxShadow: "sm",
@@ -198,11 +157,13 @@ export default function JobOrderTable() {
                   cursor="pointer"
                 >
                   <Flex align="center">
-                    <Text fontWeight="medium">{order.id}</Text>
+                    <Text fontWeight="medium">{order.jobId}</Text>
                   </Flex>
 
                   <Flex align="center">
-                    <Text>{order.date}</Text>
+                    <Text>
+                      {new Date(order.bookingDate).toLocaleDateString()}
+                    </Text>
                   </Flex>
 
                   <Flex align="center">
@@ -217,25 +178,25 @@ export default function JobOrderTable() {
                       textOverflow="ellipsis"
                       whiteSpace="nowrap"
                     >
-                      {order.email}
+                      {order.clientEmail}
                     </Text>
                   </Flex>
 
                   <Flex align="center">
-                    <Text>{order.issue}</Text>
+                    <Text>{order.carIssue}</Text>
                   </Flex>
 
                   <Flex align="center">
                     <Badge
                       colorScheme={
-                        order.payment === "Completed" ? "green" : "red"
+                        order.paymentStatus === "Complete" ? "green" : "red"
                       }
                       variant="subtle"
                       px={3}
                       py={1}
                       borderRadius="full"
                     >
-                      {order.payment}
+                      {order.paymentStatus}
                     </Badge>
                   </Flex>
 
@@ -245,7 +206,7 @@ export default function JobOrderTable() {
                   <Flex align="center">
                     <Badge
                       colorScheme={
-                        order.customerJobOrderStatus === "Approved"
+                        order.customerJobOrderStatus === "Approve"
                           ? "green"
                           : "red"
                       }
@@ -258,7 +219,7 @@ export default function JobOrderTable() {
                     >
                       <Icon
                         as={
-                          order.customerJobOrderStatus === "Approved"
+                          order.customerJobOrderStatus === "Approve"
                             ? FaCheckCircle
                             : FaClock
                         }
@@ -270,7 +231,9 @@ export default function JobOrderTable() {
                   <Flex align="center">
                     <Badge
                       colorScheme={
-                        order.repairStatus === "Completed" ? "green" : "orange"
+                        order.carRepairStatus === "Complete"
+                          ? "green"
+                          : "orange"
                       }
                       display="flex"
                       alignItems="center"
@@ -281,19 +244,21 @@ export default function JobOrderTable() {
                     >
                       <Icon
                         as={
-                          order.repairStatus === "Completed"
+                          order.carRepairStatus === "Complete"
                             ? FaCheckCircle
                             : FaClock
                         }
                         boxSize={3}
                       />
-                      {order.repairStatus}
+                      {order.carRepairStatus}
                     </Badge>
                   </Flex>
                   <Flex align="center">
                     <Badge
                       colorScheme={
-                        order.deliveryStatus === "Yes" ? "green" : "orange"
+                        order.deliveryStatus === "Delivered"
+                          ? "green"
+                          : "orange"
                       }
                       display="flex"
                       alignItems="center"
@@ -304,7 +269,7 @@ export default function JobOrderTable() {
                     >
                       <Icon
                         as={
-                          order.deliveryStatus === "Yes"
+                          order.deliveryStatus === "Delivered"
                             ? FaCheckCircle
                             : FaClock
                         }
@@ -315,7 +280,7 @@ export default function JobOrderTable() {
                   </Flex>
                 </Box>
 
-                <Collapse in={expandedRow === order.id}>
+                <Collapse in={expandedRow === order.jobId}>
                   <Box
                     ml={4}
                     p={4}
@@ -333,7 +298,7 @@ export default function JobOrderTable() {
                         colorScheme="blue"
                         variant="outline"
                         onClick={() =>
-                          handleActionClick(order.id, "registration")
+                          handleActionClick(order.jobId, "registration")
                         }
                       >
                         View Customer Order
@@ -344,7 +309,9 @@ export default function JobOrderTable() {
                         as="a"
                         colorScheme="green"
                         variant="outline"
-                        onClick={() => handleActionClick(order.id, "estimate")}
+                        onClick={() =>
+                          handleActionClick(order.jobId, "estimate")
+                        }
                       >
                         Estimate Form
                       </Button>
@@ -354,7 +321,9 @@ export default function JobOrderTable() {
                         as="a"
                         colorScheme="red"
                         variant="outline"
-                        onClick={() => handleActionClick(order.id, "stockist")}
+                        onClick={() =>
+                          handleActionClick(order.jobId, "stockist")
+                        }
                       >
                         Stockist Form
                       </Button>
@@ -364,7 +333,9 @@ export default function JobOrderTable() {
                         as="a"
                         colorScheme="orange"
                         variant="outline"
-                        onClick={() => handleActionClick(order.id, "account")}
+                        onClick={() =>
+                          handleActionClick(order.jobId, "account")
+                        }
                       >
                         Account
                       </Button>
@@ -374,7 +345,9 @@ export default function JobOrderTable() {
                         as="a"
                         colorScheme="purple"
                         variant="outline"
-                        onClick={() => handleActionClick(order.id, "invoice")}
+                        onClick={() =>
+                          handleActionClick(order.jobId, "invoice")
+                        }
                       >
                         Invoice
                       </Button>

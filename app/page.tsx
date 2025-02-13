@@ -5,7 +5,7 @@ import bgLogin from "./assets/login_bg.jpg";
 import GlassCard from "./components/minor/GlassCard";
 import { useRouter } from "next/navigation";
 import { authService } from "./utils/services/auth";
-import { setCookie } from "cookies-next";
+import { setCookie, getCookie } from "cookies-next";
 import { useAuth } from "./utils/services/context";
 
 export default function Home() {
@@ -48,12 +48,19 @@ export default function Home() {
         password: formData.password,
       });
 
+      console.log("Login response:", response); // Debug log
+      console.log("Token received:", response.token); // Debug log
+
       setCookie("token", response.token, {
         maxAge: 24 * 60 * 60, // 24hours
         path: "/",
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
       });
+
+      // Verify token was set
+      const storedToken = getCookie("token");
+      console.log("Stored token:", storedToken); // Debug log
 
       await fetchUserData(); // Add this line
 
@@ -89,7 +96,8 @@ export default function Home() {
       minH="100vh"
       bgImage={bgLogin.src}
       bgSize="cover"
-      bgRepeat="no-repeat">
+      bgRepeat="no-repeat"
+    >
       <GlassCard>
         <form onSubmit={handleLogin}>
           <Flex flexDir="column" gap={6} align="stretch">
@@ -133,7 +141,8 @@ export default function Home() {
               w="100%"
               mt={4}
               isLoading={isLoading}
-              loadingText="Signing in...">
+              loadingText="Signing in..."
+            >
               Sign In
             </Button>
           </Flex>

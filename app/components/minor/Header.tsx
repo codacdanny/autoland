@@ -13,13 +13,10 @@ import {
 import { FaSearch } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { useAuth } from "@/app/utils/services/context";
-import { useEffect } from "react";
 
 const Header = () => {
-  const { user, loading, fetchUserData } = useAuth();
-  useEffect(() => {
-    fetchUserData();
-  }, []);
+  const { user, loading } = useAuth();
+
   const { onOpen } = useDisclosure();
   const iconSpacing = useBreakpointValue({ base: "1", md: "4" });
   if (loading) {
@@ -45,12 +42,14 @@ const Header = () => {
         boxShadow="md"
         backdropFilter="blur(5px)"
         border="1px solid"
-        borderColor="gray.100">
+        borderColor="gray.100"
+      >
         <VStack align="stretch" spacing={1}>
           <Text
             textTransform="capitalize"
             fontSize={{ base: "sm", md: "lg" }}
-            fontWeight="bold">
+            fontWeight="bold"
+          >
             Hi, {user?.role}! 👋
           </Text>
           <Text color="gray.500" fontSize={{ base: "xs", md: "sm" }}>
@@ -61,7 +60,8 @@ const Header = () => {
         <Flex
           align="center"
           gap={iconSpacing}
-          display={{ base: "none", md: "flex" }}>
+          display={{ base: "none", md: "flex" }}
+        >
           {/* Enhanced Search Bar */}
           <InputGroup maxW={{ base: "200px", md: "300px" }}>
             <InputLeftElement pointerEvents="none">
