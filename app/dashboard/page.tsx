@@ -1,11 +1,6 @@
 "use client";
 import { Box, Flex, Spinner } from "@chakra-ui/react";
-import {
-  FaWallet,
-  FaClipboardList,
-  FaCheckCircle,
-  FaClock,
-} from "react-icons/fa";
+import { FaWallet, FaClipboardList, FaClock } from "react-icons/fa";
 import Sidebar from "../components/major/Sidebar";
 import MainContent from "../components/minor/MainContent";
 import Header from "../components/minor/Header";
@@ -14,15 +9,30 @@ import MetricCards from "../components/minor/MetricCards";
 import JobOrderTable from "../components/major/JobOrderTable";
 import { withAuth } from "../utils/services/hoc";
 import { useAuth } from "../utils/services/context";
+import { DashboardMetrics } from "../utils/types/dashboardMetrics";
+import { useEffect, useState } from "react";
+import { fetchDashboardMetrics } from "../utils/services/dashboardMetrics";
 
 function Dashboard() {
   const { user, loading } = useAuth();
+  const [metrics, setMetrics] = useState<DashboardMetrics | null>(null); // State to hold metrics data
+  useEffect(() => {
+    const loadMetrics = async () => {
+      try {
+        const fetchedMetrics = await fetchDashboardMetrics(); // Fetch metrics
+        setMetrics(fetchedMetrics); // Update state with fetched data
+      } catch (error) {
+        console.error("Failed to load metrics:", error);
+      }
+    };
 
+    loadMetrics();
+  }, []);
   const bgGradient = "linear(to-br, blue.50, purple.50, pink.50)";
   const dashboardMetrics: MetricCardData[] = [
     {
       title: "Total Income",
-      value: "₦90,000,000",
+      value: `₦${metrics?.totalIncome || "₦0"}`,
       change: "+12.5%",
       isIncrease: true,
       icon: FaWallet,
@@ -31,25 +41,17 @@ function Dashboard() {
     },
     {
       title: "Total Outflow",
-      value: "₦2,000,000",
+      value: `₦${metrics?.totalOutflow || "₦0"}`,
       change: "+8.2%",
       isIncrease: true,
       icon: FaClipboardList,
       color: "blue.500",
       bgGradient: "linear(to-r, blue.400, blue.600)",
     },
-    {
-      title: "Expenses",
-      value: "₦12,000,000",
-      change: "+5.1%",
-      isIncrease: true,
-      icon: FaCheckCircle,
-      color: "green.500",
-      bgGradient: "linear(to-r, green.400, green.600)",
-    },
+
     {
       title: "Net Profit",
-      value: "₦30,000,000",
+      value: `₦${metrics?.netProfit || "₦0"}`,
       change: "-2.3%",
       isIncrease: false,
       icon: FaClock,
@@ -68,7 +70,7 @@ function Dashboard() {
 
   return (
     <>
-      {user ? (
+      {user && metrics ? (
         <Flex bgGradient={bgGradient} minH="100vh">
           <Box>
             <Sidebar />
