@@ -40,8 +40,10 @@ import { Appointment } from "../utils/types/appointment";
 import {
   deleteAppointment,
   fetchAppointments,
+  editAppointment,
 } from "../utils/services/appointments";
 import { getCookie } from "cookies-next";
+import { useAuth } from "../utils/services/context";
 
 const StyledTable = styled(Table)`
   th {
@@ -80,7 +82,16 @@ const StyledModal = styled(ModalContent)`
 `;
 
 function AppointmentsPage() {
+  const { user } = useAuth();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [selectedAppointment, setSelectedAppointment] =
+    useState<Appointment | null>(null);
+  const [editDescription, setEditDescription] = useState("");
+  const [editDate, setEditDate] = useState("");
+  const [editStatus, setEditStatus] = useState("canceled");
+
   useEffect(() => {
     const loadAppointments = async () => {
       try {
@@ -93,21 +104,15 @@ function AppointmentsPage() {
 
     loadAppointments();
   }, []);
-  const toast = useToast();
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [selectedAppointment, setSelectedAppointment] =
-    useState<Appointment | null>(null);
-  // const [appointments, setAppointments] = useState(mockAppointments);
-  const [editDescription, setEditDescription] = useState("");
-  const [editDate, setEditDate] = useState("");
+
   const handleDelete = async (appointmentId: string) => {
     const token = getCookie("token");
     if (!token) {
       return;
     }
     try {
-      await deleteAppointment(appointmentId, token); // Call the delete function
-      setAppointments(appointments.filter((apt) => apt.id !== appointmentId)); // Update state to remove the deleted appointment
+      await deleteAppointment(appointmentId, token);
+      setAppointments(appointments.filter((apt) => apt.id !== appointmentId));
       toast({
         title: "Appointment deleted.",
         status: "success",
@@ -124,10 +129,49 @@ function AppointmentsPage() {
       });
     }
   };
+
+  const handleEditAppointment = async () => {
+    if (selectedAppointment && user) {
+      const token = getCookie("token");
+      const data = {
+        status: editStatus,
+        date: editDate,
+        description: editDescription,
+      };
+      if (!token) return;
+      try {
+        const updatedAppointment = await editAppointment(
+          selectedAppointment.id,
+          token,
+          data
+        );
+        setAppointments(
+          appointments.map((apt) =>
+            apt.id === updatedAppointment.id ? updatedAppointment : apt
+          )
+        );
+        toast({
+          title: "Appointment updated successfully.",
+          status: "success",
+          duration: 3000,
+        });
+        onClose();
+      } catch (error) {
+        console.error("Failed to edit appointment:", error);
+        toast({
+          title: "Error updating appointment.",
+          status: "error",
+          duration: 3000,
+        });
+      }
+    }
+  };
+
   const handleEditClick = (appointment: Appointment) => {
     setSelectedAppointment(appointment);
     setEditDate(appointment.dateTime);
     setEditDescription("");
+    setEditStatus("canceled");
     onOpen();
   };
 
@@ -360,7 +404,7 @@ function AppointmentsPage() {
                           borderRadius="md"
                           focusBorderColor="blue.300"
                           id="edit-date"
-                          type="date"
+                          type="datetime-local"
                           value={editDate}
                           onChange={(e) => setEditDate(e.target.value)}
                           p={3}
@@ -393,10 +437,7 @@ function AppointmentsPage() {
 
                       <Button
                         colorScheme="blue"
-                        onClick={() => {
-                          // Save logic here
-                          onClose();
-                        }}
+                        onClick={handleEditAppointment}
                         mt={4}
                         bgGradient="linear(to-r, blue.400, blue.600)"
                         _hover={{
