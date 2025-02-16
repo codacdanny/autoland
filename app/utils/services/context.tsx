@@ -7,6 +7,7 @@ import { getCookie } from "cookies-next"; // Import getCookie
 interface User {
   id: string;
   role: string;
+  name: string;
   // Add other user properties as needed
 }
 
@@ -30,7 +31,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       try {
         const decoded: User = jwtDecode(token);
         setUser(decoded);
-        console.log(decoded);
       } catch (error) {
         console.error("Failed to decode token", error);
         setUser(null);

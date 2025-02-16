@@ -50,7 +50,11 @@ const Header = () => {
             fontSize={{ base: "sm", md: "lg" }}
             fontWeight="bold"
           >
-            Hi, {user?.role}! 👋
+            Hi, {user?.name}!{" "}
+            <span style={{ fontSize: "12px", color: "#dbdbd9" }}>
+              ({user?.role})
+            </span>
+            👋
           </Text>
           <Text color="gray.500" fontSize={{ base: "xs", md: "sm" }}>
             {`Let's check your garage today`}
