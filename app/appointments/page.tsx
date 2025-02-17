@@ -152,6 +152,7 @@ function AppointmentsPage() {
         );
         toast({
           title: "Appointment updated successfully.",
+          position: "top-right",
           status: "success",
           duration: 3000,
         });
@@ -160,6 +161,7 @@ function AppointmentsPage() {
         console.error("Failed to edit appointment:", error);
         toast({
           title: "Error updating appointment.",
+          position: "top-right",
           status: "error",
           duration: 3000,
         });

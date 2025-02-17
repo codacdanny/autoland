@@ -1,8 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
-  Button,
   Flex,
   Heading,
   Table,
@@ -30,7 +29,7 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import {
-  FaCar,
+  // FaCar,
   FaUser,
   FaPhone,
   FaEnvelope,
@@ -42,9 +41,14 @@ import styled from "@emotion/styled";
 import Sidebar from "@/app/components/major/Sidebar";
 import MainContent from "@/app/components/minor/MainContent";
 import Header from "@/app/components/minor/Header";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import { FaCakeCandles } from "react-icons/fa6";
 import { withAuth } from "../utils/services/hoc";
+import {
+  fetchCustomerDetails,
+  fetchCustomers,
+} from "../utils/services/customers";
+import { Customer } from "../utils/types/customer";
 
 const StyledTable = styled(Table)`
   th {
@@ -70,125 +74,67 @@ const StyledTable = styled(Table)`
   }
 `;
 
-interface Customer {
-  name: string;
-  email: string;
-  plateNumber: string;
-  phoneNo: string;
-  cars: number;
-  debt: string;
-  birthDate: string;
-  vehicles?: Array<{
-    model: string;
-    year: string;
-    lastService: string;
-    serviceHistory: Array<{
-      date: string;
-      service: string;
-      cost: string;
-    }>;
-  }>;
-}
-
-// Enhance the customer data with additional details
-const enhancedCustomersData: Customer[] = [
-  {
-    name: "Esther Howard",
-    email: "test@gmail.com",
-    plateNumber: "ABV 13 AL",
-    phoneNo: "08156438520",
-    cars: 2,
-    debt: "$250.00",
-    birthDate: "01/13/1995",
-    vehicles: [
-      {
-        model: "Toyota Camry",
-        year: "2020",
-        lastService: "2023-10-15",
-        serviceHistory: [
-          {
-            date: "2023-10-15",
-            service: "Oil Change",
-            cost: "$50.00",
-          },
-          {
-            date: "2023-08-20",
-            service: "Brake Inspection",
-            cost: "$75.00",
-          },
-        ],
-      },
-      {
-        model: "Honda CR-V",
-        year: "2019",
-        lastService: "2023-09-01",
-        serviceHistory: [
-          {
-            date: "2023-09-01",
-            service: "Tire Rotation",
-            cost: "$40.00",
-          },
-        ],
-      },
-    ],
-  },
-  // ...Add similar vehicle data for other customers...
-];
-
 function CustomersPage() {
-  // const [searchTerm, setSearchTerm] = useState("");
+  const [customers, setCustomers] = useState<Customer[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-
+  const [totalPages, setTotalPages] = useState(1);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
     null
   );
-  const [selectedVehicle, setSelectedVehicle] = useState("");
-  const router = useRouter();
+  const [, setSelectedVehicle] = useState("");
+  // const router = useRouter();
   const toast = useToast();
-  const dummyServiceHistory = Array.from({ length: 15 }, (_, index) => ({
-    id: index + 1,
-    service: `Service ${index + 1}`,
-    date: `2023-10-${index + 1}`,
-  }));
 
-  const itemsPerPage = 5; // Number of job orders to display per page
-  const totalPages = Math.ceil(dummyServiceHistory.length / itemsPerPage);
+  useEffect(() => {
+    const loadCustomers = async () => {
+      try {
+        const response = await fetchCustomers(currentPage, 10);
+        setCustomers(response.data.customers);
+
+        setTotalPages(response.data.pagination.totalPages);
+      } catch (error) {
+        toast({
+          title: "Error loading customers.",
+          status: "error",
+          duration: 3000,
+        });
+      }
+    };
+
+    loadCustomers();
+  }, [currentPage]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
-  // Calculate the current items to display
-  const currentItems = dummyServiceHistory.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-  const handleRowClick = (customer: Customer) => {
+  const handleRowClick = async (customer: Customer) => {
     setSelectedCustomer(customer);
-    onOpen();
-  };
+    console.log(customer);
 
-  const handleCustomerOrder = () => {
-    if (!selectedVehicle) {
+    try {
+      const response = await fetchCustomerDetails(customer.id); // Fetch customer details
+      const customerDetails = response.data.customerDetails; // Extract customer details
+      const vehicles = response.data.vehicles; // Extract vehicles
+      const serviceHistory = response.data.serviceHistory; // Extract service history
+
+      // Update selectedCustomer with detailed information
+      setSelectedCustomer({
+        ...customer,
+        ...customerDetails,
+        vehicles: vehicles,
+        serviceHistory: serviceHistory,
+      });
+    } catch (error) {
+      console.error("Failed to load customer details:", error);
       toast({
-        title: "Please select a vehicle",
+        title: "Error loading customer details.",
         status: "error",
         duration: 3000,
       });
-      return;
     }
-    // Navigate to create job order page with customer and vehicle data
-    router.push(
-      `/create-job-order?customer=${selectedCustomer?.name}&vehicle=${selectedVehicle}`
-    );
-  };
-
-  const handleNewCustomerOrder = () => {
-    // Navigate to create job order page with customer and vehicle data
-    router.push(
-      `/create-job-order?customer=${selectedCustomer?.name}&vehicle=${selectedVehicle}`
-    );
+    onOpen(); // Open the drawer
   };
 
   return (
@@ -204,7 +150,8 @@ function CustomersPage() {
             md: 4,
             xl: 8,
           }}
-          mt={{ base: 10, xl: 4 }}>
+          mt={{ base: 10, xl: 4 }}
+        >
           <Header />
 
           {/* Search and Title Section */}
@@ -214,7 +161,7 @@ function CustomersPage() {
             </Heading>
           </Flex>
 
-          {/* Enhanced Table */}
+          {/* Customers Table */}
           <Box bg="white" rounded="lg" shadow="sm" overflow="hidden">
             <StyledTable>
               <Thead>
@@ -228,50 +175,49 @@ function CustomersPage() {
                 </Tr>
               </Thead>
               <Tbody>
-                {enhancedCustomersData.map((customer, index) => (
+                {customers.map((customer, index) => (
                   <Tr key={index} onClick={() => handleRowClick(customer)}>
                     <Td>
                       <HStack>
-                        <Avatar size="sm" name={customer.name} />
+                        <Avatar size="sm" name={customer.fullName} />
                         <Box>
-                          <Text fontWeight="medium">{customer.name}</Text>
+                          <Text fontWeight="medium">{customer.fullName}</Text>
                           <Text
                             fontSize="xs"
                             fontWeight="semibold"
-                            color="gray.600">
+                            color="gray.600"
+                          >
                             {customer.email}
                           </Text>
                         </Box>
                       </HStack>
                     </Td>
-                    <Td>{customer.phoneNo}</Td>
+                    <Td>{customer.phoneNumber}</Td>
                     <Td>{customer.plateNumber}</Td>
                     <Td>
                       <Badge colorScheme="blue" borderRadius="full">
-                        {customer.cars} vehicles
+                        {customer.totalVehicles} vehicles
                       </Badge>
                     </Td>
                     <Td>
                       <Text
                         color={
-                          parseFloat(customer.debt.slice(1)) > 0
+                          customer.outstandingPayment > 0
                             ? "red.500"
                             : "green.500"
-                        }>
-                        {customer.debt}
+                        }
+                      >
+                        ${customer.outstandingPayment}
                       </Text>
                     </Td>
                     <Td>
                       <Badge
                         colorScheme={
-                          parseFloat(customer.debt.slice(1)) > 0
-                            ? "red"
-                            : "green"
+                          customer.outstandingPayment > 0 ? "red" : "green"
                         }
-                        borderRadius="full">
-                        {parseFloat(customer.debt.slice(1)) > 0
-                          ? "Pending"
-                          : "Clear"}
+                        borderRadius="full"
+                      >
+                        {customer.currentJobOrderStatus}
                       </Badge>
                     </Td>
                   </Tr>
@@ -279,6 +225,27 @@ function CustomersPage() {
               </Tbody>
             </StyledTable>
           </Box>
+
+          {/* Pagination Controls */}
+          <HStack spacing={4} mt={4}>
+            <IconButton
+              colorScheme="blue"
+              aria-label="previous"
+              icon={<FaAngleLeft color="#002050" />}
+              onClick={() => handlePageChange(currentPage - 1)}
+              isDisabled={currentPage === 1}
+            />
+            <Text>
+              Page {currentPage} of {totalPages}
+            </Text>
+            <IconButton
+              colorScheme="blue"
+              aria-label="next"
+              icon={<FaAngleRight color="#002050" />}
+              onClick={() => handlePageChange(currentPage + 1)}
+              isDisabled={currentPage === totalPages}
+            />
+          </HStack>
 
           {/* Customer Details Drawer */}
           <Drawer isOpen={isOpen} onClose={onClose} size="md">
@@ -288,7 +255,8 @@ function CustomersPage() {
               <DrawerHeader
                 fontSize="medium"
                 fontWeight="extrabold"
-                borderBottomWidth="1px">
+                borderBottomWidth="1px"
+              >
                 Customer Details
               </DrawerHeader>
               <DrawerBody>
@@ -302,7 +270,7 @@ function CustomersPage() {
                       <VStack align="stretch" spacing={3} color="gray.700">
                         <HStack>
                           <Icon as={FaUser} color="blue.500" />
-                          <Text>{selectedCustomer.name}</Text>
+                          <Text>{selectedCustomer.fullName}</Text>
                         </HStack>
                         <HStack>
                           <Icon as={FaEnvelope} color="blue.500" />
@@ -310,15 +278,22 @@ function CustomersPage() {
                         </HStack>
                         <HStack>
                           <Icon as={FaPhone} color="blue.500" />
-                          <Text>{selectedCustomer.phoneNo}</Text>
+                          <Text>{selectedCustomer.phoneNumber}</Text>
                         </HStack>
                         <HStack>
                           <Icon as={FaDollarSign} color="blue.500" />
-                          <Text>Outstanding: {selectedCustomer.debt}</Text>
+                          <Text>
+                            Outstanding: ${selectedCustomer.outstandingPayment}
+                          </Text>
                         </HStack>
                         <HStack>
                           <Icon as={FaCakeCandles} color="blue.500" />
-                          <Text>Birthdate: {selectedCustomer.birthDate}</Text>
+                          <Text>
+                            Birthdate:{" "}
+                            {new Date(
+                              selectedCustomer.birthDate
+                            ).toLocaleDateString()}
+                          </Text>
                         </HStack>
                       </VStack>
                     </Box>
@@ -334,7 +309,8 @@ function CustomersPage() {
                         size="sm"
                         placeholder="Select vehicle for job order"
                         onChange={(e) => setSelectedVehicle(e.target.value)}
-                        mb={4}>
+                        mb={4}
+                      >
                         {selectedCustomer.vehicles?.map((vehicle, idx) => (
                           <option
                             style={{
@@ -343,116 +319,38 @@ function CustomersPage() {
                               fontSize: "14px",
                             }}
                             key={idx}
-                            value={vehicle.model}>
-                            {vehicle.model} ({vehicle.year})
+                            value={vehicle.name}
+                          >
+                            {vehicle.name} ({vehicle.year})
                           </option>
                         ))}
                       </Select>
 
-                      {/* Vehicle History */}
-                      {/* {selectedCustomer.vehicles?.map((vehicle, idx) => (
-                        <Box
-                          key={idx}
-                          mb={4}
-                          p={4}
-                          bg="gray.50"
-                          borderRadius="md"
-                        >
-                          <HStack mb={2}>
-                            <Icon as={FaCar} color="blue.500" />
-                            <Text fontWeight="medium">
-                              {vehicle.model} ({vehicle.year})
-                            </Text>
-                          </HStack>
-                          <Text fontSize="sm" color="gray.600" mb={2}>
-                            Last Service: {vehicle.lastService}
-                          </Text>
-                          <VStack align="stretch" spacing={2}>
-                            {vehicle.serviceHistory.map((history, hidx) => (
-                              <Box
-                                key={hidx}
-                                p={2}
-                                bg="white"
-                                borderRadius="md"
-                                fontSize="sm"
-                              >
-                                <HStack justify="space-between">
-                                  <Text>{history.service}</Text>
-                                  <Text color="gray.600">{history.date}</Text>
-                                </HStack>
-                                <Text color="blue.500" fontWeight="medium">
-                                  {history.cost}
-                                </Text>
-                              </Box>
-                            ))}
-                          </VStack>
-                        </Box>
-                      ))} */}
                       <Text fontSize="sm" color="gray.600" mb={2}>
                         Service History
                       </Text>
                       <VStack align="stretch" spacing={2}>
-                        {currentItems.map((history) => (
+                        {selectedCustomer.serviceHistory?.map((history) => (
                           <Box
-                            key={history.id}
+                            key={history.jobOrderId}
                             p={2}
                             bg="white"
                             borderRadius="md"
-                            fontSize="sm">
+                            fontSize="sm"
+                          >
                             <HStack justify="space-between">
-                              <Text>Job Order ID: {history.id}</Text>
-                              <Text color="gray.600">{history.date}</Text>
+                              <Text>Job Order ID: {history.jobOrderId}</Text>
+                              <Text color="gray.600">
+                                {new Date(history.date).toLocaleDateString()}
+                              </Text>
                             </HStack>
                             <Text color="blue.500" fontWeight="medium">
-                              {history.service}
+                              {history.serviceRendered}
                             </Text>
                           </Box>
                         ))}
                       </VStack>
-
-                      {/* Pagination Controls */}
-                      <HStack spacing={4} mt={4}>
-                        <IconButton
-                          colorScheme="blue"
-                          aria-label="previous"
-                          icon={<FaAngleLeft color="#002050" />}
-                          onClick={() => handlePageChange(currentPage - 1)}
-                          isDisabled={currentPage === 1}
-                        />
-
-                        <Text>
-                          Page {currentPage} of {totalPages}
-                        </Text>
-                        <IconButton
-                          colorScheme="blue"
-                          aria-label="next"
-                          icon={<FaAngleRight color="#002050" />}
-                          onClick={() => handlePageChange(currentPage + 1)}
-                          isDisabled={currentPage === totalPages}
-                        />
-                      </HStack>
                     </Box>
-                    <Flex gap={6} mb={4}>
-                      <Button
-                        width="fit-content"
-                        colorScheme="blue"
-                        size="sm"
-                        leftIcon={<FaCar fontSize="sm" />}
-                        onClick={handleCustomerOrder}
-                        mt={4}>
-                        Customer Order
-                      </Button>
-                      <Button
-                        width="fit-content"
-                        colorScheme="purple"
-                        // bgColor="secondaryBlue"
-                        size="sm"
-                        leftIcon={<FaCar fontSize="sm" />}
-                        onClick={handleNewCustomerOrder}
-                        mt={4}>
-                        New Car Order
-                      </Button>
-                    </Flex>
                   </VStack>
                 )}
               </DrawerBody>
