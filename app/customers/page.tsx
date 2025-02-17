@@ -103,7 +103,7 @@ function CustomersPage() {
     };
 
     loadCustomers();
-  }, [currentPage]);
+  }, [currentPage, toast]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);

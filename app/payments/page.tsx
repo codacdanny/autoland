@@ -23,9 +23,11 @@ import {
   Tr,
   Th,
   Td,
-  Badge,
   Text,
   HStack,
+  Spinner,
+  IconButton,
+  useToast,
 } from "@chakra-ui/react";
 import {
   FaPlus,
@@ -33,6 +35,10 @@ import {
   FaFileInvoice,
   FaChartLine,
   FaFilter,
+  FaAngleLeft,
+  FaAngleRight,
+  FaEdit,
+  FaTrash,
 } from "react-icons/fa";
 import styled from "@emotion/styled";
 
@@ -41,9 +47,19 @@ import MainContent from "../components/minor/MainContent";
 import Header from "../components/minor/Header";
 import MetricCards from "../components/minor/MetricCards";
 import { FaClipboardList, FaClock } from "react-icons/fa6";
-import { FaCheckCircle } from "react-icons/fa";
-import { MetricCardData } from "../types/metrics";
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
+import { DashboardMetrics } from "../utils/types/dashboardMetrics";
+import { fetchDashboardMetrics } from "../utils/services/dashboardMetrics";
+import { useAuth } from "../utils/services/context";
+import { MetricCardData } from "../utils/types/metrics";
+import {
+  addExpense,
+  deleteExpense,
+  fetchExpenses,
+  updateExpense,
+} from "../utils/services/expenses";
+import { Expense } from "../utils/types/expenses";
 
 const StyledModal = styled(ModalContent)`
   background: linear-gradient(
@@ -62,7 +78,7 @@ const StyledInput = styled(Textarea)`
   border: 1px solid #e2e8f0;
   border-radius: 10px;
   padding: 0.8rem 1rem;
-  font-size: 0.9rem;
+  fontsize: 0.9rem;
   transition: all 0.3s ease;
 
   &:focus {
@@ -85,30 +101,54 @@ const ExpenseCard = styled(Box)`
   }
 `;
 
-interface Expense {
-  id: string;
-  category: string;
-  amount: number;
-  description: string;
-  date: string;
-  status: "pending" | "approved" | "rejected";
-  paymentMethod: string;
-}
-
 export default function PaymentsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [expenses] = useState<Expense[]>([
-    {
-      id: "EXP001",
-      category: "Fuel",
-      amount: 500,
-      description: "Monthly fuel allowance",
-      date: "2024-02-20",
-      status: "approved",
-      paymentMethod: "Cash",
-    },
-    // Add more mock data...
-  ]);
+  const {
+    isOpen: isEditOpen,
+    onOpen: onEditOpen,
+    onClose: onEditClose,
+  } = useDisclosure(); // State for edit modal
+  const { user } = useAuth();
+  const toast = useToast();
+
+  const [metrics, setMetrics] = useState<DashboardMetrics | null>(null); // State to hold metrics data
+  const [expenses, setExpenses] = useState<Expense[]>([]); // State to hold expenses data
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [category, setCategory] = useState("fuel"); // Default category
+
+  const [editExpense, setEditExpense] = useState<Expense | null>(null); // State to hold the expense being edited
+
+  useEffect(() => {
+    const loadMetrics = async () => {
+      try {
+        const fetchedMetrics = await fetchDashboardMetrics(); // Fetch metrics
+        setMetrics(fetchedMetrics); // Update state with fetched data
+      } catch (error) {
+        console.error("Failed to load metrics:", error);
+      }
+    };
+
+    loadMetrics();
+  }, []);
+
+  useEffect(() => {
+    const loadExpenses = async () => {
+      try {
+        const response = await fetchExpenses(category, currentPage, 10); // Fetch expenses
+        setExpenses(response.data.expenses); // Update state with fetched expenses
+        setTotalPages(response.data.pagination.totalPages); // Update total pages
+      } catch (error) {
+        console.error("Failed to load expenses:", error);
+      }
+    };
+
+    loadExpenses();
+  }, [category, currentPage]); // Fetch expenses when category or currentPage changes
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   const [newExpense, setNewExpense] = useState<Partial<Expense>>({
     category: "",
@@ -117,10 +157,10 @@ export default function PaymentsPage() {
     paymentMethod: "",
   });
 
-  const JobOrderMetrics: MetricCardData[] = [
+  const dashboardMetrics: MetricCardData[] = [
     {
       title: "Total Income",
-      value: "142",
+      value: `₦${metrics?.totalIncome || "₦0"}`,
       change: "+12.5%",
       isIncrease: true,
       icon: FaWallet,
@@ -128,26 +168,18 @@ export default function PaymentsPage() {
       bgGradient: "linear(to-r, purple.400, purple.600)",
     },
     {
-      title: "Total outflow",
-      value: "12",
+      title: "Total Outflow",
+      value: `₦${metrics?.totalOutflow || "₦0"}`,
       change: "+8.2%",
       isIncrease: true,
       icon: FaClipboardList,
       color: "blue.500",
       bgGradient: "linear(to-r, blue.400, blue.600)",
     },
-    {
-      title: "Expenses",
-      value: "30",
-      change: "+5.1%",
-      isIncrease: true,
-      icon: FaCheckCircle,
-      color: "green.500",
-      bgGradient: "linear(to-r, green.400, green.600)",
-    },
+
     {
       title: "Net Profit",
-      value: "100",
+      value: `₦${metrics?.netProfit || "₦0"}`,
       change: "-2.3%",
       isIncrease: false,
       icon: FaClock,
@@ -156,183 +188,180 @@ export default function PaymentsPage() {
     },
   ];
 
+  const handleEditExpense = (expense: Expense) => {
+    setEditExpense(expense);
+    onEditOpen(); // Correct way to open the modal
+  };
+  const handleDeleteExpense = async (expense: Expense) => {
+    try {
+      await deleteExpense(expense.expenseId); // Call the delete function with expenseId
+      const response = await fetchExpenses(category, currentPage, 10); // Refresh the expenses list after deleting
+      setExpenses(response.data.expenses);
+      setTotalPages(response.data.pagination.totalPages);
+      toast({
+        title: "Expense deleted.",
+        status: "success",
+        position: "top-right",
+        duration: 3000,
+      });
+    } catch (error) {
+      console.error("Failed to delete expense:", error);
+      toast({
+        title: "Error deleting expense.",
+        status: "error",
+        position: "top-right",
+        duration: 3000,
+      });
+    }
+  };
+
+  const handleUpdateExpense = async () => {
+    if (editExpense) {
+      try {
+        await updateExpense(editExpense.expenseId, editExpense);
+        // Call the update function with expenseId and data
+        const response = await fetchExpenses(category, currentPage, 10); // Refresh the expenses list after updating
+        setExpenses(response.data.expenses);
+        setTotalPages(response.data.pagination.totalPages);
+        toast({
+          title: "Expense updated.",
+          status: "success",
+          position: "top-right",
+          duration: 3000,
+        });
+        onEditClose(); // Close the modal
+      } catch (error) {
+        console.error("Failed to update expense:", error);
+        toast({
+          title: "Error updating expense.",
+          status: "error",
+          position: "top-right",
+          duration: 3000,
+        });
+      }
+    }
+  };
+  const handleAddExpense = async () => {
+    try {
+      const newExpenseData = {
+        category: newExpense.category,
+        description: newExpense.description,
+        amount: newExpense.amount,
+        paymentMethod: newExpense.paymentMethod,
+      };
+      console.log(newExpenseData);
+
+      await addExpense(newExpenseData); // Call the addExpense function
+      // setExpenses((prevExpenses) => [...prevExpenses, addedExpense]); // Add the new expense to the state
+      // toast({
+      //   title: "Expense added successfully.",
+      //   status: "success",
+      //   duration: 3000,
+      // });
+      onClose(); // Close the modal
+    } catch (error) {
+      console.error("Failed to add expense:", error);
+      toast({
+        title: "Error adding expense.",
+        status: "error",
+        duration: 3000,
+      });
+    }
+  };
+
   return (
-    <Flex>
-      <Box display={{ base: "none", lg: "block" }}>
-        <Sidebar />
-      </Box>
-      <MainContent>
-        <Box flex="1" p={8}>
-          <Header />
-          <MetricCards metrics={JobOrderMetrics} />
-
-          {/* Quick Actions */}
-          <Grid
-            templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }}
-            gap={6}
-            mb={8}>
-            <ExpenseCard>
-              <VStack align="stretch" spacing={4}>
-                <Icon as={FaWallet} color="blue.500" boxSize={6} />
-                <Text fontWeight="medium" fontSize="sm">
-                  Quick Add Expense
-                </Text>
-                <Button
-                  colorScheme="blue"
-                  leftIcon={<FaPlus />}
-                  size="sm"
-                  onClick={onOpen}>
-                  Add New Expense
-                </Button>
-              </VStack>
-            </ExpenseCard>
-
-            <ExpenseCard>
-              <VStack align="stretch" spacing={4}>
-                <Icon
-                  as={FaFileInvoice}
-                  fontSize="sm"
-                  color="purple.500"
-                  boxSize={6}
-                />
-                <Text fontWeight="medium" fontSize="sm">
-                  Generate Report
-                </Text>
-                <Button colorScheme="purple" variant="outline" size="sm">
-                  Download Report
-                </Button>
-              </VStack>
-            </ExpenseCard>
-
-            <ExpenseCard>
-              <VStack align="stretch" spacing={4}>
-                <Icon
-                  as={FaChartLine}
-                  fontSize="sm"
-                  color="green.500"
-                  boxSize={6}
-                />
-                <Text fontWeight="medium" fontSize="sm">
-                  Analytics
-                </Text>
-                <Button colorScheme="green" variant="outline" size="sm">
-                  View Analytics
-                </Button>
-              </VStack>
-            </ExpenseCard>
-          </Grid>
-
-          {/* Expenses Table */}
-          <Box bg="white" rounded="lg" shadow="sm" overflow="hidden">
-            <Flex p={4} justify="space-between" align="center">
-              <Text fontSize="lg" fontWeight="bold">
-                Recent Expenses
-              </Text>
-              <HStack>
-                <Button leftIcon={<FaFilter />} size="sm" variant="ghost">
-                  Filter
-                </Button>
-                <Select placeholder="Category" size="sm" maxW="200px">
-                  <option
-                    style={{
-                      backgroundColor: "#eee",
-                      color: "gray.500",
-                    }}>
-                    Fuel
-                  </option>
-                  <option
-                    style={{
-                      backgroundColor: "#eee",
-                      color: "gray.500",
-                    }}>
-                    Equipment
-                  </option>
-                  <option
-                    style={{
-                      backgroundColor: "#eee",
-                      color: "gray.500",
-                    }}>
-                    Maintenance
-                  </option>
-                  <option
-                    style={{
-                      backgroundColor: "#eee",
-                      color: "gray.500",
-                    }}>
-                    Others
-                  </option>
-                </Select>
-              </HStack>
-            </Flex>
-
-            <Table variant="simple">
-              <Thead bg="gray.50">
-                <Tr>
-                  <Th>ID</Th>
-                  <Th>Category</Th>
-                  <Th>Description</Th>
-                  <Th isNumeric>Amount</Th>
-                  <Th>Date</Th>
-                  <Th>Payment Method</Th>
-                  <Th>Status</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {expenses.map((expense) => (
-                  <Tr key={expense.id}>
-                    <Td fontWeight="medium">{expense.id}</Td>
-                    <Td>{expense.category}</Td>
-                    <Td>{expense.description}</Td>
-                    <Td isNumeric fontWeight="bold">
-                      ₦{expense.amount}
-                    </Td>
-                    <Td>{expense.date}</Td>
-                    <Td>{expense.paymentMethod}</Td>
-                    <Td>
-                      <Badge
-                        colorScheme={
-                          expense.status === "approved"
-                            ? "green"
-                            : expense.status === "rejected"
-                            ? "red"
-                            : "yellow"
-                        }>
-                        {expense.status}
-                      </Badge>
-                    </Td>
-                  </Tr>
-                ))}
-              </Tbody>
-            </Table>
+    <>
+      {user && metrics ? (
+        <Flex>
+          <Box display={{ base: "none", lg: "block" }}>
+            <Sidebar />
           </Box>
+          <MainContent>
+            <Box flex="1" p={8}>
+              <Header />
+              <MetricCards metrics={dashboardMetrics} />
 
-          {/* Add Expense Modal */}
-          <Modal isOpen={isOpen} onClose={onClose} size="xl">
-            <ModalOverlay backdropFilter="blur(10px)" />
-            <StyledModal>
-              <ModalHeader borderBottom="1px solid" borderColor="gray.100">
-                Add New Expense
-              </ModalHeader>
-              <ModalCloseButton />
-              <ModalBody py={6}>
-                <VStack spacing={4}>
-                  <FormControl>
-                    <FormLabel>Category</FormLabel>
+              {/* Quick Actions */}
+              <Grid
+                templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }}
+                gap={6}
+                mb={8}
+              >
+                <ExpenseCard>
+                  <VStack align="stretch" spacing={4}>
+                    <Icon as={FaWallet} color="blue.500" boxSize={6} />
+                    <Text fontWeight="medium" fontSize="sm">
+                      Quick Add Expense
+                    </Text>
+                    <Button
+                      colorScheme="blue"
+                      leftIcon={<FaPlus />}
+                      size="sm"
+                      onClick={onOpen}
+                    >
+                      Add New Expense
+                    </Button>
+                  </VStack>
+                </ExpenseCard>
+
+                <ExpenseCard>
+                  <VStack align="stretch" spacing={4}>
+                    <Icon
+                      as={FaFileInvoice}
+                      fontSize="sm"
+                      color="purple.500"
+                      boxSize={6}
+                    />
+                    <Text fontWeight="medium" fontSize="sm">
+                      Generate Report
+                    </Text>
+                    <Button colorScheme="purple" variant="outline" size="sm">
+                      Download Report
+                    </Button>
+                  </VStack>
+                </ExpenseCard>
+
+                <ExpenseCard>
+                  <VStack align="stretch" spacing={4}>
+                    <Icon
+                      as={FaChartLine}
+                      fontSize="sm"
+                      color="green.500"
+                      boxSize={6}
+                    />
+                    <Text fontWeight="medium" fontSize="sm">
+                      Analytics
+                    </Text>
+                    <Button colorScheme="green" variant="outline" size="sm">
+                      View Analytics
+                    </Button>
+                  </VStack>
+                </ExpenseCard>
+              </Grid>
+
+              {/* Expenses Table */}
+              <Box bg="white" rounded="lg" shadow="sm" overflow="hidden">
+                <Flex p={4} justify="space-between" align="center">
+                  <Text fontSize="lg" fontWeight="bold">
+                    Recent Expenses
+                  </Text>
+                  <HStack>
+                    <Button leftIcon={<FaFilter />} size="sm" variant="ghost">
+                      Filter
+                    </Button>
                     <Select
-                      placeholder="Select category"
-                      value={newExpense.category}
-                      onChange={(e) =>
-                        setNewExpense({
-                          ...newExpense,
-                          category: e.target.value,
-                        })
-                      }>
+                      placeholder="Category"
+                      size="sm"
+                      maxW="200px"
+                      onChange={(e) => setCategory(e.target.value)}
+                    >
                       <option
                         style={{
                           backgroundColor: "#eee",
                           color: "gray.500",
                         }}
-                        value="fuel">
+                        value="fuel"
+                      >
                         Fuel
                       </option>
                       <option
@@ -340,7 +369,8 @@ export default function PaymentsPage() {
                           backgroundColor: "#eee",
                           color: "gray.500",
                         }}
-                        value="equipment">
+                        value="equipment"
+                      >
                         Equipment
                       </option>
                       <option
@@ -348,7 +378,8 @@ export default function PaymentsPage() {
                           backgroundColor: "#eee",
                           color: "gray.500",
                         }}
-                        value="maintenance">
+                        value="maintenance"
+                      >
                         Maintenance
                       </option>
                       <option
@@ -356,92 +387,391 @@ export default function PaymentsPage() {
                           backgroundColor: "#eee",
                           color: "gray.500",
                         }}
-                        value="others">
+                        value="others"
+                      >
                         Others
                       </option>
                     </Select>
-                  </FormControl>
+                  </HStack>
+                </Flex>
 
-                  <FormControl>
-                    <FormLabel>Amount</FormLabel>
-                    <StyledInput
-                      type="number"
-                      placeholder="Enter amount"
-                      value={newExpense.amount}
-                      onChange={(e) =>
-                        setNewExpense({
-                          ...newExpense,
-                          amount: Number(e.target.value),
-                        })
-                      }
-                    />
-                  </FormControl>
+                <Table variant="simple">
+                  <Thead bg="gray.50">
+                    <Tr>
+                      <Th>ID</Th>
+                      <Th>Category</Th>
+                      <Th>Description</Th>
+                      <Th isNumeric>Amount</Th>
+                      <Th>Date</Th>
+                      <Th>Payment Method</Th>
+                      <Th>Actions</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    {expenses.map((expense) => (
+                      <Tr key={expense.expenseId}>
+                        <Td fontWeight="medium">{expense.expenseId}</Td>
+                        <Td>{expense.category}</Td>
+                        <Td>{expense.description}</Td>
+                        <Td isNumeric fontWeight="bold">
+                          ₦{expense.amount}
+                        </Td>
+                        <Td>
+                          {new Date(expense.createdAt).toLocaleDateString()}
+                        </Td>
+                        <Td>{expense.paymentMethod}</Td>
+                        <Td>
+                          <HStack spacing={2}>
+                            <IconButton
+                              size="sm"
+                              colorScheme="blue"
+                              aria-label="edit"
+                              icon={<FaEdit />}
+                              onClick={() => handleEditExpense(expense)} // Call edit function
+                            />
 
-                  <FormControl>
-                    <FormLabel>Description</FormLabel>
-                    <Textarea
-                      background=" rgba(247, 250, 252, 0.8)"
-                      border=" 1px solid #e2e8f0"
-                      borderRadius="10px"
-                      font-size="sm"
-                      placeholder="Enter description"
-                      value={newExpense.description}
-                      onChange={(e) =>
-                        setNewExpense({
-                          ...newExpense,
-                          description: e.target.value,
-                        })
-                      }
-                    />
-                  </FormControl>
+                            <IconButton
+                              size="sm"
+                              aria-label="delete"
+                              colorScheme="red"
+                              icon={<FaTrash />}
+                              onClick={() => handleDeleteExpense(expense)} // Call delete function
+                            />
+                          </HStack>
+                        </Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
 
-                  <FormControl>
-                    <FormLabel>Payment Method</FormLabel>
-                    <Select
-                      placeholder="Select payment method"
-                      value={newExpense.paymentMethod}
-                      onChange={(e) =>
-                        setNewExpense({
-                          ...newExpense,
-                          paymentMethod: e.target.value,
-                        })
-                      }>
-                      <option
-                        style={{
-                          backgroundColor: "#eee",
-                          color: "gray.500",
-                        }}
-                        value="cash">
-                        Cash
-                      </option>
-                      <option
-                        style={{
-                          backgroundColor: "#eee",
-                          color: "gray.500",
-                        }}
-                        value="transfer">
-                        Bank Transfer
-                      </option>
-                      <option
-                        style={{
-                          backgroundColor: "#eee",
-                          color: "gray.500",
-                        }}
-                        value="card">
-                        Card Payment
-                      </option>
-                    </Select>
-                  </FormControl>
+                {/* Pagination Controls */}
+                <HStack spacing={4} mt={4}>
+                  <IconButton
+                    colorScheme="blue"
+                    aria-label="previous"
+                    icon={<FaAngleLeft color="#002050" />}
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    isDisabled={currentPage === 1}
+                  />
+                  <Text>
+                    Page {currentPage} of {totalPages}
+                  </Text>
+                  <IconButton
+                    colorScheme="blue"
+                    aria-label="next"
+                    icon={<FaAngleRight color="#002050" />}
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    isDisabled={currentPage === totalPages}
+                  />
+                </HStack>
+              </Box>
 
-                  <Button colorScheme="blue" size="sm" width="full">
-                    Add Expense
-                  </Button>
-                </VStack>
-              </ModalBody>
-            </StyledModal>
-          </Modal>
-        </Box>
-      </MainContent>
-    </Flex>
+              {/* Add Expense Modal */}
+              <Modal isOpen={isOpen} onClose={onClose} size="xl">
+                <ModalOverlay backdropFilter="blur(10px)" />
+                <StyledModal>
+                  <ModalHeader borderBottom="1px solid" borderColor="gray.300">
+                    Add New Expense
+                  </ModalHeader>
+                  <ModalCloseButton />
+                  <ModalBody py={6}>
+                    <VStack spacing={4}>
+                      <FormControl>
+                        <FormLabel>Category</FormLabel>
+                        <Select
+                          placeholder="Select category"
+                          value={newExpense.category}
+                          onChange={(e) =>
+                            setNewExpense({
+                              ...newExpense,
+                              category: e.target.value,
+                            })
+                          }
+                        >
+                          <option
+                            style={{
+                              backgroundColor: "#eee",
+                              color: "gray.500",
+                            }}
+                            value="fuel"
+                          >
+                            Fuel
+                          </option>
+                          <option
+                            style={{
+                              backgroundColor: "#eee",
+                              color: "gray.500",
+                            }}
+                            value="equipment"
+                          >
+                            Equipment
+                          </option>
+                          <option
+                            style={{
+                              backgroundColor: "#eee",
+                              color: "gray.500",
+                            }}
+                            value="maintenance"
+                          >
+                            Maintenance
+                          </option>
+                          <option
+                            style={{
+                              backgroundColor: "#eee",
+                              color: "gray.500",
+                            }}
+                            value="others"
+                          >
+                            Others
+                          </option>
+                        </Select>
+                      </FormControl>
+
+                      <FormControl>
+                        <FormLabel>Amount</FormLabel>
+                        <StyledInput
+                          type="number"
+                          placeholder="Enter amount"
+                          value={newExpense.amount}
+                          onChange={(e) =>
+                            setNewExpense({
+                              ...newExpense,
+                              amount: Number(e.target.value),
+                            })
+                          }
+                        />
+                      </FormControl>
+
+                      <FormControl>
+                        <FormLabel>Description</FormLabel>
+                        <Textarea
+                          background=" rgba(247, 250, 252, 0.8)"
+                          border=" 1px solid #e2e8f0"
+                          borderRadius="10px"
+                          font-size="sm"
+                          placeholder="Enter description"
+                          value={newExpense.description}
+                          onChange={(e) =>
+                            setNewExpense({
+                              ...newExpense,
+                              description: e.target.value,
+                            })
+                          }
+                        />
+                      </FormControl>
+
+                      <FormControl>
+                        <FormLabel>Payment Method</FormLabel>
+                        <Select
+                          placeholder="Select payment method"
+                          value={newExpense.paymentMethod}
+                          onChange={(e) =>
+                            setNewExpense({
+                              ...newExpense,
+                              paymentMethod: e.target.value,
+                            })
+                          }
+                        >
+                          <option
+                            style={{
+                              backgroundColor: "#eee",
+                              color: "gray.500",
+                            }}
+                            value="cash"
+                          >
+                            Cash
+                          </option>
+                          <option
+                            style={{
+                              backgroundColor: "#eee",
+                              color: "gray.500",
+                            }}
+                            value="transfer"
+                          >
+                            Bank Transfer
+                          </option>
+                          <option
+                            style={{
+                              backgroundColor: "#eee",
+                              color: "gray.500",
+                            }}
+                            value="card"
+                          >
+                            Card Payment
+                          </option>
+                        </Select>
+                      </FormControl>
+
+                      <Button
+                        colorScheme="blue"
+                        size="sm"
+                        width="full"
+                        onClick={handleAddExpense}
+                      >
+                        Add Expense
+                      </Button>
+                    </VStack>
+                  </ModalBody>
+                </StyledModal>
+              </Modal>
+
+              {/* Edit Expense Modal */}
+              <Modal isOpen={isEditOpen} onClose={onEditClose} size="xl">
+                <ModalOverlay backdropFilter="blur(10px)" />
+
+                <ModalContent bgColor="gray.100" color="gray.800">
+                  <ModalHeader borderBottom="1px solid" borderColor="gray.300">
+                    Edit Expense
+                  </ModalHeader>
+                  <ModalCloseButton />
+                  <ModalBody py={6}>
+                    {editExpense && (
+                      <VStack spacing={4}>
+                        <FormControl>
+                          <FormLabel>Category</FormLabel>
+                          <Select
+                            value={editExpense.category}
+                            onChange={(e) =>
+                              setEditExpense({
+                                ...editExpense,
+                                category: e.target.value,
+                              })
+                            }
+                          >
+                            <option
+                              style={{
+                                backgroundColor: "#eee",
+                                color: "gray.500",
+                              }}
+                              value="fuel"
+                            >
+                              Fuel
+                            </option>
+                            <option
+                              style={{
+                                backgroundColor: "#eee",
+                                color: "gray.500",
+                              }}
+                              value="equipment"
+                            >
+                              Equipment
+                            </option>
+                            <option
+                              style={{
+                                backgroundColor: "#eee",
+                                color: "gray.500",
+                              }}
+                              value="maintenance"
+                            >
+                              Maintenance
+                            </option>
+                            <option
+                              style={{
+                                backgroundColor: "#eee",
+                                color: "gray.500",
+                              }}
+                              value="others"
+                            >
+                              Others
+                            </option>
+                          </Select>
+                        </FormControl>
+
+                        <FormControl>
+                          <FormLabel>Description</FormLabel>
+                          <Textarea
+                            background=" rgba(247, 250, 252, 0.8)"
+                            border=" 1px solid #e2e8f0"
+                            borderRadius="10px"
+                            font-size="sm"
+                            value={editExpense.description}
+                            onChange={(e) =>
+                              setEditExpense({
+                                ...editExpense,
+                                description: e.target.value,
+                              })
+                            }
+                            placeholder="Enter description"
+                          />
+                        </FormControl>
+
+                        <FormControl>
+                          <FormLabel>Amount</FormLabel>
+                          <StyledInput
+                            type="number"
+                            value={editExpense.amount}
+                            onChange={(e) =>
+                              setEditExpense({
+                                ...editExpense,
+                                amount: Number(e.target.value),
+                              })
+                            }
+                            placeholder="Enter amount"
+                          />
+                        </FormControl>
+
+                        <FormControl>
+                          <FormLabel>Payment Method</FormLabel>
+                          <Select
+                            value={editExpense.paymentMethod}
+                            onChange={(e) =>
+                              setEditExpense({
+                                ...editExpense,
+                                paymentMethod: e.target.value,
+                              })
+                            }
+                          >
+                            <option
+                              style={{
+                                backgroundColor: "#eee",
+                                color: "gray.500",
+                              }}
+                              value="cash"
+                            >
+                              Cash
+                            </option>
+                            <option
+                              style={{
+                                backgroundColor: "#eee",
+                                color: "gray.500",
+                              }}
+                              value="transfer"
+                            >
+                              Bank Transfer
+                            </option>
+                            <option
+                              style={{
+                                backgroundColor: "#eee",
+                                color: "gray.500",
+                              }}
+                              value="card"
+                            >
+                              Card Payment
+                            </option>
+                          </Select>
+                        </FormControl>
+
+                        <Button
+                          colorScheme="blue"
+                          size="sm"
+                          width="full"
+                          onClick={handleUpdateExpense}
+                        >
+                          Update Expense
+                        </Button>
+                      </VStack>
+                    )}
+                  </ModalBody>
+                </ModalContent>
+              </Modal>
+            </Box>
+          </MainContent>
+        </Flex>
+      ) : (
+        <Flex justify="center" align="center" h="100vh">
+          <Spinner size="xl" />
+        </Flex>
+      )}
+    </>
   );
 }

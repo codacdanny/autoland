@@ -6,7 +6,6 @@ export const fetchDashboardMetrics = async (): Promise<DashboardMetrics> => {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URL}/workshops/job-orders/dashboard/stats`
     );
-    console.log(response);
     const { totalIncome, totalOutflow, netProfit } = response.data.data; // Destructure the relevant data
     return { totalIncome, totalOutflow, netProfit }; // Return the relevant data
   } catch (error) {
