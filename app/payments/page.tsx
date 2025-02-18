@@ -577,7 +577,7 @@ export default function PaymentsPage() {
                               backgroundColor: "#eee",
                               color: "gray.500",
                             }}
-                            value="cash"
+                            value="Cash"
                           >
                             Cash
                           </option>
@@ -586,7 +586,7 @@ export default function PaymentsPage() {
                               backgroundColor: "#eee",
                               color: "gray.500",
                             }}
-                            value="transfer"
+                            value="Bank Transfer"
                           >
                             Bank Transfer
                           </option>
@@ -595,9 +595,18 @@ export default function PaymentsPage() {
                               backgroundColor: "#eee",
                               color: "gray.500",
                             }}
-                            value="card"
+                            value="Card Payment"
                           >
                             Card Payment
+                          </option>
+                          <option
+                            style={{
+                              backgroundColor: "#eee",
+                              color: "gray.500",
+                            }}
+                            value="POS"
+                          >
+                            POS
                           </option>
                         </Select>
                       </FormControl>
@@ -726,7 +735,7 @@ export default function PaymentsPage() {
                                 backgroundColor: "#eee",
                                 color: "gray.500",
                               }}
-                              value="cash"
+                              value="Cash"
                             >
                               Cash
                             </option>
@@ -735,7 +744,7 @@ export default function PaymentsPage() {
                                 backgroundColor: "#eee",
                                 color: "gray.500",
                               }}
-                              value="transfer"
+                              value="Bank Transfer"
                             >
                               Bank Transfer
                             </option>
@@ -744,9 +753,18 @@ export default function PaymentsPage() {
                                 backgroundColor: "#eee",
                                 color: "gray.500",
                               }}
-                              value="card"
+                              value="Card Payment"
                             >
                               Card Payment
+                            </option>
+                            <option
+                              style={{
+                                backgroundColor: "#eee",
+                                color: "gray.500",
+                              }}
+                              value="POS"
+                            >
+                              POS
                             </option>
                           </Select>
                         </FormControl>
