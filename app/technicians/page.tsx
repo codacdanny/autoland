@@ -14,9 +14,9 @@ import {
   fetchTechnicians,
   deleteTechnician,
 } from "../utils/services/technicians";
-import { AddTechnicianModal } from "../components/modals/AddTechnicianModal";
-import { EditTechnicianModal } from "../components/modals/EditTechnicianModal";
-import { TechniciansTable } from "../components/tables/TechniciansTable";
+import { AddTechnicianModal } from "../components/minor/modals/AddTechnicianModal";
+import { EditTechnicianModal } from "../components/minor/modals/EditTechnicianModal";
+import { TechniciansTable } from "../components/minor/tables/TechniciansTable";
 import Sidebar from "../components/major/Sidebar";
 import MainContent from "../components/minor/MainContent";
 import Header from "../components/minor/Header";

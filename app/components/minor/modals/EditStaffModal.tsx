@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -19,26 +19,37 @@ import {
   StyledModal,
   StyledInput,
   StyledSelect,
-} from "../minor/styling/technicians.styles";
-import { TechnicianFormData } from "../../utils/types/technicians";
-import { addTechnician } from "../../utils/services/technicians";
+} from "../styling/technicians.styles";
+import { Staff, StaffFormData } from "../../../utils/types/staff";
+import { updateStaff } from "../../../utils/services/staff";
 
-interface AddTechnicianModalProps {
+interface EditStaffModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSuccess: () => Promise<void>; // Updated type
-  initialData: TechnicianFormData;
+  onUpdate: () => Promise<void>;
+  staff: Staff | null;
 }
 
-export const AddTechnicianModal = ({
+export const EditStaffModal = ({
   isOpen,
   onClose,
-  onSuccess,
-  initialData,
-}: AddTechnicianModalProps) => {
+  onUpdate,
+  staff,
+}: EditStaffModalProps) => {
   const toast = useToast();
-  const [formData, setFormData] = useState<TechnicianFormData>(initialData);
-
+  const [formData, setFormData] = useState<StaffFormData>({
+    fullName: "",
+    phoneNumber: "",
+    email: "",
+    workshop: "",
+    role: "",
+    status: "On Duty",
+  });
+  useEffect(() => {
+    if (staff) {
+      setFormData(staff);
+    }
+  }, [staff]);
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -48,7 +59,6 @@ export const AddTechnicianModal = ({
       [name]: value,
     }));
   };
-
   const handleSubmit = async () => {
     if (!formData.fullName || !formData.phoneNumber || !formData.email) {
       toast({
@@ -62,27 +72,29 @@ export const AddTechnicianModal = ({
     }
 
     try {
-      await addTechnician(formData);
-      await onSuccess(); // Wait for refresh to complete
+      if (!staff?._id) throw new Error("No staff ID found");
+
+      await updateStaff(staff._id, formData);
+      await onUpdate(); // Wait for refresh to complete
       toast({
         title: "Success",
-        description: "Technician added successfully",
+        description: "Staff updated successfully",
         status: "success",
         position: "top-right",
         duration: 3000,
       });
       onClose();
     } catch (error) {
+      console.error("Update failed:", error);
       toast({
         title: "Error",
-        description: "Failed to add technician",
+        description: "Failed to update staff",
         status: "error",
         position: "top-right",
         duration: 3000,
       });
     }
   };
-
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="xl">
       <ModalOverlay backdropFilter="blur(10px)" bg="blackAlpha.300" />
@@ -91,29 +103,25 @@ export const AddTechnicianModal = ({
           color="gray.800"
           borderBottom="1px solid"
           borderColor="gray.400">
-          Add New Technician
+          Edit Staff
         </ModalHeader>
         <ModalCloseButton />
-        <ModalBody py={6} color="gray.800">
+        <ModalBody color="gray.800" py={6}>
           <Stack spacing={6}>
             <FormControl isRequired>
-              <FormLabel fontSize="sm" color="gray.600">
-                Full Name
-              </FormLabel>
+              <FormLabel color="gray.600">Full Name</FormLabel>
               <StyledInput
                 name="fullName"
                 value={formData.fullName}
                 onChange={handleInputChange}
-                placeholder="Enter technician's full name"
+                placeholder="Enter full name"
                 _placeholder={{ color: "rgb(172, 175, 179)" }}
                 color="black"
               />
             </FormControl>
 
             <FormControl isRequired>
-              <FormLabel fontSize="sm" color="gray.600">
-                Phone Number
-              </FormLabel>
+              <FormLabel color="gray.600">Phone Number</FormLabel>
               <StyledInput
                 name="phoneNumber"
                 value={formData.phoneNumber}
@@ -125,15 +133,24 @@ export const AddTechnicianModal = ({
             </FormControl>
 
             <FormControl isRequired>
-              <FormLabel fontSize="sm" color="gray.600">
-                Email
-              </FormLabel>
+              <FormLabel color="gray.600">Email</FormLabel>
               <StyledInput
                 name="email"
                 type="email"
                 value={formData.email}
                 onChange={handleInputChange}
                 placeholder="Enter email address"
+              />
+            </FormControl>
+
+            <FormControl isRequired>
+              <FormLabel color="gray.600">Password</FormLabel>
+              <StyledInput
+                name="password"
+                type="password"
+                value={formData.password}
+                onChange={handleInputChange}
+                placeholder="Enter password"
                 _placeholder={{ color: "rgb(172, 175, 179)" }}
                 color="black"
               />
@@ -141,9 +158,7 @@ export const AddTechnicianModal = ({
 
             <HStack spacing={4}>
               <FormControl flex={1}>
-                <FormLabel fontSize="sm" color="gray.600">
-                  Workshop
-                </FormLabel>
+                <FormLabel color="gray.600">Workshop</FormLabel>
                 <StyledSelect
                   name="workshop"
                   value={formData.workshop}
@@ -169,82 +184,50 @@ export const AddTechnicianModal = ({
               </FormControl>
 
               <FormControl flex={1}>
-                <FormLabel fontSize="sm" color="gray.600">
-                  Speciality
-                </FormLabel>
+                <FormLabel color="gray.600">Role</FormLabel>
                 <StyledSelect
-                  name="specialty"
-                  value={formData.specialty}
+                  name="role"
+                  value={formData.role}
                   onChange={handleInputChange}
-                  placeholder="Select speciality">
+                  placeholder="Select role">
                   <option
                     style={{
                       backgroundColor: "#eee",
                       color: "gray.500",
                     }}
-                    value="German">
-                    German
+                    value="frontDesk">
+                    Front Desk
                   </option>
                   <option
                     style={{
                       backgroundColor: "#eee",
                       color: "gray.500",
                     }}
-                    value="Japanese">
-                    Japanese
+                    value="accountant">
+                    Accounts
                   </option>
                   <option
                     style={{
                       backgroundColor: "#eee",
                       color: "gray.500",
                     }}
-                    value="American">
-                    American
+                    value="autoclub">
+                    Autoclub
+                  </option>
+                  <option
+                    style={{
+                      backgroundColor: "#eee",
+                      color: "gray.500",
+                    }}
+                    value="workshopManager">
+                    Manager
                   </option>
                 </StyledSelect>
               </FormControl>
             </HStack>
 
             <FormControl>
-              <FormLabel fontSize="sm" color="gray.600">
-                Team
-              </FormLabel>
-              <StyledSelect
-                name="team"
-                value={formData.team}
-                onChange={handleInputChange}
-                placeholder="Select team">
-                <option
-                  style={{
-                    backgroundColor: "#eee",
-                    color: "gray.500",
-                  }}
-                  value="Alpha">
-                  Alpha
-                </option>
-                <option
-                  style={{
-                    backgroundColor: "#eee",
-                    color: "gray.500",
-                  }}
-                  value="Beta">
-                  Beta
-                </option>
-                <option
-                  style={{
-                    backgroundColor: "#eee",
-                    color: "gray.500",
-                  }}
-                  value="Delta">
-                  Delta
-                </option>
-              </StyledSelect>
-            </FormControl>
-
-            <FormControl>
-              <FormLabel fontSize="sm" color="gray.600">
-                Status
-              </FormLabel>
+              <FormLabel color="gray.600">Status</FormLabel>
               <RadioGroup
                 value={formData.status}
                 onChange={(value) =>
@@ -266,7 +249,7 @@ export const AddTechnicianModal = ({
               onClick={handleSubmit}
               width="full"
               size="sm">
-              Add Technician
+              Update Staff
             </Button>
           </Stack>
         </ModalBody>

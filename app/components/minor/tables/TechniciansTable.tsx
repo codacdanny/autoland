@@ -12,8 +12,8 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import { Technician } from "../../utils/types/technicians";
-import { StyledTable } from "../minor/styling/technicians.styles";
+import { Technician } from "../../../utils/types/technicians";
+import { StyledTable } from "../styling/technicians.styles";
 
 interface TechniciansTableProps {
   technicians: Technician[];
