@@ -42,14 +42,12 @@ const Header = () => {
         boxShadow="md"
         backdropFilter="blur(5px)"
         border="1px solid"
-        borderColor="gray.100"
-      >
+        borderColor="gray.100">
         <VStack align="stretch" spacing={1}>
           <Text
             textTransform="capitalize"
             fontSize={{ base: "sm", md: "lg" }}
-            fontWeight="bold"
-          >
+            fontWeight="bold">
             Hi, {user?.name}!{" "}
             <span style={{ fontSize: "12px", color: "#dbdbd9" }}>
               ({user?.role})
@@ -64,8 +62,7 @@ const Header = () => {
         <Flex
           align="center"
           gap={iconSpacing}
-          display={{ base: "none", md: "flex" }}
-        >
+          display={{ base: "none", md: "flex" }}>
           {/* Enhanced Search Bar */}
           <InputGroup maxW={{ base: "200px", md: "300px" }}>
             <InputLeftElement pointerEvents="none">

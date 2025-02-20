@@ -1,4 +1,4 @@
-export interface JobOrder {
+export interface JobOrderTableType {
   jobId: string;
   bookingDate: string; // You can use Date if you want to handle it as a Date object
   clientName: string;

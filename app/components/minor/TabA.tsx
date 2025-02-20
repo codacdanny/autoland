@@ -2,40 +2,41 @@ import React from "react";
 import {
   Box,
   VStack,
-  Heading,
   Icon,
   FormControl,
   FormLabel,
   HStack,
   Textarea,
-  Flex,
-  useToast,
+  Text,
 } from "@chakra-ui/react";
 import { FaUser, FaCar, FaTools } from "react-icons/fa";
-import { InputField, SelectField, TextAreaField } from "./Form";
-import { ActionButton, SectionTitle } from "./styling/sectionTitle";
-import { FormData } from "@/app/utils/types/formData";
+import { InputField, TextAreaField } from "./Form";
+import { SectionTitle } from "./styling/sectionTitle";
+import {
+  ClientInformation,
+  VehicleInformation,
+} from "@/app/utils/types/formData";
 
 interface TabAProps {
-  formData: FormData;
-  handleChange: (
-    event: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
+  formData: {
+    clientInformation: ClientInformation;
+    vehicleInformation: VehicleInformation;
+  };
+  onChange: (
+    subKey: "clientInformation" | "vehicleInformation",
+    data: Partial<ClientInformation | VehicleInformation>
   ) => void;
 }
-const TabA = ({ formData, handleChange }: TabAProps) => {
-  const toast = useToast();
-  const handleSubmit = () => {
-    // Handle form submission logic here
-    toast({
-      title: "Job Order Created.",
-      description: "Your job order has been created successfully.",
-      status: "success",
-      duration: 5000,
-      isClosable: true,
-    });
+
+const TabA: React.FC<TabAProps> = ({ formData, onChange }) => {
+  const handleClientInfoChange = (field: string, value: string) => {
+    onChange("clientInformation", { [field]: value });
   };
+
+  const handleVehicleInfoChange = (field: string, value: string) => {
+    onChange("vehicleInformation", { [field]: value });
+  };
+
   return (
     <>
       <Box mb={{ base: 4, md: 8 }}>
@@ -45,38 +46,40 @@ const TabA = ({ formData, handleChange }: TabAProps) => {
             fontSize={{ base: "xs", md: "sm" }}
             color="blue.500"
           />
-          <Heading as="h3" size={{ base: "xs", md: "sm" }}>
-            Client Information
-          </Heading>
+          <Box fontSize={{ base: "xs", md: "sm" }}>Client Information</Box>
         </SectionTitle>
         <VStack spacing={{ base: 3, md: 4 }} align="stretch">
           <InputField
             name="clientName"
             placeholder="Client Name"
-            value={formData.clientName}
-            onChange={handleChange}
-            // size={{ base: "sm", md: "md" }}
+            value={formData.clientInformation.clientName}
+            onChange={(e) =>
+              handleClientInfoChange("clientName", e.target.value)
+            }
           />
           <InputField
-            name="phoneNumber"
+            name="clientPhone"
             placeholder="Client Phone Number"
-            value={formData.phoneNumber}
-            onChange={handleChange}
-            // size={{ base: "sm", md: "md" }}
+            value={formData.clientInformation.clientPhone}
+            onChange={(e) =>
+              handleClientInfoChange("clientPhone", e.target.value)
+            }
           />
           <InputField
             name="clientEmail"
             placeholder="Client Email"
-            value={formData.clientEmail}
-            onChange={handleChange}
-            // size={{ base: "sm", md: "md" }}
+            value={formData.clientInformation.clientEmail}
+            onChange={(e) =>
+              handleClientInfoChange("clientEmail", e.target.value)
+            }
           />
           <InputField
             name="clientBirthday"
             placeholder="Client Birthday"
-            value={formData.clientEmail}
-            onChange={handleChange}
-            // size={{ base: "sm", md: "md" }}
+            value={formData.clientInformation.clientBirthday}
+            onChange={(e) =>
+              handleClientInfoChange("clientBirthday", e.target.value)
+            }
           />
         </VStack>
       </Box>
@@ -88,45 +91,43 @@ const TabA = ({ formData, handleChange }: TabAProps) => {
             fontSize={{ base: "xs", md: "sm" }}
             color="blue.500"
           />
-          <Heading as="h3" size={{ base: "xs", md: "sm" }}>
-            Vehicle Information
-          </Heading>
+          <Box fontSize={{ base: "xs", md: "sm" }}>Vehicle Information</Box>
         </SectionTitle>
         <VStack spacing={{ base: 3, md: 4 }} align="stretch">
           <InputField
-            name="carNo"
+            name="carVIN"
             placeholder="Car VIN"
-            value={formData.carNo}
-            onChange={handleChange}
-            // size={{ base: "sm", md: "md" }}
+            value={formData.vehicleInformation.carVIN}
+            onChange={(e) => handleVehicleInfoChange("carVIN", e.target.value)}
           />
           <InputField
-            name="carNo"
-            placeholder="Car Chasis Number"
-            value={formData.carNo}
-            onChange={handleChange}
-            // size={{ base: "sm", md: "md" }}
+            name="carChassis"
+            placeholder="Car Chassis Number"
+            value={formData.vehicleInformation.carChassis}
+            onChange={(e) =>
+              handleVehicleInfoChange("carChassis", e.target.value)
+            }
           />
           <InputField
-            name="carNo"
+            name="carPlate"
             placeholder="Car Plate Number"
-            value={formData.carNo}
-            onChange={handleChange}
-            // size={{ base: "sm", md: "md" }}
+            value={formData.vehicleInformation.carPlate}
+            onChange={(e) =>
+              handleVehicleInfoChange("carPlate", e.target.value)
+            }
           />
           <InputField
             name="carMake"
             placeholder="Car Make"
-            value={formData.carMake}
-            onChange={handleChange}
-            // size={{ base: "sm", md: "md" }}
+            value={formData.vehicleInformation.carMake}
+            onChange={(e) => handleVehicleInfoChange("carMake", e.target.value)}
           />
+          <Text>Input Car Year</Text>
           <InputField
             name="carYear"
             placeholder="Car Year"
-            value={formData.carYear}
-            onChange={handleChange}
-            // size={{ base: "sm", md: "md" }}
+            value={formData.vehicleInformation.carYear}
+            onChange={(e) => handleVehicleInfoChange("carYear", e.target.value)}
           />
           <FormControl>
             <FormLabel fontSize={{ base: "xs", md: "sm" }}>
@@ -143,46 +144,45 @@ const TabA = ({ formData, handleChange }: TabAProps) => {
                 width: "100%",
                 fontSize: "14px",
               }}
+              value={formData.vehicleInformation.dateSelected}
+              onChange={(e) =>
+                handleVehicleInfoChange("dateSelected", e.target.value)
+              }
             />
           </FormControl>
           <InputField
             name="carIssue"
             placeholder="Car Issue"
-            value={formData.carIssue}
-            onChange={handleChange}
-            // size={{ base: "sm", md: "md" }}
+            value={formData.vehicleInformation.carIssue}
+            onChange={(e) =>
+              handleVehicleInfoChange("carIssue", e.target.value)
+            }
           />
           <InputField
             name="carColour"
             placeholder="Car Colour"
-            value={formData.carColour}
-            onChange={handleChange}
-            // size={{ base: "sm", md: "md" }}
+            value={formData.vehicleInformation.carColour}
+            onChange={(e) =>
+              handleVehicleInfoChange("carColour", e.target.value)
+            }
           />
+          <Text>Input Odometer</Text>
           <InputField
             name="odometer"
             placeholder="Odometer"
-            value={formData.odometer}
-            onChange={handleChange}
-            // size={{ base: "sm", md: "md" }}
+            value={formData.vehicleInformation.odometer}
+            onChange={(e) =>
+              handleVehicleInfoChange("odometer", e.target.value)
+            }
           />
-          <SelectField
-            name="workshop"
-            placeholder="Select Workshop"
-            value={formData.workshop}
-            onChange={handleChange}
-            options={[
-              { value: "Owerri", label: "Owerri" },
-              { value: "Portharcourt", label: "Portharcourt" },
-            ]}
-            // size={{ base: "sm", md: "md" }}
-          />
+
           <TextAreaField
             name="customerRequest"
             placeholder="Customer's Request"
-            value={formData.customerRequest}
-            onChange={handleChange}
-            // size={{ base: "sm", md: "md" }}
+            value={formData.vehicleInformation.customerRequest}
+            onChange={(e) =>
+              handleVehicleInfoChange("customerRequest", e.target.value)
+            }
           />
         </VStack>
       </Box>
@@ -194,9 +194,7 @@ const TabA = ({ formData, handleChange }: TabAProps) => {
             fontSize={{ base: "xs", md: "sm" }}
             color="blue.500"
           />
-          <Heading as="h3" size={{ base: "xs", md: "sm" }}>
-            Descriptions of Work
-          </Heading>
+          <Box fontSize={{ base: "xs", md: "sm" }}>Description of Work</Box>
         </SectionTitle>
         <HStack>
           <Textarea
@@ -207,31 +205,14 @@ const TabA = ({ formData, handleChange }: TabAProps) => {
             borderRadius="sm"
             p={{ base: 2, md: 4 }}
             fontSize={{ base: "xs", md: "sm" }}
-            placeholder="Describe the Work that should be done on this vehicle"
-            value={formData.customerRequest}
-            onChange={handleChange}
+            placeholder="Describe the work to be done on this vehicle"
+            value={formData.vehicleInformation.descriptionOfWork}
+            onChange={(e) =>
+              handleVehicleInfoChange("descriptionOfWork", e.target.value)
+            }
           />
         </HStack>
       </Box>
-      <Flex
-        justify="flex-end"
-        gap={{ base: 2, md: 4 }}
-        direction={{ base: "column", sm: "row" }}
-        mb={{ base: 6, md: 0 }}
-      >
-        <ActionButton
-          onClick={() => {}}
-          color="gray.600"
-          border="1px solid"
-          borderColor="gray.300"
-          w={{ base: "full", sm: "auto" }}
-        >
-          Cancel
-        </ActionButton>
-        <ActionButton onClick={handleSubmit} w={{ base: "full", sm: "auto" }}>
-          Save
-        </ActionButton>
-      </Flex>
     </>
   );
 };

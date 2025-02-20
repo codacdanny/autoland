@@ -29,45 +29,58 @@ export const StyledInput = styled(Input)`
   }
 `;
 
-export const InputField = ({
+export interface InputFieldProps {
+  name: string;
+  placeholder: string;
+  value: string | number;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  isReadOnly?: boolean;
+}
+
+export interface SelectFieldProps {
+  name: string;
+  placeholder: string;
+  value: string;
+  onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  options: Array<{ label: string; value: string }>;
+}
+
+export interface TextAreaFieldProps {
+  name: string;
+  placeholder: string;
+  value: string;
+  onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+}
+
+export const InputField: React.FC<InputFieldProps> = ({
   name,
   placeholder,
   value,
   onChange,
-}: {
-  name: string;
-  placeholder: string;
-  value: string;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  isReadOnly,
 }) => (
   <StyledInput
     placeholder={placeholder}
     name={name}
     value={value}
     onChange={onChange}
+    isReadOnly={isReadOnly}
   />
 );
 
-export const SelectField = ({
+export const SelectField: React.FC<SelectFieldProps> = ({
   name,
   placeholder,
   value,
   onChange,
   options,
-}: {
-  name: string;
-  placeholder: string;
-  value: string;
-  onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
-  options: { label: string; value: string }[];
 }) => (
   <Select
     name={name}
     fontSize="sm"
     placeholder={placeholder}
     value={value}
-    onChange={onChange}
-  >
+    onChange={onChange}>
     {options.map((option) => (
       <option
         style={{
@@ -75,24 +88,18 @@ export const SelectField = ({
           color: "gray",
         }}
         key={option.value}
-        value={option.value}
-      >
+        value={option.value}>
         {option.label}
       </option>
     ))}
   </Select>
 );
 
-export const TextAreaField = ({
+export const TextAreaField: React.FC<TextAreaFieldProps> = ({
   name,
   placeholder,
   value,
   onChange,
-}: {
-  name: string;
-  placeholder: string;
-  value: string;
-  onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }) => (
   <Textarea
     name={name}
@@ -108,14 +115,23 @@ export const TextAreaField = ({
   />
 );
 
-export const CheckboxGroup = ({
+export interface CheckboxGroupProps {
+  options: Array<{ label: string; value: string }>;
+  values?: { [key: string]: boolean };
+  onChange?: (field: string, value: boolean) => void;
+}
+
+export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
   options,
-}: {
-  options: { label: string }[];
+  values = {},
+  onChange = () => {},
 }) => (
-  <VStack align="stretch">
-    {options.map((option: { label: string }) => (
-      <Checkbox key={option.label}>
+  <VStack align="stretch" spacing={2}>
+    {options.map((option) => (
+      <Checkbox
+        key={option.value}
+        isChecked={values[option.value] || false}
+        onChange={(e) => onChange(option.value, e.target.checked)}>
         <Text fontSize="sm">{option.label}</Text>
       </Checkbox>
     ))}

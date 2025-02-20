@@ -21,7 +21,7 @@ import {
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { JobOrder } from "@/app/utils/types/jobOrder";
+import { JobOrderTableType } from "@/app/utils/types/jobOrder";
 import { fetchJobOrders } from "@/app/utils/services/jobOrderTableService";
 
 const GridHeader = ({ children }: { children: React.ReactNode }) => (
@@ -30,8 +30,7 @@ const GridHeader = ({ children }: { children: React.ReactNode }) => (
     fontWeight="semibold"
     color="gray.600"
     textTransform="uppercase"
-    p={4}
-  >
+    p={4}>
     {children}
   </Text>
 );
@@ -39,7 +38,7 @@ const GridHeader = ({ children }: { children: React.ReactNode }) => (
 export default function JobOrderTable() {
   const router = useRouter();
   const [expandedRow, setExpandedRow] = useState<string | null>(null);
-  const [orders, setOrders] = useState<JobOrder[]>([]);
+  const [orders, setOrders] = useState<JobOrderTableType[]>([]);
 
   useEffect(() => {
     const loadOrders = async () => {
@@ -77,8 +76,7 @@ export default function JobOrderTable() {
       boxShadow="md"
       backdropFilter="blur(5px)"
       border="1px solid"
-      borderColor="gray.100"
-    >
+      borderColor="gray.100">
       <Flex justify="space-between" align="center" mb={6}>
         <Text fontSize={{ base: "md", lg: "lg" }} fontWeight="semibold">
           Customer Orders
@@ -89,8 +87,7 @@ export default function JobOrderTable() {
             color="blue.500"
             cursor="pointer"
             gap={2}
-            _hover={{ color: "blue.600" }}
-          >
+            _hover={{ color: "blue.600" }}>
             <Text>See More</Text>
             <FaArrowRight />
           </Flex>
@@ -114,8 +111,7 @@ export default function JobOrderTable() {
               background: "#a0aec0",
             },
           },
-        }}
-      >
+        }}>
         <Box minWidth="1800px">
           <Box
             display="grid"
@@ -123,8 +119,7 @@ export default function JobOrderTable() {
             gap={4}
             bg="gray.50"
             borderRadius="lg"
-            mb={2}
-          >
+            mb={2}>
             <GridHeader>Job ID</GridHeader>
             <GridHeader>Booking Date</GridHeader>
             <GridHeader>Client Name</GridHeader>
@@ -154,8 +149,7 @@ export default function JobOrderTable() {
                     bg: "gray.50",
                   }}
                   transition="all 0.2s"
-                  cursor="pointer"
-                >
+                  cursor="pointer">
                   <Flex align="center">
                     <Text fontWeight="medium">{order.jobId}</Text>
                   </Flex>
@@ -176,8 +170,7 @@ export default function JobOrderTable() {
                       fontSize="sm"
                       overflow="hidden"
                       textOverflow="ellipsis"
-                      whiteSpace="nowrap"
-                    >
+                      whiteSpace="nowrap">
                       {order.clientEmail}
                     </Text>
                   </Flex>
@@ -194,8 +187,7 @@ export default function JobOrderTable() {
                       variant="subtle"
                       px={3}
                       py={1}
-                      borderRadius="full"
-                    >
+                      borderRadius="full">
                       {order.paymentStatus}
                     </Badge>
                   </Flex>
@@ -215,8 +207,7 @@ export default function JobOrderTable() {
                       gap={1}
                       px={3}
                       py={1}
-                      borderRadius="full"
-                    >
+                      borderRadius="full">
                       <Icon
                         as={
                           order.customerJobOrderStatus === "Approve"
@@ -240,8 +231,7 @@ export default function JobOrderTable() {
                       gap={1}
                       px={3}
                       py={1}
-                      borderRadius="full"
-                    >
+                      borderRadius="full">
                       <Icon
                         as={
                           order.carRepairStatus === "Complete"
@@ -265,8 +255,7 @@ export default function JobOrderTable() {
                       gap={1}
                       px={3}
                       py={1}
-                      borderRadius="full"
-                    >
+                      borderRadius="full">
                       <Icon
                         as={
                           order.deliveryStatus === "Delivered"
@@ -288,8 +277,7 @@ export default function JobOrderTable() {
                     borderRadius="lg"
                     mt={2}
                     border="1px dashed"
-                    borderColor="gray.200"
-                  >
+                    borderColor="gray.200">
                     <HStack spacing={4} justify="flex-end">
                       <Button
                         leftIcon={<FaFileAlt />}
@@ -299,8 +287,7 @@ export default function JobOrderTable() {
                         variant="outline"
                         onClick={() =>
                           handleActionClick(order.jobId, "registration")
-                        }
-                      >
+                        }>
                         View Customer Order
                       </Button>
                       <Button
@@ -311,8 +298,7 @@ export default function JobOrderTable() {
                         variant="outline"
                         onClick={() =>
                           handleActionClick(order.jobId, "estimate")
-                        }
-                      >
+                        }>
                         Estimate Form
                       </Button>
                       <Button
@@ -323,8 +309,7 @@ export default function JobOrderTable() {
                         variant="outline"
                         onClick={() =>
                           handleActionClick(order.jobId, "stockist")
-                        }
-                      >
+                        }>
                         Stockist Form
                       </Button>
                       <Button
@@ -335,8 +320,7 @@ export default function JobOrderTable() {
                         variant="outline"
                         onClick={() =>
                           handleActionClick(order.jobId, "account")
-                        }
-                      >
+                        }>
                         Account
                       </Button>
                       <Button
@@ -347,8 +331,7 @@ export default function JobOrderTable() {
                         variant="outline"
                         onClick={() =>
                           handleActionClick(order.jobId, "invoice")
-                        }
-                      >
+                        }>
                         Invoice
                       </Button>
                     </HStack>

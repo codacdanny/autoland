@@ -1,47 +1,33 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Box,
   VStack,
-  Heading,
   Icon,
   RadioGroup,
   Stack,
   Radio,
   Text,
-  Flex,
-  useToast,
 } from "@chakra-ui/react";
 import { FaTools } from "react-icons/fa";
-import { SelectField, StyledInput } from "./Form";
-import { ActionButton, SectionTitle } from "./styling/sectionTitle";
-import CustomRadioGroup from "./CustomRadioGroup";
-import { FormData } from "@/app/utils/types/formData";
+import { StyledInput } from "./Form";
+import { SectionTitle } from "./styling/sectionTitle";
+import { useAuth } from "@/app/utils/services/context";
 
 interface TabCProps {
-  formData: FormData;
-  handleChange: (
-    event: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
-  ) => void;
+  formData: {
+    customerJobOrderStatus: string;
+    jobOrderStatus: string;
+    repairStatus: string;
+    carReceivedBy: string;
+  };
+  onChange: (field: string, value: string) => void;
 }
 
-export default function TabC({ formData, handleChange }: TabCProps) {
-  const [jobStatus, setJobStatus] = useState<string>("pending"); // Default value
-  const toast = useToast();
-
-  const handleSubmit = () => {
-    // Handle form submission logic here
-    toast({
-      title: "Job Order Created.",
-      description: "Your job order has been created successfully.",
-      status: "success",
-      duration: 5000,
-      isClosable: true,
-    });
-  };
+const TabC: React.FC<TabCProps> = ({ formData, onChange }) => {
+  const { user } = useAuth();
   return (
     <>
+      {/* Customer Job Order Status */}
       <Box mb={{ base: 4, md: 8 }}>
         <SectionTitle>
           <Icon
@@ -49,140 +35,127 @@ export default function TabC({ formData, handleChange }: TabCProps) {
             fontSize={{ base: "xs", md: "sm" }}
             color="blue.500"
           />
-          <Heading as="h3" size={{ base: "xs", md: "sm" }}>
-            Assign Technicians
-          </Heading>
-        </SectionTitle>
-        <VStack align="stretch" spacing={{ base: 3, md: 4 }}>
-          <SelectField
-            name="team"
-            placeholder="Select Team"
-            value={formData.carYear}
-            onChange={handleChange}
-            options={[
-              { value: "team A", label: "Team A" },
-              { value: "team B", label: "Team B" },
-              { value: "team C", label: "Team C" },
-            ]}
-            // size={{ base: "sm", md: "md" }}
-          />
-        </VStack>
-      </Box>
-      <Box mb={{ base: 4, md: 8 }}>
-        <SectionTitle>
-          <Icon
-            as={FaTools}
-            fontSize={{ base: "xs", md: "sm" }}
-            color="blue.500"
-          />
-          <Heading as="h3" size={{ base: "xs", md: "sm" }}>
+          <Box fontSize={{ base: "xs", md: "sm" }}>
             Customer Job Order Status
-          </Heading>
+          </Box>
         </SectionTitle>
-        <RadioGroup defaultValue="disapprove">
+        <RadioGroup
+          value={formData.customerJobOrderStatus}
+          onChange={(val) => onChange("customerJobOrderStatus", val)}>
           <Stack spacing={{ base: 3, md: 4 }}>
             <Radio
-              value="approve"
+              value="Approve"
               borderColor="green.200"
               colorScheme="green"
               size={{ base: "sm", md: "md" }}
               _hover={{ bg: "green.100" }}
-              _checked={{ bg: "green.500", color: "white" }}
-            >
+              _checked={{ bg: "green.500", color: "white" }}>
               <Text fontSize={{ base: "xs", md: "sm" }}>Approve</Text>
             </Radio>
-
             <Radio
-              value="disapprove"
-              borderColor="orange.500"
-              colorScheme="orange"
+              value="Disapprove"
+              borderColor="red.500"
+              colorScheme="red"
               size={{ base: "sm", md: "md" }}
-              _hover={{ bg: "orange.100" }}
-              _checked={{ bg: "orange.500", color: "white" }}
-            >
+              _hover={{ bg: "red.100" }}
+              _checked={{ bg: "red.500", color: "white" }}>
               <Text fontSize={{ base: "xs", md: "sm" }}>Disapprove</Text>
             </Radio>
           </Stack>
         </RadioGroup>
       </Box>
+      {/* Job Order Status */}
       <Box mb={8}>
         <SectionTitle>
           <Icon as={FaTools} fontSize="sm" color="blue.500" />
-          <Heading as="h3" size="xs">
-            Car Repair Status
-          </Heading>
+          <Box fontSize="xs">Job Order Status</Box>
         </SectionTitle>
-        <CustomRadioGroup value={jobStatus} onChange={setJobStatus} />
-      </Box>
-      <Box mb={8}>
-        <SectionTitle>
-          <Icon as={FaTools} fontSize="sm" color="blue.500" />
-          <Heading as="h3" size="xs">
-            Customer Job Order Status
-          </Heading>
-        </SectionTitle>
-        <RadioGroup defaultValue="disapprove">
+        <RadioGroup
+          value={formData.jobOrderStatus}
+          onChange={(val) => onChange("jobOrderStatus", val)}>
           <Stack spacing={4}>
             <Radio
-              value="delivered"
-              borderColor="green.200"
-              colorScheme="green"
-              size="md"
-              _hover={{ bg: "green.100" }}
-              _checked={{ bg: "green.500", color: "white" }}
-            >
-              <Text fontSize="sm">Delivered</Text>
-            </Radio>
-
-            <Radio
-              value="demurrage"
+              value="In Progress"
               borderColor="red.500"
               colorScheme="red"
               size="md"
               _hover={{ bg: "red.100" }}
-              _checked={{ bg: "red.500", color: "white" }}
-            >
-              <Text fontSize="sm" defaultChecked>
-                Demurrage
-              </Text>
+              _checked={{ bg: "red.500", color: "white" }}>
+              <Text fontSize="sm">In Progress</Text>
+            </Radio>
+            <Radio
+              value="Delivered"
+              borderColor="green.200"
+              colorScheme="green"
+              size="md"
+              _hover={{ bg: "green.100" }}
+              _checked={{ bg: "green.500", color: "white" }}>
+              <Text fontSize="sm">Delivered</Text>
+            </Radio>
+            <Radio
+              value="Demurrage"
+              borderColor="red.500"
+              colorScheme="red"
+              size="md"
+              _hover={{ bg: "red.100" }}
+              _checked={{ bg: "red.500", color: "white" }}>
+              <Text fontSize="sm">Demurrage</Text>
             </Radio>
           </Stack>
         </RadioGroup>
       </Box>
+      {/* Repair Status */}
       <Box mb={8}>
         <SectionTitle>
           <Icon as={FaTools} fontSize="sm" color="blue.500" />
-          <Heading as="h3" size="xs">
-            Car Received By
-          </Heading>
+          <Box fontSize="xs">Repair Status</Box>
+        </SectionTitle>
+        <RadioGroup
+          value={formData.repairStatus}
+          onChange={(val) => onChange("repairStatus", val)}>
+          <Stack spacing={4}>
+            <Radio
+              value="Pending"
+              borderColor="blue.200"
+              colorScheme="blue"
+              size="md"
+              _hover={{ bg: "blue.100" }}
+              _checked={{ bg: "blue.500", color: "white" }}>
+              <Text fontSize="sm">Pending</Text>
+            </Radio>
+            <Radio
+              value="Ongoing"
+              borderColor="purple.200"
+              colorScheme="purple"
+              size="md"
+              _hover={{ bg: "purple.100" }}
+              _checked={{ bg: "purple.500", color: "white" }}>
+              <Text fontSize="sm">Ongoing</Text>
+            </Radio>
+            <Radio
+              value="Completed"
+              borderColor="green.200"
+              colorScheme="green"
+              size="md"
+              _hover={{ bg: "green.100" }}
+              _checked={{ bg: "green.500", color: "white" }}>
+              <Text fontSize="sm">Completed</Text>
+            </Radio>
+          </Stack>
+        </RadioGroup>
+      </Box>
+      {/* Car Received By */}
+      <Box mb={8}>
+        <SectionTitle>
+          <Icon as={FaTools} fontSize="sm" color="blue.500" />
+          <Box fontSize="xs">Car Received By</Box>
         </SectionTitle>
         <VStack align="stretch">
-          <StyledInput
-            placeholder="Car received by"
-            value={""}
-            onChange={() => {}}
-          />
+          <StyledInput value={user?.name} isReadOnly />
         </VStack>
       </Box>
-      <Flex
-        justify="flex-end"
-        gap={{ base: 2, md: 4 }}
-        direction={{ base: "column", sm: "row" }}
-        mb={{ base: 6, md: 0 }}
-      >
-        <ActionButton
-          onClick={() => {}}
-          color="gray.600"
-          border="1px solid"
-          borderColor="gray.300"
-          w={{ base: "full", sm: "auto" }}
-        >
-          Cancel
-        </ActionButton>
-        <ActionButton onClick={handleSubmit} w={{ base: "full", sm: "auto" }}>
-          Save
-        </ActionButton>
-      </Flex>
     </>
   );
-}
+};
+
+export default TabC;

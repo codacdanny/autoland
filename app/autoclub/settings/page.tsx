@@ -27,8 +27,8 @@ import {
 } from "react-icons/fa";
 import { FaWallet } from "react-icons/fa6";
 import { useState } from "react";
-import { SubscriptionTierCard } from "@/app/components/autoclub/SubscriptionTierCard";
-import { SubscriptionTierForm } from "@/app/components/autoclub/SubscriptionTierForm";
+import { SubscriptionTierCard } from "@/app/components/major/autoclub/SubscriptionTierCard";
+import { SubscriptionTierForm } from "@/app/components/major/autoclub/SubscriptionTierForm";
 import { withAuth } from "@/app/utils/services/hoc";
 
 // Sample subscription tiers data

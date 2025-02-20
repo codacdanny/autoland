@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useState } from "react";
 import {
@@ -24,16 +25,12 @@ import TabA from "../components/minor/TabA";
 import TabB from "../components/minor/TabB";
 import TabC from "../components/minor/TabC";
 import TabD from "../components/minor/TabD";
-import { FormData } from "../utils/types/formData";
+import { JobOrderFormData } from "../utils/types/formData";
 import { withAuth } from "../utils/services/hoc";
 
-// Updated styled components
+// Styled components
 const FormContainer = styled(Box)`
-  background: linear-gradient(
-    145deg,
-    rgba(255, 255, 255, 0.95),
-    rgba(249, 250, 251, 0.85)
-  );
+  background: #f7fafc;
   border-radius: 20px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
   padding: 2.5rem;
@@ -61,43 +58,184 @@ const ActionButton = styled(Button)`
 
 function CreateJobOrderPage() {
   const toast = useToast();
-  const [formData, setFormData] = useState<FormData>({
-    clientName: "",
-    phoneNumber: "",
-    clientEmail: "",
-    carNo: "",
-    carMake: "",
-    carYear: "",
-    date: "",
-    carIssue: "",
-    carColour: "",
-    odometer: "",
-    workshop: "",
-    team: "",
-    firstPayment: "",
-    secondPayment: "",
-    debt: "",
-    customerRequest: "",
+  const [formData, setFormData] = useState<JobOrderFormData>({
+    sectionA: {
+      clientInformation: {
+        clientName: "",
+        clientPhone: "",
+        clientEmail: "",
+        clientBirthday: "",
+      },
+      vehicleInformation: {
+        carVIN: "",
+        carIssue: "",
+        carChassis: "",
+        carPlate: "",
+        carMake: "",
+        carYear: 0,
+        carColour: "",
+        odometer: 0,
+        dateSelected: "",
+        customerRequest: "",
+        descriptionOfWork: "",
+      },
+    },
+    sectionB: {
+      exterior: {
+        windShieldCracks: false,
+        bodyPanelMatch: false,
+        magnetAdheres: false,
+        freshPaintJob: false,
+        seamsAligned: false,
+        freeBodyScratches: false,
+        freeBodyDents: false,
+        headlightsFunctional: false,
+        bodyScratches: false,
+        bodyDents: false,
+        lightsFunctional: false,
+      },
+      brake: {
+        straightSteering: false,
+        parkingBrakeWorks: false,
+        noGrindingNoise: false,
+        antiLockBrakesWork: false,
+      },
+      suspension: {
+        vehicleRestsLevelly: false,
+        bounceWithoutNoise: false,
+        cornersRespondEqually: false,
+      },
+      engine: {
+        freeLeaks: false,
+        oilFillerClean: false,
+        batteryTerminalsClean: false,
+        dipStickOilQuality: false,
+        noOdoursRunning: false,
+        exhaustEmissionsNormal: false,
+      },
+      interior: {
+        seatsCondition: false,
+        allDoorsWork: false,
+        trunkOpens: false,
+        gaugesWork: false,
+        dashboardLightsOff: false,
+        stereoWorks: false,
+        heatersWork: false,
+        acWorks: false,
+        windshieldWipersWork: false,
+        seatBeltsFunctional: false,
+        seatAdjustsWell: false,
+        sunRoofOpensWell: false,
+        carALarmWorks: false,
+        driverSideLocksAndUnlocksWithKey: false,
+        hazardLightWorks: false,
+        headlightWorksProperly: false,
+      },
+      tyres: {
+        reputableBrand: false,
+        sameType: false,
+        freeFromDamage: false,
+        treadEvenWear: false,
+        spareTireAvailable: false,
+        spareTireInflated: false,
+      },
+      automaticTransmission: {
+        fluidIsClean: false,
+      },
+      steering: {
+        doesNotOneSide: false,
+        vehicleIsStable: false,
+        noResistance: false,
+        noClicking: false,
+      },
+      battery: {
+        batteryPresent: false,
+        batteryLevel: false,
+      },
+      miscellaneous: {
+        manualAvailable: false,
+        accessoriesInstructions: false,
+        serviceRecordsAvailable: false,
+        ownerHasTitle: false,
+      },
+      underHood: {
+        oilLevels: false,
+        brakeFluid: false,
+        coolantLevels: false,
+        airFilter: false,
+      },
+    },
+    sectionC: {
+      bodyCheckList: {
+        windscreenCracks: false,
+        lightsFunctional: false,
+        spareTireEquipment: false,
+        steeringButtons: false,
+        centralLockWorks: false,
+        radioFunctional: false,
+        windshieldWipersDispense: false,
+        hornWorks: false,
+        seatAdjustable: false,
+        acCooling: false,
+        engineCover: false,
+        reverseCamera: false,
+      },
+      fuelLevel: 0, // stored as number
+      assignTechnicians: "",
+    },
+    sectionD: {
+      customerJobOrderStatus: "Disapprove",
+      jobOrderStatus: "In Progress",
+      repairStatus: "Pending",
+      carReceivedBy: "",
+    },
   });
 
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
-  ) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  // Generic helper for updating an entire section
+  const updateSection = (section: keyof JobOrderFormData, value: any) => {
+    setFormData((prev) => ({
+      ...prev,
+      [section]: value,
+    }));
   };
 
-  const handleSubmit = () => {
-    // Handle form submission logic here
-    toast({
-      title: "Job Order Created.",
-      description: "Your job order has been created successfully.",
-      status: "success",
-      duration: 5000,
-      isClosable: true,
-    });
+  // Helper for updating nested fields in a subsection (e.g. in sectionA)
+  const updateSubsection = (
+    section: keyof JobOrderFormData,
+    subsection: string,
+    field: string,
+    value: string | number | boolean | object
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      [section]: {
+        ...prev[section],
+        [subsection]: {
+          ...(prev[section] as any)[subsection],
+          [field]: value,
+        },
+      },
+    }));
+  };
+
+  const handleSubmit = async () => {
+    try {
+      // API call to save job order
+      console.log("Submitting form data:", formData);
+      toast({
+        title: "Success",
+        description: "Job order created successfully",
+        status: "success",
+        duration: 5000,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to create job order",
+        status: "error",
+        duration: 5000,
+      });
+    }
   };
 
   return (
@@ -110,11 +248,7 @@ function CreateJobOrderPage() {
           as={motion.div}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          p={{
-            base: 2,
-            md: 4,
-            xl: 8,
-          }}
+          p={{ base: 2, md: 4, xl: 8 }}
           mt={{ base: 10, xl: 4 }}>
           <FormContainer>
             <Flex align="center" mb={8}>
@@ -133,22 +267,67 @@ function CreateJobOrderPage() {
               </TabList>
 
               <TabPanels>
-                {/* TAB A */}
+                {/* Section A: Client & Vehicle Info */}
                 <TabPanel>
-                  {/* Information Section */}
-                  <TabA formData={formData} handleChange={handleChange} />
+                  <TabA
+                    formData={formData.sectionA}
+                    onChange={(subKey, data) =>
+                      updateSection("sectionA", {
+                        ...formData.sectionA,
+                        [subKey]: {
+                          ...formData.sectionA[subKey],
+                          ...data,
+                        },
+                      })
+                    }
+                  />
                 </TabPanel>
-
-                {/*TAB B*/}
+                {/* Section B: Checklists */}
                 <TabPanel>
-                  <TabB />
+                  <TabB
+                    formData={formData.sectionB}
+                    onChange={(category, field, value) =>
+                      updateSubsection("sectionB", category, field, value)
+                    }
+                  />
                 </TabPanel>
-                {/* TAB C */}
+                {/* Section C: Body Checklist, Fuel Level & Assign Technicians */}
                 <TabPanel>
-                  <TabD />
+                  <TabD
+                    formData={formData.sectionC}
+                    onChange={(field, value) =>
+                      updateSubsection(
+                        "sectionC",
+                        "bodyCheckList",
+                        field,
+                        value
+                      )
+                    }
+                    onFuelChange={(value: number) =>
+                      updateSection("sectionC", {
+                        ...formData.sectionC,
+                        fuelLevel: value,
+                      })
+                    }
+                    onTechniciansChange={(value: string) =>
+                      updateSection("sectionC", {
+                        ...formData.sectionC,
+                        assignTechnicians: value,
+                      })
+                    }
+                  />
                 </TabPanel>
+                {/* Section D: Job Order & Repair Status, Car Received By */}
                 <TabPanel>
-                  <TabC formData={formData} handleChange={handleChange} />
+                  <TabC
+                    formData={formData.sectionD}
+                    onChange={(field, value) =>
+                      updateSection("sectionD", {
+                        ...formData.sectionD,
+                        [field]: value,
+                      })
+                    }
+                  />
                 </TabPanel>
               </TabPanels>
             </Tabs>
@@ -174,4 +353,5 @@ function CreateJobOrderPage() {
     </Flex>
   );
 }
+
 export default withAuth(CreateJobOrderPage);

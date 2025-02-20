@@ -86,22 +86,21 @@ const SubMenuItem = ({
   active = false,
   onClick,
 }: SubMenuItemProps) => (
-  <Link href={path} style={{ textDecoration: "none" }} onClick={onClick}>
-    <HStack
-      cursor="pointer"
-      p={3}
-      pl={10}
-      borderRadius="md"
-      bg={active ? "rgba(255, 255, 255, 0.1)" : "transparent"}
-      _hover={{
-        bg: "rgba(255, 255, 255, 0.1)",
-      }}
-      color="white"
-      transition="all 0.3s ease"
-    >
-      <Text fontWeight="medium">{label}</Text>
-    </HStack>
-  </Link>
+  <Box
+    as="div"
+    cursor="pointer"
+    p={3}
+    pl={10}
+    borderRadius="md"
+    bg={active ? "rgba(255, 255, 255, 0.1)" : "transparent"}
+    _hover={{
+      bg: "rgba(255, 255, 255, 0.1)",
+    }}
+    color="white"
+    transition="all 0.3s ease"
+    onClick={() => onClick && onClick()}>
+    <Text fontWeight="medium">{label}</Text>
+  </Box>
 );
 
 const SidebarItem = ({
@@ -127,47 +126,19 @@ const SidebarItem = ({
 
   return (
     <>
-      {path && !subItems ? (
-        <Link passHref href={path} style={{ textDecoration: "none" }}>
-          <HStack
-            cursor="pointer"
-            p={3}
-            borderRadius="md"
-            bg={active ? "rgba(255, 255, 255, 0.1)" : "transparent"}
-            _hover={{
-              bg: "rgba(255, 255, 255, 0.1)",
-            }}
-            color="white"
-            transition="all 0.3s ease"
-            onClick={onClick}
-          >
-            <Icon as={icon} />
-            <Text fontWeight="medium" fontSize="sm">
-              {label}
-            </Text>
-            {subItems && (
-              <ChakraIcon
-                as={isOpen ? FaChevronDown : FaChevronRight}
-                fontSize="xs"
-                ml="auto"
-              />
-            )}
-          </HStack>
-        </Link>
-      ) : (
-        <HStack
-          cursor="pointer"
-          p={3}
-          borderRadius="md"
-          bg={active ? "rgba(255, 255, 255, 0.1)" : "transparent"}
-          _hover={{
-            bg: "rgba(255, 255, 255, 0.1)",
-          }}
-          color="white"
-          transition="all 0.3s ease"
-          onClick={handleClick}
-          justify="space-between"
-        >
+      <Box
+        as="div"
+        cursor="pointer"
+        p={3}
+        borderRadius="md"
+        bg={active ? "rgba(255, 255, 255, 0.1)" : "transparent"}
+        _hover={{
+          bg: "rgba(255, 255, 255, 0.1)",
+        }}
+        color="white"
+        transition="all 0.3s ease"
+        onClick={handleClick}>
+        <HStack justify="space-between">
           <HStack>
             <Icon as={icon} />
             <Text fontWeight="medium" fontSize="sm">
@@ -181,23 +152,21 @@ const SidebarItem = ({
             />
           )}
         </HStack>
-      )}
+      </Box>
 
       {subItems && (
         <Collapse in={isOpen}>
           <VStack align="stretch" spacing={0}>
             {subItems.map((item) => (
-              <Link
+              <SubMenuItem
                 key={item.path}
-                href={item.path}
-                style={{ textDecoration: "none" }}
-              >
-                <SubMenuItem
-                  {...item}
-                  active={pathname === item.path}
-                  onClick={onClick}
-                />
-              </Link>
+                {...item}
+                active={pathname === item.path}
+                onClick={() => {
+                  router.push(item.path);
+                  if (onClick) onClick();
+                }}
+              />
             ))}
           </VStack>
         </Collapse>
@@ -333,8 +302,7 @@ const SidebarContent = ({ onClose }: SidebarContentProps) => {
           onClick={() => {
             handleLogout();
             onClose?.();
-          }}
-        >
+          }}>
           <Icon as={FaSignOutAlt} />
           <Text fontWeight="medium">Logout</Text>
         </HStack>
@@ -373,8 +341,7 @@ export default function Sidebar({ onClose }: SidebarContentProps) {
           isOpen={isOpen}
           placement="left"
           onClose={handleDrawerClose}
-          size="xs"
-        >
+          size="xs">
           <DrawerOverlay />
           <DrawerContent>
             <SidebarContainer>
@@ -392,8 +359,7 @@ export default function Sidebar({ onClose }: SidebarContentProps) {
       position="fixed"
       left={0}
       top={0}
-      h="100vh"
-    >
+      h="100vh">
       <SidebarContainer>
         <SidebarContent onClose={onClose} />
       </SidebarContainer>

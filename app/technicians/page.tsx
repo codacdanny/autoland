@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { useEffect, useState } from "react";
 import {
@@ -125,7 +126,8 @@ function TechniciansPage() {
               colorScheme="blue"
               leftIcon={<FaPlus />}
               onClick={onAddModalOpen}
-              size="sm">
+              size="sm"
+            >
               Add Technician
             </Button>
           </Flex>

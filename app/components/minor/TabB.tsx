@@ -1,24 +1,18 @@
 import React from "react";
-import { Box, Flex, Heading, Icon, useToast } from "@chakra-ui/react";
+import { Box, Icon } from "@chakra-ui/react";
 import { FaTools } from "react-icons/fa";
 import { CheckboxGroup } from "./Form";
-import { ActionButton, SectionTitle } from "./styling/sectionTitle";
+import { SectionTitle } from "./styling/sectionTitle";
 
-const TabB = () => {
-    const toast = useToast();
+interface TabBProps {
+  formData: { [key: string]: { [key: string]: boolean } };
+  onChange: (category: string, field: string, value: boolean) => void;
+}
 
-  const handleSubmit = () => {
-    // Handle form submission logic here
-    toast({
-      title: "Job Order Created.",
-      description: "Your job order has been created successfully.",
-      status: "success",
-      duration: 5000,
-      isClosable: true,
-    });
-  };
+const TabB: React.FC<TabBProps> = ({ formData, onChange }) => {
   return (
     <>
+      {/* Exterior */}
       <Box mb={{ base: 4, md: 8 }}>
         <SectionTitle>
           <Icon
@@ -26,31 +20,24 @@ const TabB = () => {
             fontSize={{ base: "xs", md: "sm" }}
             color="blue.500"
           />
-          <Heading as="h3" size={{ base: "xs", md: "sm" }}>
-            Exterior
-          </Heading>
+          <Box fontSize={{ base: "xs", md: "sm" }}>Exterior</Box>
         </SectionTitle>
         <CheckboxGroup
           options={[
-            { label: "Wind-shield free of cracks" },
-            { label: "Body panel colour match" },
-            { label: "Magnet adheres to all steel body panels" },
-            { label: "Fresh paint Job (if yes, it could be concern rust)" },
-            {
-              label: "Seams where doors and fenders meet are properly aligned",
-            },
-            { label: "Free of body scratches" },
-            { label: "Free of body dents" },
-            { label: "Free of body scratches" },
-            {
-              label:
-                "Headlights and directional lights intact and fully functional",
-            },
+            { label: "Windshield free of cracks", value: "windShieldCracks" },
+            { label: "Body panel color match", value: "bodyPanelMatch" },
+            { label: "Magnet adheres to steel panels", value: "magnetAdheres" },
+            { label: "Fresh paint job", value: "freshPaintJob" },
+            { label: "Seams aligned", value: "seamsAligned" },
+            { label: "Free body scratches", value: "freeBodyScratches" },
+            { label: "Free body dents", value: "freeBodyDents" },
+            { label: "Headlights functional", value: "headlightsFunctional" },
           ]}
-          // size={{ base: "sm", md: "md" }}
-          // spacing={{ base: 2, md: 3 }}
+          values={formData.exterior}
+          onChange={(field, value) => onChange("exterior", field, value)}
         />
       </Box>
+      {/* Brake */}
       <Box mb={{ base: 4, md: 8 }}>
         <SectionTitle>
           <Icon
@@ -58,27 +45,20 @@ const TabB = () => {
             fontSize={{ base: "xs", md: "sm" }}
             color="blue.500"
           />
-          <Heading as="h3" size={{ base: "xs", md: "sm" }}>
-            Brake
-          </Heading>
+          <Box fontSize={{ base: "xs", md: "sm" }}>Brake</Box>
         </SectionTitle>
         <CheckboxGroup
           options={[
-            {
-              label:
-                "Vehicle steers straight and does not pull to one side when applying brakes ",
-            },
-            { label: "Parking broke engages and disengages freely" },
-            { label: "No grinding noise when applying " },
-            {
-              label:
-                "Wheels do not lock when applying anti-lock brakes (if applicable) ",
-            },
+            { label: "Straight steering", value: "straightSteering" },
+            { label: "Parking brake works", value: "parkingBrakeWorks" },
+            { label: "No grinding noise", value: "noGrindingNoise" },
+            { label: "Anti-lock brakes work", value: "antiLockBrakesWork" },
           ]}
-          // size={{ base: "sm", md: "md" }}
-          // spacing={{ base: 2, md: 3 }}
+          values={formData.brake}
+          onChange={(field, value) => onChange("brake", field, value)}
         />
       </Box>
+      {/* Suspension */}
       <Box mb={{ base: 4, md: 8 }}>
         <SectionTitle>
           <Icon
@@ -86,23 +66,22 @@ const TabB = () => {
             fontSize={{ base: "xs", md: "sm" }}
             color="blue.500"
           />
-          <Heading as="h3" size={{ base: "xs", md: "sm" }}>
-            Suspension
-          </Heading>
+          <Box fontSize={{ base: "xs", md: "sm" }}>Suspension</Box>
         </SectionTitle>
         <CheckboxGroup
           options={[
-            { label: "Vehicle rests levelly" },
+            { label: "Vehicle rests levelly", value: "vehicleRestsLevelly" },
+            { label: "Bounce without noise", value: "bounceWithoutNoise" },
             {
-              label:
-                "When bouncing the vehicle's corners, no cracking noise is made",
+              label: "Corners respond equally",
+              value: "cornersRespondEqually",
             },
-            { label: "All corners respond the same when bouncing" },
           ]}
-          // size={{ base: "sm", md: "md" }}
-          // spacing={{ base: 2, md: 3 }}
+          values={formData.suspension}
+          onChange={(field, value) => onChange("suspension", field, value)}
         />
       </Box>
+      {/* Engine */}
       <Box mb={{ base: 4, md: 8 }}>
         <SectionTitle>
           <Icon
@@ -110,28 +89,28 @@ const TabB = () => {
             fontSize={{ base: "xs", md: "sm" }}
             color="blue.500"
           />
-          <Heading as="h3" size={{ base: "xs", md: "sm" }}>
-            Engine
-          </Heading>
+          <Box fontSize={{ base: "xs", md: "sm" }}>Engine</Box>
         </SectionTitle>
         <CheckboxGroup
           options={[
-            { label: "Free of fluid or oil leaks" },
-            { label: "Oil filler neck not coated with thick, black deposits" },
-            { label: "Battery terminals free of corrosion" },
-            { label: "oil dip stick free of dark, black oil" },
+            { label: "Free of leaks", value: "freeLeaks" },
+            { label: "Oil filler clean", value: "oilFillerClean" },
             {
-              label: "Free of odours while engine is running ",
+              label: "Battery terminals clean",
+              value: "batteryTerminalsClean",
             },
+            { label: "Dipstick oil quality good", value: "dipStickOilQuality" },
+            { label: "No odours running", value: "noOdoursRunning" },
             {
-              label:
-                "Exhaust pipe emissions are neither blue (indicates engine burns oil)or black (indicate excessive oil consumption)",
+              label: "Exhaust emissions normal",
+              value: "exhaustEmissionsNormal",
             },
           ]}
-          // size={{ base: "sm", md: "md" }}
-          // spacing={{ base: 2, md: 3 }}
+          values={formData.engine}
+          onChange={(field, value) => onChange("engine", field, value)}
         />
       </Box>
+      {/* Interior */}
       <Box mb={{ base: 4, md: 8 }}>
         <SectionTitle>
           <Icon
@@ -139,40 +118,38 @@ const TabB = () => {
             fontSize={{ base: "xs", md: "sm" }}
             color="blue.500"
           />
-          <Heading as="h3" size={{ base: "xs", md: "sm" }}>
-            Interior
-          </Heading>
+          <Box fontSize={{ base: "xs", md: "sm" }}>Interior</Box>
         </SectionTitle>
         <CheckboxGroup
           options={[
-            { label: "Seat unworn and free of cracks" },
-            { label: "All doors open and close freely" },
-            { label: "Trunk opens and closes freely" },
-            { label: "All gauges work" },
+            { label: "Seats condition", value: "seatsCondition" },
+            { label: "All doors work", value: "allDoorsWork" },
+            { label: "Trunk opens", value: "trunkOpens" },
+            { label: "Gauges work", value: "gaugesWork" },
+            { label: "Dashboard lights off", value: "dashboardLightsOff" },
+            { label: "Stereo works", value: "stereoWorks" },
+            { label: "Heaters work", value: "heatersWork" },
+            { label: "AC works", value: "acWorks" },
+            { label: "Windshield wipers work", value: "windshieldWipersWork" },
+            { label: "Seat belts functional", value: "seatBeltsFunctional" },
+            { label: "Seats adjust well", value: "seatAdjustsWell" },
+            { label: "Sunroof opens well", value: "sunRoofOpensWell" },
+            { label: "Car alarm works", value: "carALarmWorks" },
             {
-              label: "No dashboard warning lights remain illuminated",
+              label: "Driver side locks work",
+              value: "driverSideLocksAndUnlocksWithKey",
             },
-            { label: "Stereo works" },
-            { label: "Heaters work" },
-            { label: "Air conditioning works" },
-            { label: "Windshield wipers work" },
-            { label: "Windshield wiper fluid dispenses properly" },
+            { label: "Hazard lights work", value: "hazardLightWorks" },
             {
-              label: "All seats equipped with functional seat belts",
+              label: "Headlights work properly",
+              value: "headlightWorksProperly",
             },
-            { label: "All seats adjust properly" },
-            { label: "Sunroof opens and closes properly" },
-            { label: "Car alarm works (if applicable)" },
-            {
-              label: "Truck & driver-side door lock and unlock with key",
-            },
-            { label: "Hazard light functions properly" },
-            { label: "Headlight including bright works properly" },
           ]}
-          // size={{ base: "sm", md: "md" }}
-          // spacing={{ base: 2, md: 3 }}
+          values={formData.interior}
+          onChange={(field, value) => onChange("interior", field, value)}
         />
       </Box>
+      {/* Tyres */}
       <Box mb={{ base: 4, md: 8 }}>
         <SectionTitle>
           <Icon
@@ -180,30 +157,22 @@ const TabB = () => {
             fontSize={{ base: "xs", md: "sm" }}
             color="blue.500"
           />
-          <Heading as="h3" size={{ base: "xs", md: "sm" }}>
-            Tyres
-          </Heading>
+          <Box fontSize={{ base: "xs", md: "sm" }}>Tyres</Box>
         </SectionTitle>
         <CheckboxGroup
           options={[
-            { label: "Tires are a reputable brand name (Michelin, etc)" },
-            { label: "Tires are all of the same" },
-            { label: "Tires are all of free of any cuts, bubbles or cracks" },
-            {
-              label:
-                "Tread worn evenly (uneven wear indicates alignment and suspension problems)",
-            },
-            {
-              label: "Spare tire, jack & lug wrench on car & full functional",
-            },
-            {
-              label: "Spare tire inflated",
-            },
+            { label: "Reputable brand", value: "reputableBrand" },
+            { label: "Same type", value: "sameType" },
+            { label: "Free from damage", value: "freeFromDamage" },
+            { label: "Tread even wear", value: "treadEvenWear" },
+            { label: "Spare tire available", value: "spareTireAvailable" },
+            { label: "Spare tire inflated", value: "spareTireInflated" },
           ]}
-          // size={{ base: "sm", md: "md" }}
-          // spacing={{ base: 2, md: 3 }}
+          values={formData.tyres}
+          onChange={(field, value) => onChange("tyres", field, value)}
         />
       </Box>
+      {/* Automatic Transmission */}
       <Box mb={{ base: 4, md: 8 }}>
         <SectionTitle>
           <Icon
@@ -211,21 +180,38 @@ const TabB = () => {
             fontSize={{ base: "xs", md: "sm" }}
             color="blue.500"
           />
-          <Heading as="h3" size={{ base: "xs", md: "sm" }}>
-            Automatic Transmission
-          </Heading>
+          <Box fontSize={{ base: "xs", md: "sm" }}>Automatic Transmission</Box>
+        </SectionTitle>
+        <CheckboxGroup
+          options={[{ label: "Fluid is clean", value: "fluidIsClean" }]}
+          values={formData.automaticTransmission}
+          onChange={(field, value) =>
+            onChange("automaticTransmission", field, value)
+          }
+        />
+      </Box>
+      {/* Steering */}
+      <Box mb={{ base: 4, md: 8 }}>
+        <SectionTitle>
+          <Icon
+            as={FaTools}
+            fontSize={{ base: "xs", md: "sm" }}
+            color="blue.500"
+          />
+          <Box fontSize={{ base: "xs", md: "sm" }}>Steering</Box>
         </SectionTitle>
         <CheckboxGroup
           options={[
-            {
-              label:
-                "Transmission fluid looks clean, not dirty or gritty (no indicates possible internal transmission problem)",
-            },
+            { label: "Does not veer to one side", value: "doesNotOneSide" },
+            { label: "Vehicle is stable", value: "vehicleIsStable" },
+            { label: "No resistance", value: "noResistance" },
+            { label: "No clicking", value: "noClicking" },
           ]}
-          // size={{ base: "sm", md: "md" }}
-          // spacing={{ base: 2, md: 3 }}
+          values={formData.steering}
+          onChange={(field, value) => onChange("steering", field, value)}
         />
       </Box>
+      {/* Battery */}
       <Box mb={{ base: 4, md: 8 }}>
         <SectionTitle>
           <Icon
@@ -233,23 +219,18 @@ const TabB = () => {
             fontSize={{ base: "xs", md: "sm" }}
             color="blue.500"
           />
-          <Heading as="h3" size={{ base: "xs", md: "sm" }}>
-            Steering
-          </Heading>
+          <Box fontSize={{ base: "xs", md: "sm" }}>Battery</Box>
         </SectionTitle>
         <CheckboxGroup
           options={[
-            { label: "Vehicle does not drift to one side without prodding " },
-            { label: "Vehicle is stable; no shaking or vibrating " },
-            { label: "No resistance in the steering wheel when turning " },
-            {
-              label: "No clicking or clunking when turning ",
-            },
+            { label: "Battery present", value: "batteryPresent" },
+            { label: "Battery level", value: "batteryLevel" },
           ]}
-          // size={{ base: "sm", md: "md" }}
-          // spacing={{ base: 2, md: 3 }}
+          values={formData.battery}
+          onChange={(field, value) => onChange("battery", field, value)}
         />
       </Box>
+      {/* Miscellaneous */}
       <Box mb={{ base: 4, md: 8 }}>
         <SectionTitle>
           <Icon
@@ -257,40 +238,26 @@ const TabB = () => {
             fontSize={{ base: "xs", md: "sm" }}
             color="blue.500"
           />
-          <Heading as="h3" size={{ base: "xs", md: "sm" }}>
-            Battery
-          </Heading>
-        </SectionTitle>
-        <CheckboxGroup
-          options={[{ label: "Battery Present " }, { label: "Battery level" }]}
-          // size={{ base: "sm", md: "md" }}
-          // spacing={{ base: 2, md: 3 }}
-        />
-      </Box>
-      <Box mb={{ base: 4, md: 8 }}>
-        <SectionTitle>
-          <Icon
-            as={FaTools}
-            fontSize={{ base: "xs", md: "sm" }}
-            color="blue.500"
-          />
-          <Heading as="h3" size={{ base: "xs", md: "sm" }}>
-            Miscellanous
-          </Heading>
+          <Box fontSize={{ base: "xs", md: "sm" }}>Miscellaneous</Box>
         </SectionTitle>
         <CheckboxGroup
           options={[
-            { label: "Car manual located in the glove compartment " },
-            { label: "Instructions included for any accessories " },
-            { label: "Service and repair records available" },
+            { label: "Manual available", value: "manualAvailable" },
             {
-              label: "Owner has title",
+              label: "Accessories instructions",
+              value: "accessoriesInstructions",
             },
+            {
+              label: "Service records available",
+              value: "serviceRecordsAvailable",
+            },
+            { label: "Owner has title", value: "ownerHasTitle" },
           ]}
-          // size={{ base: "sm", md: "md" }}
-          // spacing={{ base: 2, md: 3 }}
+          values={formData.miscellaneous}
+          onChange={(field, value) => onChange("miscellaneous", field, value)}
         />
       </Box>
+      {/* Under Hood */}
       <Box mb={{ base: 4, md: 8 }}>
         <SectionTitle>
           <Icon
@@ -298,42 +265,19 @@ const TabB = () => {
             fontSize={{ base: "xs", md: "sm" }}
             color="blue.500"
           />
-          <Heading as="h3" size={{ base: "xs", md: "sm" }}>
-            Under Hood *{" "}
-          </Heading>
+          <Box fontSize={{ base: "xs", md: "sm" }}>Under Hood</Box>
         </SectionTitle>
         <CheckboxGroup
           options={[
-            { label: "Oil levels/filter" },
-            { label: "Brake fluid levels" },
-            { label: "Radiator/coolant levels " },
-            {
-              label: "Air filter",
-            },
+            { label: "Oil levels", value: "oilLevels" },
+            { label: "Brake fluid", value: "brakeFluid" },
+            { label: "Coolant levels", value: "coolantLevels" },
+            { label: "Air filter", value: "airFilter" },
           ]}
-          // size={{ base: "sm", md: "md" }}
-          // spacing={3}
+          values={formData.underHood}
+          onChange={(field, value) => onChange("underHood", field, value)}
         />
       </Box>
-      <Flex
-        justify="flex-end"
-        gap={{ base: 2, md: 4 }}
-        direction={{ base: "column", sm: "row" }}
-        mb={{ base: 6, md: 0 }}
-      >
-        <ActionButton
-          onClick={() => {}}
-          color="gray.600"
-          border="1px solid"
-          borderColor="gray.300"
-          w={{ base: "full", sm: "auto" }}
-        >
-          Cancel
-        </ActionButton>
-        <ActionButton onClick={handleSubmit} w={{ base: "full", sm: "auto" }}>
-          Save
-        </ActionButton>
-      </Flex>
     </>
   );
 };

@@ -5,6 +5,7 @@ import { jwtDecode } from "jwt-decode"; // To decode the JWT token
 import { getCookie } from "cookies-next"; // Import getCookie
 
 interface User {
+  name?: string;
   id: string;
   role: string;
   // Add other user properties as needed

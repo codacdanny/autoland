@@ -1,10 +1,10 @@
 import axios from "axios";
-import { JobOrder } from "../types/jobOrder";
+import { JobOrderTableType } from "../types/jobOrder";
 
 export const fetchJobOrders = async (
   page: number,
   limit: number
-): Promise<JobOrder[]> => {
+): Promise<JobOrderTableType[]> => {
   try {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URL}/workshops/job-orders/table?page=${page}&limit=${limit}`
