@@ -24,6 +24,26 @@ export const fetchExpenses = async (
     throw error; // Rethrow the error for handling in the component
   }
 };
+export const addExpense = async (expenseData: AddExpense): Promise<Expense> => {
+  const token = getCookie("token"); // Get the token from cookies
+
+  try {
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_API_URL}/workshops/expenses`,
+      expenseData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the headers
+        },
+      }
+    );
+
+    return response.data.data; // Return the added expense data
+  } catch (error) {
+    console.error("Error adding expense:", error);
+    throw error; // Rethrow the error for handling in the component
+  }
+};
 
 export const updateExpense = async (
   expenseId: string,
@@ -60,27 +80,6 @@ export const deleteExpense = async (expenseId: string): Promise<void> => {
     );
   } catch (error) {
     console.error("Error deleting expense:", error);
-    throw error; // Rethrow the error for handling in the component
-  }
-};
-
-export const addExpense = async (expenseData: AddExpense): Promise<Expense> => {
-  const token = getCookie("token"); // Get the token from cookies
-
-  try {
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/workshops/expenses`,
-      expenseData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`, // Include the token in the headers
-        },
-      }
-    );
-
-    return response.data.data; // Return the added expense data
-  } catch (error) {
-    console.error("Error adding expense:", error);
     throw error; // Rethrow the error for handling in the component
   }
 };

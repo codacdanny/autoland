@@ -22,7 +22,7 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { JobOrderTableType } from "@/app/utils/types/jobOrder";
-import { fetchJobOrders } from "@/app/utils/services/jobOrderTableService";
+import { fetchJobOrders } from "@/app/utils/services/JobOrder";
 
 const GridHeader = ({ children }: { children: React.ReactNode }) => (
   <Text
@@ -133,6 +133,7 @@ export default function JobOrderTable() {
           </Box>
 
           <VStack spacing={2} align="stretch">
+            {}
             {orders.map((order) => (
               <Box key={order.jobId}>
                 <Box
@@ -142,7 +143,7 @@ export default function JobOrderTable() {
                   p={4}
                   bg="white"
                   borderRadius="lg"
-                  onClick={() => handleRowClick(order.jobId)}
+                  onClick={() => handleRowClick(order._id)}
                   _hover={{
                     transform: "translateY(-2px)",
                     boxShadow: "sm",
@@ -269,7 +270,7 @@ export default function JobOrderTable() {
                   </Flex>
                 </Box>
 
-                <Collapse in={expandedRow === order.jobId}>
+                <Collapse in={expandedRow === order._id}>
                   <Box
                     ml={4}
                     p={4}
@@ -286,7 +287,7 @@ export default function JobOrderTable() {
                         colorScheme="blue"
                         variant="outline"
                         onClick={() =>
-                          handleActionClick(order.jobId, "registration")
+                          handleActionClick(order._id, "registration")
                         }>
                         View Customer Order
                       </Button>
@@ -297,7 +298,7 @@ export default function JobOrderTable() {
                         colorScheme="green"
                         variant="outline"
                         onClick={() =>
-                          handleActionClick(order.jobId, "estimate")
+                          handleActionClick(order._id, "estimate")
                         }>
                         Estimate Form
                       </Button>
@@ -308,7 +309,7 @@ export default function JobOrderTable() {
                         colorScheme="red"
                         variant="outline"
                         onClick={() =>
-                          handleActionClick(order.jobId, "stockist")
+                          handleActionClick(order._id, "stockist")
                         }>
                         Stockist Form
                       </Button>
@@ -318,9 +319,7 @@ export default function JobOrderTable() {
                         as="a"
                         colorScheme="orange"
                         variant="outline"
-                        onClick={() =>
-                          handleActionClick(order.jobId, "account")
-                        }>
+                        onClick={() => handleActionClick(order._id, "account")}>
                         Account
                       </Button>
                       <Button
@@ -329,9 +328,7 @@ export default function JobOrderTable() {
                         as="a"
                         colorScheme="purple"
                         variant="outline"
-                        onClick={() =>
-                          handleActionClick(order.jobId, "invoice")
-                        }>
+                        onClick={() => handleActionClick(order._id, "invoice")}>
                         Invoice
                       </Button>
                     </HStack>

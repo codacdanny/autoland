@@ -15,7 +15,6 @@ import {
   TabPanels,
   TabPanel,
 } from "@chakra-ui/react";
-import styled from "@emotion/styled";
 import Sidebar from "../components/major/Sidebar";
 import MainContent from "../components/minor/MainContent";
 import { motion } from "framer-motion";
@@ -27,44 +26,25 @@ import TabC from "../components/minor/TabC";
 import TabD from "../components/minor/TabD";
 import { JobOrderFormData } from "../utils/types/formData";
 import { withAuth } from "../utils/services/hoc";
+import { createJobOrder } from "../utils/services/JobOrder";
+import { useRouter } from "next/navigation";
+import {
+  ActionButton,
+  FormContainer,
+} from "../components/minor/styling/jobOrderStyle";
 
 // Styled components
-const FormContainer = styled(Box)`
-  background: #f7fafc;
-  border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-  padding: 2.5rem;
-  max-width: 900px;
-  margin: auto;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-`;
-
-const ActionButton = styled(Button)`
-  font-size: 0.85rem;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  background: linear-gradient(45deg, #4299e1, #805ad5);
-  color: white;
-  width: fit-content;
-  border: none;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(66, 153, 225, 0.3);
-  }
-`;
 
 function CreateJobOrderPage() {
   const toast = useToast();
+  const router = useRouter();
   const [formData, setFormData] = useState<JobOrderFormData>({
     sectionA: {
       clientInformation: {
         clientName: "",
         clientPhone: "",
         clientEmail: "",
-        clientBirthday: "",
+        clientBirthday: "", // Fixed format
       },
       vehicleInformation: {
         carVIN: "",
@@ -90,9 +70,6 @@ function CreateJobOrderPage() {
         freeBodyScratches: false,
         freeBodyDents: false,
         headlightsFunctional: false,
-        bodyScratches: false,
-        bodyDents: false,
-        lightsFunctional: false,
       },
       brake: {
         straightSteering: false,
@@ -126,7 +103,7 @@ function CreateJobOrderPage() {
         seatBeltsFunctional: false,
         seatAdjustsWell: false,
         sunRoofOpensWell: false,
-        carALarmWorks: false,
+        carAlarmWorks: false,
         driverSideLocksAndUnlocksWithKey: false,
         hazardLightWorks: false,
         headlightWorksProperly: false,
@@ -180,13 +157,13 @@ function CreateJobOrderPage() {
         engineCover: false,
         reverseCamera: false,
       },
-      fuelLevel: 0, // stored as number
-      assignTechnicians: "",
+      fuelLevel: 0, // Store as string percentage
+      assignTechnicians: "", // Keep if intentionally empty, or provide a team name string
     },
     sectionD: {
-      customerJobOrderStatus: "Disapprove",
-      jobOrderStatus: "In Progress",
-      repairStatus: "Pending",
+      customerJobOrderStatus: "Disapprove", // Keep if intended, but ensure capitalization is correct
+      jobOrderStatus: "Inprogress", // Fixed format, one word
+      repairStatus: "Pending", // Keep if intended
       carReceivedBy: "",
     },
   });
@@ -221,18 +198,23 @@ function CreateJobOrderPage() {
   const handleSubmit = async () => {
     try {
       // API call to save job order
+      await createJobOrder(formData);
       console.log("Submitting form data:", formData);
       toast({
         title: "Success",
         description: "Job order created successfully",
         status: "success",
+        position: "top-right",
         duration: 5000,
       });
+      router.push("/dashboard");
     } catch (error) {
       toast({
         title: "Error",
         description: "Failed to create job order",
         status: "error",
+
+        position: "top-right",
         duration: 5000,
       });
     }
@@ -336,6 +318,7 @@ function CreateJobOrderPage() {
 
             <Flex justify="flex-end" gap={4}>
               <ActionButton
+                size="sm"
                 colorScheme="blue"
                 onClick={() => {}}
                 color="gray.600"
@@ -343,7 +326,7 @@ function CreateJobOrderPage() {
                 borderColor="gray.300">
                 Cancel
               </ActionButton>
-              <ActionButton colorScheme="blue" onClick={handleSubmit}>
+              <ActionButton colorScheme="blue" size="sm" onClick={handleSubmit}>
                 Create Job Order
               </ActionButton>
             </Flex>

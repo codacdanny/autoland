@@ -25,9 +25,9 @@ export interface ExteriorChecks {
   magnetAdheres: boolean;
   freshPaintJob: boolean;
   seamsAligned: boolean;
-  bodyScratches: boolean;
-  bodyDents: boolean;
-  lightsFunctional: boolean;
+  freeBodyScratches: boolean;
+  freeBodyDents: boolean;
+  headlightsFunctional: boolean;
   [key: string]: boolean;
 }
 
@@ -69,7 +69,7 @@ export interface InteriorChecks {
   seatBeltsFunctional: boolean;
   seatAdjustsWell: boolean;
   sunRoofOpensWell: boolean;
-  carALarmWorks: boolean;
+  carAlarmWorks: boolean;
   driverSideLocksAndUnlocksWithKey: boolean;
   hazardLightWorks: boolean;
   headlightWorksProperly: boolean;
@@ -159,8 +159,44 @@ export interface JobOrderFormData {
   };
   sectionD: {
     customerJobOrderStatus: "Approve" | "Disapprove";
-    jobOrderStatus: "Demurrage" | "Delivered" | "In Progress";
+    jobOrderStatus: "Demurrage" | "Delivered" | "Inprogress";
     repairStatus: "Pending" | "Ongoing" | "Completed";
     carReceivedBy: string;
   };
+}
+
+export interface JobOrderData {
+  _id: string;
+  sectionA: {
+    clientInformation: ClientInformation;
+    vehicleInformation: VehicleInformation;
+  };
+  sectionB: {
+    exterior: ExteriorChecks;
+    brake: BrakeChecks;
+    suspension: SuspensionChecks;
+    engine: EngineChecks;
+    interior: InteriorChecks;
+    tyres: TyreChecks;
+    automaticTransmission: {
+      fluidIsClean: boolean;
+    };
+    steering: SteeringChecks;
+    battery: BatteryChecks;
+    miscellaneous: MiscellaneousChecks;
+    underHood: UnderHoodChecks;
+  };
+  sectionC: {
+    bodyCheckList: BodyCheckList;
+    fuelLevel: number;
+    assignTechnicians: string;
+  };
+  sectionD: {
+    customerJobOrderStatus: "Approve" | "Disapprove";
+    jobOrderStatus: "Demurrage" | "Delivered" | "Inprogress";
+    repairStatus: "Pending" | "Ongoing" | "Completed";
+    carReceivedBy: string;
+  };
+  createdAt: string;
+  updatedAt: string;
 }

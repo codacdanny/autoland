@@ -127,7 +127,7 @@ function InvoicePage({}: { params: { id: string } }) {
   return (
     <Flex>
       <Sidebar />
-      <Box flex="1" p={{ base: 4, md: 8 }} ml={{ base: 0, md: "250px" }}>
+      <Box flex="1" p={{ base: 4, md: 8 }}>
         <Header />
         <FormContainer>
           <VStack align="stretch" spacing={6}>
