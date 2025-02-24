@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -27,6 +27,17 @@ import {
 import styled from "@emotion/styled";
 import { FaUser, FaFileInvoice, FaPlus, FaTrash } from "react-icons/fa";
 import { withAuth } from "@/app/utils/services/hoc";
+import { PageProps } from "@/app/utils/types/jobOrder";
+import { EstimateFormData } from "@/app/utils/types/estimate";
+import {
+  fetchEstimate,
+  fetchEstimateDetails,
+  getJobOrderDetailsForEstimate,
+  updateEstimate,
+  createEstimate,
+} from "@/app/utils/services/estimate";
+import { userAgent } from "next/server";
+import { useAuth } from "@/app/utils/services/context";
 
 const StyledInput = styled(Input)`
   background: rgba(247, 250, 252, 0.8);
@@ -69,32 +80,70 @@ const SectionTitle = styled(Heading)`
   }
 `;
 
-function EstimatePage() {
-  const [formData, setFormData] = useState({
-    name: "",
-    plateNumber: "",
-    workshop: "",
-    vehMake: "",
-    email: "",
-    chassisNo: "",
-    phoneNo: "",
-    modelNo: "",
-    jobOrderNo: "",
-    date: "",
+function EstimatePage({ params }: PageProps) {
+  const { user } = useAuth();
+  const jobId = params.id;
+  const [formData, setFormData] = useState<EstimateFormData>({
+    customerDetails: {
+      customerName: "",
+      regNo: "",
+      vehicleMake: "",
+      chassisNo: "",
+      modelNo: "",
+      date: "",
+      jobOrderNo: "",
+      phoneNo: "",
+      email: "",
+    },
+    partsAndServices: [],
+    costSummary: {
+      labour: 0,
+      sundries: 0,
+      vat: 0,
+      estimator: "",
+    },
   });
 
-  const [spareParts, setSpareParts] = useState([
-    {
-      sparePartNo: "",
-      partName: "",
-      description: "",
-      qty: "",
-      unitPrice: "",
-      amount: "",
-    },
-  ]);
   const toast = useToast();
   const isMobile = useBreakpointValue({ base: true, md: false });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // First get the job order details for customer info
+        const jobOrderDetails = await getJobOrderDetailsForEstimate(jobId);
+
+        // Then try to fetch existing estimate details
+        const estimateDetails = await fetchEstimateDetails(jobId);
+        console.log("ESTIMATE DETAILS=>", estimateDetails);
+
+        setFormData((prev) => ({
+          ...prev,
+          // Always update customer details from job order
+          customerDetails: jobOrderDetails.customerDetails,
+          // Update parts and cost summary only if they exist
+          ...(estimateDetails?.partsAndServices && {
+            partsAndServices: estimateDetails.partsAndServices,
+          }),
+          ...(estimateDetails?.costSummary && {
+            costSummary: estimateDetails.costSummary,
+          }),
+        }));
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to fetch data",
+          status: "error",
+          position: "top-right",
+          duration: 5000,
+        });
+      }
+    };
+
+    if (jobId) {
+      fetchData();
+    }
+  }, [jobId, toast]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -103,42 +152,134 @@ function EstimatePage() {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleAddPart = () => {
-    setSpareParts([
-      ...spareParts,
-      {
-        sparePartNo: "",
-        partName: "",
-        description: "",
-        qty: "",
-        unitPrice: "",
-        amount: "",
+  const handleCostSummaryChange = (field: string, value: string | number) => {
+    setFormData((prev) => ({
+      ...prev,
+      costSummary: {
+        ...prev.costSummary,
+        [field]: typeof value === "string" ? parseFloat(value) || 0 : value,
       },
-    ]);
+    }));
   };
 
+  const handleAddPart = () => {
+    setFormData({
+      ...formData,
+      partsAndServices: [
+        ...formData.partsAndServices,
+        {
+          partNo: "",
+          partName: "",
+          description: "",
+          quantity: 0,
+          unitPrice: 0,
+          amount: 0,
+        },
+      ],
+    });
+  };
+
+  // const handlePartChange = (
+  //   index: number,
+  //   e: React.ChangeEvent<HTMLInputElement>
+  // ) => {
+  //   const { name, value } = e.target;
+  //   const updatedParts = formData.partsAndServices.map((part, idx) => {
+  //     if (idx === index) {
+  //       const updatedPart = { ...part, [name]: value };
+  //       // Calculate amount if quantity or unitPrice changes
+  //       if (name === "quantity" || name === "unitPrice") {
+  //         updatedPart.amount =
+  //           Number(updatedPart.quantity) * Number(updatedPart.unitPrice);
+  //       }
+  //       return updatedPart;
+  //     }
+  //     return part;
+  //   });
+  //   setFormData({ ...formData, partsAndServices: updatedParts });
+  // };
   const handlePartChange = (
     index: number,
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const { name, value } = e.target;
-    const updatedParts = spareParts.map((part, idx) => {
+    const updatedParts = formData.partsAndServices.map((part, idx) => {
       if (idx === index) {
-        return { ...part, [name]: value };
+        // For numeric fields, convert value to a number
+        let updatedValue: any = value;
+        if (name === "quantity" || name === "unitPrice") {
+          updatedValue = Number(value);
+        }
+        const updatedPart = { ...part, [name]: updatedValue };
+        // Recalculate amount if quantity or unitPrice changes
+        if (name === "quantity" || name === "unitPrice") {
+          updatedPart.amount =
+            Number(updatedPart.quantity) * Number(updatedPart.unitPrice);
+        }
+        return updatedPart;
       }
       return part;
     });
-    setSpareParts(updatedParts);
+    setFormData({ ...formData, partsAndServices: updatedParts });
+  };
+  const handleSubmit = async () => {
+    try {
+      const response = await updateEstimate(jobId, formData);
+      console.log(response);
+
+      toast({
+        title: "Success",
+        description: "Estimate updated successfully",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update estimate",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
   };
 
-  const handleSubmit = () => {
-    toast({
-      title: "Estimate Submitted",
-      description: "Your estimate has been submitted successfully.",
-      status: "success",
-      duration: 5000,
-      isClosable: true,
-    });
+  const handleGenerateEstimate = async () => {
+    try {
+      // Send all required data
+      const response = await createEstimate(jobId, {
+        ...formData,
+        customerDetails: {
+          ...formData.customerDetails,
+          date: new Date().toISOString().split("T")[0], // Format date as YYYY-MM-DD
+        },
+        costSummary: {
+          ...formData.costSummary,
+          estimator: user?.name || formData.costSummary.estimator, // Use logged in user's name
+        },
+      });
+      console.log(response);
+
+      // Update form with response data
+      setFormData(response.data);
+
+      toast({
+        title: "Success",
+        description: "Estimate generated successfully",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to generate estimate",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
   };
 
   return (
@@ -171,9 +312,9 @@ function EstimatePage() {
                   Customer Name
                 </FormLabel>
                 <StyledInput
-                  name="name"
+                  name="customerName"
                   placeholder="Enter customer name"
-                  value={formData.name}
+                  value={formData.customerDetails.customerName}
                   onChange={handleInputChange}
                 />
               </VStack>
@@ -182,31 +323,31 @@ function EstimatePage() {
                   Plate Number{" "}
                 </FormLabel>
                 <StyledInput
-                  name="plateNumber"
+                  name="regNo"
                   placeholder="Enter registration number"
-                  value={formData.plateNumber}
+                  value={formData.customerDetails.regNo}
                   onChange={handleInputChange}
                 />
               </VStack>
-              <VStack align="stretch">
+              {/* <VStack align="stretch">
                 <FormLabel color="gray.600" fontSize="sm">
                   Workshop
                 </FormLabel>
                 <StyledInput
                   name="workshop"
                   placeholder="Enter workshop"
-                  value={formData.workshop}
+                  value={formData.customerDetails.workshop}
                   onChange={handleInputChange}
                 />
-              </VStack>
+              </VStack> */}
               <VStack align="stretch">
                 <FormLabel color="gray.600" fontSize="sm">
                   Veh Make
                 </FormLabel>
                 <StyledInput
-                  name="vehMake"
+                  name="vehicleMake"
                   placeholder="Enter vehicle make"
-                  value={formData.vehMake}
+                  value={formData.customerDetails.vehicleMake}
                   onChange={handleInputChange}
                 />
               </VStack>
@@ -217,7 +358,7 @@ function EstimatePage() {
                 <StyledInput
                   name="email"
                   placeholder="Enter email"
-                  value={formData.email}
+                  value={formData.customerDetails.email}
                   onChange={handleInputChange}
                 />
               </VStack>
@@ -228,7 +369,7 @@ function EstimatePage() {
                 <StyledInput
                   name="chassisNo"
                   placeholder="Enter chassis number"
-                  value={formData.chassisNo}
+                  value={formData.customerDetails.chassisNo}
                   onChange={handleInputChange}
                 />
               </VStack>
@@ -239,21 +380,21 @@ function EstimatePage() {
                 <StyledInput
                   name="phoneNo"
                   placeholder="Enter phone number"
-                  value={formData.phoneNo}
+                  value={formData.customerDetails.phoneNo}
                   onChange={handleInputChange}
                 />
               </VStack>
-              <VStack align="stretch">
+              {/* <VStack align="stretch">
                 <FormLabel color="gray.600" fontSize="sm">
                   Model No
                 </FormLabel>
                 <StyledInput
                   name="modelNo"
                   placeholder="Enter model number"
-                  value={formData.modelNo}
+                  value="Testing"
                   onChange={handleInputChange}
                 />
-              </VStack>
+              </VStack> */}
               <VStack align="stretch">
                 <FormLabel color="gray.600" fontSize="sm">
                   Job Order No
@@ -261,7 +402,8 @@ function EstimatePage() {
                 <StyledInput
                   name="jobOrderNo"
                   placeholder="Enter job order number"
-                  value={formData.jobOrderNo}
+                  // value={formData.customerDetails.jobOrderNo}
+                  value="JO-PT1002"
                   onChange={handleInputChange}
                 />
               </VStack>
@@ -272,7 +414,7 @@ function EstimatePage() {
                 <StyledInput
                   name="date"
                   placeholder="Enter date"
-                  value={formData.date}
+                  value={formData.customerDetails.date}
                   onChange={handleInputChange}
                 />
               </VStack>
@@ -287,8 +429,13 @@ function EstimatePage() {
                 Parts & Services
               </Heading>
             </SectionTitle>
-            <Box bg="white" rounded="lg" shadow="sm" mx={{ base: -2, md: 0 }}>
-              <TableContainer minW="900px" overflowX="auto">
+            <Box
+              bg="white"
+              overflowX="scroll"
+              rounded="lg"
+              shadow="sm"
+              mx={{ base: -2, md: 0 }}>
+              <TableContainer minW="1800px" overflowX="auto">
                 <Table variant="simple" size={{ base: "sm", md: "md" }}>
                   <Thead bg="gray.50">
                     <Tr>
@@ -302,14 +449,14 @@ function EstimatePage() {
                     </Tr>
                   </Thead>
                   <Tbody>
-                    {spareParts.map((part, index) => (
+                    {formData.partsAndServices.map((part, index) => (
                       <Tr key={index}>
                         <Td>
                           <StyledInput
-                            name="sparePartNo"
+                            name="partNo"
                             placeholder="Part no."
                             size={{ base: "sm", md: "md" }}
-                            value={part.sparePartNo}
+                            value={part.partNo}
                             onChange={(e) => handlePartChange(index, e)}
                           />
                         </Td>
@@ -335,10 +482,10 @@ function EstimatePage() {
                         )}
                         <Td>
                           <StyledInput
-                            name="qty"
+                            name="quantity"
                             placeholder="Qty"
                             size={{ base: "sm", md: "md" }}
-                            value={part.qty}
+                            value={part.quantity}
                             onChange={(e) => handlePartChange(index, e)}
                           />
                         </Td>
@@ -357,7 +504,7 @@ function EstimatePage() {
                             placeholder="Amount"
                             size={{ base: "sm", md: "md" }}
                             value={part.amount}
-                            onChange={(e) => handlePartChange(index, e)}
+                            readOnly
                           />
                         </Td>
                         <Td>
@@ -368,9 +515,13 @@ function EstimatePage() {
                             colorScheme="red"
                             variant="ghost"
                             onClick={() =>
-                              setSpareParts(
-                                spareParts.filter((_, i) => i !== index)
-                              )
+                              setFormData({
+                                ...formData,
+                                partsAndServices:
+                                  formData.partsAndServices.filter(
+                                    (_, i) => i !== index
+                                  ),
+                              })
                             }
                           />
                         </Td>
@@ -400,19 +551,48 @@ function EstimatePage() {
               maxW={{ base: "100%", md: "400px" }}>
               <HStack justify="space-between">
                 <Text color="gray.600">Labour:</Text>
-                <StyledInput w="200px" placeholder="0.00" />
+                <StyledInput
+                  w="200px"
+                  placeholder="0.00"
+                  type="number"
+                  value={formData.costSummary.labour}
+                  onChange={(e) =>
+                    handleCostSummaryChange("labour", e.target.value)
+                  }
+                />
               </HStack>
               <HStack justify="space-between">
                 <Text color="gray.600">Sundries:</Text>
-                <StyledInput w="200px" placeholder="0.00" />
+                <StyledInput
+                  w="200px"
+                  placeholder="0.00"
+                  value={formData.costSummary.sundries}
+                  onChange={(e) =>
+                    handleCostSummaryChange("sundries", e.target.value)
+                  }
+                />
               </HStack>
               <HStack justify="space-between">
                 <Text color="gray.600">VAT:</Text>
-                <StyledInput w="200px" placeholder="0.00" />
+                <StyledInput
+                  w="200px"
+                  placeholder="0.00"
+                  value={formData.costSummary.vat}
+                  onChange={(e) =>
+                    handleCostSummaryChange("vat", e.target.value)
+                  }
+                />
               </HStack>
               <HStack justify="space-between">
                 <Text color="gray.600">Estimator Name:</Text>
-                <StyledInput w="200px" placeholder="Anozie Ikechi" />
+                <StyledInput
+                  w="200px"
+                  placeholder="Anozie Ikechi"
+                  value={user?.name}
+                  onChange={(e) =>
+                    handleCostSummaryChange("estimator", e.target.value)
+                  }
+                />
               </HStack>
             </VStack>
           </Box>
@@ -435,7 +615,7 @@ function EstimatePage() {
             <Button
               colorScheme="blue"
               size={{ base: "xs", md: "sm" }}
-              onClick={handleSubmit}
+              onClick={handleGenerateEstimate}
               leftIcon={<FaFileInvoice />}
               w={{ base: "full", sm: "auto" }}>
               Generate Estimate

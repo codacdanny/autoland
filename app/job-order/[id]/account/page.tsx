@@ -41,30 +41,59 @@ import {
 } from "@chakra-ui/react";
 import { FaCheckCircle, FaClipboardList, FaEdit } from "react-icons/fa";
 import { FaWallet } from "react-icons/fa6";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { withAuth } from "@/app/utils/services/hoc";
+import {
+  Payment,
+  PaymentMetrics,
+  PaymentHistory,
+} from "@/app/utils/types/account";
+import {
+  addPayment,
+  getPaymentMetrics,
+  updateTotalAmount,
+  getPaymentHistory,
+} from "@/app/utils/services/account";
 
-interface Payment {
-  id: string;
-  phase: string;
-  amount: number;
-  date: string;
-  paymentMethod: string;
-}
-
-function CustomerJobOrderAccount() {
+function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
+  const jobId = params.id;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
   const isMobile = useBreakpointValue({ base: true, md: false });
-  const [payments, setPayments] = useState<Payment[]>([]);
-  const [totalJobAmount] = useState(2251375); // This should come from the job order
+  const [metrics, setMetrics] = useState<PaymentMetrics | null>(null);
+  const [payments, setPayments] = useState<PaymentHistory[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Form state
-  const [paymentForm, setPaymentForm] = useState({
-    phase: "",
-    amount: "",
+  const [paymentForm, setPaymentForm] = useState<Omit<Payment, "jobOrderId">>({
+    amount: 0,
+    totalAmountDue: 0,
+    paymentPhase: "",
     paymentMethod: "",
   });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [metricsData, historyData] = await Promise.all([
+          getPaymentMetrics(jobId),
+          getPaymentHistory(jobId),
+        ]);
+        setMetrics(metricsData);
+        setPayments(historyData);
+      } catch (error) {
+        toast({
+          title: "Error fetching data",
+          status: "error",
+          duration: 3000,
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [jobId, toast]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -76,39 +105,61 @@ function CustomerJobOrderAccount() {
     }));
   };
 
-  const handleSubmitPayment = () => {
-    const newPayment: Payment = {
-      id: Date.now().toString(),
-      phase: paymentForm.phase,
-      amount: Number(paymentForm.amount),
-      date: new Date().toISOString().split("T")[0],
-      paymentMethod: paymentForm.paymentMethod,
-    };
+  const handleSubmitPayment = async () => {
+    try {
+      await addPayment({
+        jobOrderId: jobId,
+        ...paymentForm,
+      });
 
-    setPayments([...payments, newPayment]);
-    onClose();
-    toast({
-      title: "Payment recorded successfully",
-      status: "success",
-      duration: 3000,
-      isClosable: true,
-    });
+      // Refresh data
+      const [newMetrics, newHistory] = await Promise.all([
+        getPaymentMetrics(jobId),
+        getPaymentHistory(jobId),
+      ]);
 
-    // Reset form
-    setPaymentForm({
-      phase: "",
-      amount: "",
-      paymentMethod: "",
-    });
+      setMetrics(newMetrics);
+      setPayments(newHistory);
+      onClose();
+
+      toast({
+        title: "Payment recorded successfully",
+        status: "success",
+        duration: 3000,
+      });
+    } catch (error) {
+      toast({
+        title: "Failed to record payment",
+        status: "error",
+        duration: 3000,
+      });
+    }
   };
 
-  const totalPaid = payments.reduce((sum, payment) => sum + payment.amount, 0);
-  const balance = totalJobAmount - totalPaid;
+  const handleEditTotalAmount = async (newAmount: number) => {
+    try {
+      await updateTotalAmount(jobId, newAmount);
+      const newMetrics = await getPaymentMetrics(jobId);
+      setMetrics(newMetrics);
+
+      toast({
+        title: "Total amount updated",
+        status: "success",
+        duration: 3000,
+      });
+    } catch (error) {
+      toast({
+        title: "Failed to update amount",
+        status: "error",
+        duration: 3000,
+      });
+    }
+  };
 
   const dashboardMetrics: MetricCardData[] = [
     {
       title: "Total Job Amount",
-      value: `₦${totalJobAmount.toLocaleString()}`,
+      value: `₦${metrics?.totalJobAmount}`,
       change: "100%",
       isIncrease: true,
       icon: FaWallet,
@@ -117,8 +168,8 @@ function CustomerJobOrderAccount() {
     },
     {
       title: "Total Paid",
-      value: `₦${totalPaid.toLocaleString()}`,
-      change: `${((totalPaid / totalJobAmount) * 100).toFixed(1)}%`,
+      value: `₦${metrics?.previouslyPaid}`,
+      change: `2%`,
       isIncrease: true,
       icon: FaClipboardList,
       color: "blue.500",
@@ -126,8 +177,8 @@ function CustomerJobOrderAccount() {
     },
     {
       title: "Balance",
-      value: `₦${balance.toLocaleString()}`,
-      change: `${((balance / totalJobAmount) * 100).toFixed(1)}%`,
+      value: `₦${metrics?.remainingBalance}`,
+      change: `3%`,
       isIncrease: false,
       icon: FaCheckCircle,
       color: "green.500",
@@ -194,7 +245,7 @@ function CustomerJobOrderAccount() {
                 <Tbody>
                   {payments.map((payment) => (
                     <Tr key={payment.id}>
-                      {!isMobile && <Td>{payment.phase}</Td>}
+                      {!isMobile && <Td>{payment.paymentPhase}</Td>}
                       <Td>{payment.date}</Td>
                       <Td isNumeric>₦{payment.amount.toLocaleString()}</Td>
                       {!isMobile && <Td>{payment.paymentMethod}</Td>}
@@ -230,12 +281,14 @@ function CustomerJobOrderAccount() {
                 Record New Payment
               </Text>
               <Badge
-                colorScheme={balance === 0 ? "green" : "orange"}
+                colorScheme={
+                  metrics?.remainingBalance === 0 ? "green" : "orange"
+                }
                 fontSize={{ base: "2xs", md: "sm" }}
                 px={2}
                 py={1}
                 borderRadius="full">
-                Balance: ₦{balance.toLocaleString()}
+                Balance: ₦{metrics?.remainingBalance.toLocaleString()}
               </Badge>
             </Stack>
           </ModalHeader>
@@ -249,8 +302,8 @@ function CustomerJobOrderAccount() {
                     Payment Phase
                   </FormLabel>
                   <Select
-                    name="phase"
-                    value={paymentForm.phase}
+                    name="paymentPhase"
+                    value={paymentForm.paymentPhase}
                     onChange={handleInputChange}
                     placeholder="Select phase"
                     size={{ base: "sm", md: "md" }}>
@@ -291,12 +344,11 @@ function CustomerJobOrderAccount() {
                   <InputGroup size={{ base: "sm", md: "md" }}>
                     <InputLeftAddon>₦</InputLeftAddon>
                     <Input
-                      name="amount"
+                      name="totalAmountDue"
                       type="number"
-                      value={paymentForm.amount}
+                      value={paymentForm.totalAmountDue}
                       onChange={handleInputChange}
-                      placeholder="Enter payment amount"
-                      max={balance}
+                      placeholder="Enter total amount due"
                       isReadOnly
                     />
                   </InputGroup>
@@ -304,7 +356,8 @@ function CustomerJobOrderAccount() {
                     fontSize={{ base: "2xs", md: "sm" }}
                     color="gray.300"
                     mt={1}>
-                    Maximum allowed: ₦{balance.toLocaleString()}
+                    Maximum allowed: ₦
+                    {metrics?.remainingBalance.toLocaleString()}
                   </Text>
                 </FormControl>
               </GridItem>
@@ -322,14 +375,15 @@ function CustomerJobOrderAccount() {
                       value={paymentForm.amount}
                       onChange={handleInputChange}
                       placeholder="Enter payment amount"
-                      max={balance}
+                      max={metrics?.remainingBalance}
                     />
                   </InputGroup>
                   <Text
                     fontSize={{ base: "2xs", md: "sm" }}
                     color="gray.300"
                     mt={1}>
-                    Maximum allowed: ₦{balance.toLocaleString()}
+                    Maximum allowed: ₦
+                    {metrics?.remainingBalance.toLocaleString()}
                   </Text>
                 </FormControl>
               </GridItem>
@@ -365,10 +419,12 @@ function CustomerJobOrderAccount() {
                     fontSize={{ base: "xs", md: "sm" }}>
                     <Text color="gray.300">Total Job Amount:</Text>
                     <Text fontWeight="bold">
-                      ₦{totalJobAmount.toLocaleString()}
+                      ₦{metrics?.totalJobAmount.toLocaleString()}
                     </Text>
                     <Text color="gray.300">Previously Paid:</Text>
-                    <Text fontWeight="bold">₦{totalPaid.toLocaleString()}</Text>
+                    <Text fontWeight="bold">
+                      ₦{metrics?.previouslyPaid.toLocaleString()}
+                    </Text>
                     <Text color="gray.300">Current Payment:</Text>
                     <Text fontWeight="bold">
                       ₦{(Number(paymentForm.amount) || 0).toLocaleString()}
@@ -376,10 +432,15 @@ function CustomerJobOrderAccount() {
                     <Text color="gray.300">Remaining Balance:</Text>
                     <Text
                       fontWeight="bold"
-                      color={balance === 0 ? "green.500" : "orange.500"}>
+                      color={
+                        metrics?.remainingBalance === 0
+                          ? "green.500"
+                          : "orange.500"
+                      }>
                       ₦
                       {(
-                        balance - (Number(paymentForm.amount) || 0)
+                        (metrics?.remainingBalance || 0) -
+                        (Number(paymentForm.amount) || 0)
                       ).toLocaleString()}
                     </Text>
                   </Grid>
@@ -398,10 +459,10 @@ function CustomerJobOrderAccount() {
               colorScheme="blue"
               onClick={handleSubmitPayment}
               isDisabled={
-                !paymentForm.phase ||
+                !paymentForm.paymentPhase ||
                 !paymentForm.amount ||
                 !paymentForm.paymentMethod ||
-                Number(paymentForm.amount) > balance
+                Number(paymentForm.amount) > (metrics?.remainingBalance || 0)
               }
               size={{ base: "sm", md: "md" }}
               w={{ base: "full", sm: "auto" }}>

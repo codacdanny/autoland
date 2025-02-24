@@ -167,6 +167,7 @@ export interface JobOrderFormData {
 
 export interface JobOrderData {
   _id: string;
+  jobOrderId: string;
   sectionA: {
     clientInformation: ClientInformation;
     vehicleInformation: VehicleInformation;

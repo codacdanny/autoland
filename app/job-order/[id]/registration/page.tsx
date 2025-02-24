@@ -386,7 +386,7 @@ function RegistrationPage({ params }: PageProps) {
                   colorScheme="blue"
                   size="sm"
                   onClick={handleSubmit}>
-                  Create Job Order
+                  Update Job Order
                 </ActionButton>
               </Flex>
             </Box>
