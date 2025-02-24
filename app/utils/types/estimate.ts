@@ -1,5 +1,5 @@
 export interface PartAndService {
-  _id?: string;
+  // _id?: string;
   partNo: string;
   partName: string;
   description: string;

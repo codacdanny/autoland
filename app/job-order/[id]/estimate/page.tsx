@@ -30,13 +30,12 @@ import { withAuth } from "@/app/utils/services/hoc";
 import { PageProps } from "@/app/utils/types/jobOrder";
 import { EstimateFormData } from "@/app/utils/types/estimate";
 import {
-  fetchEstimate,
   fetchEstimateDetails,
   getJobOrderDetailsForEstimate,
   updateEstimate,
   createEstimate,
 } from "@/app/utils/services/estimate";
-import { userAgent } from "next/server";
+
 import { useAuth } from "@/app/utils/services/context";
 
 const StyledInput = styled(Input)`
@@ -609,7 +608,8 @@ function EstimatePage({ params }: PageProps) {
               variant="outline"
               size={{ base: "xs", md: "sm" }}
               colorScheme="blue"
-              w={{ base: "full", md: "auto" }}>
+              w={{ base: "full", md: "auto" }}
+              onClick={() => window.history.back()}>
               Cancel
             </Button>
             <Button

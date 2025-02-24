@@ -25,7 +25,7 @@ export const fetchEstimate = async (jobId: string): Promise<any> => {
         },
       }
     );
-    console.log(response);
+    console.log(response.data.data);
 
     return response.data.data;
   } catch (error) {
@@ -35,13 +35,15 @@ export const fetchEstimate = async (jobId: string): Promise<any> => {
 };
 
 export const updateEstimate = async (
-  jobId: string,
-  data: EstimateFormData
-): Promise<EstimateFormData> => {
+  estimateId: string,
+  data: any
+): Promise<any> => {
   const token = getCookie("token");
+  console.log("ESTIMATE ID=>", estimateId);
+  console.log("ESTIMATE data=>", data);
   try {
     const response = await axios.put(
-      `${process.env.NEXT_PUBLIC_API_URL}/workshops/estimates/${jobId}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/workshops/estimates/${estimateId}`,
       data,
       {
         headers: {
@@ -49,6 +51,7 @@ export const updateEstimate = async (
         },
       }
     );
+
     return response.data.data;
   } catch (error) {
     console.error("Error updating estimate:", error);
@@ -135,6 +138,22 @@ export const createEstimate = async (
     return response.data.data;
   } catch (error) {
     console.error("Error creating estimate:", error);
+    throw error;
+  }
+};
+
+export const generateInvoice = async (jobId: string): Promise<any> => {
+  const token = getCookie("token");
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/workshops/estimates/invoice/${jobId}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error("Error fetching invoice:", error);
     throw error;
   }
 };

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -27,6 +27,15 @@ import {
 import styled from "@emotion/styled";
 import { FaUser, FaFileInvoice, FaPlus, FaTrash } from "react-icons/fa";
 import { withAuth } from "@/app/utils/services/hoc";
+import { PageProps } from "@/app/utils/types/jobOrder";
+import {
+  updateEstimate,
+  createEstimate,
+  fetchEstimate,
+} from "@/app/utils/services/estimate";
+
+import { useAuth } from "@/app/utils/services/context";
+import { EstimateFormData } from "@/app/utils/types/estimate";
 
 const StyledInput = styled(Input)`
   background: rgba(247, 250, 252, 0.8);
@@ -69,32 +78,69 @@ const SectionTitle = styled(Heading)`
   }
 `;
 
-function StockistPage() {
-  const [formData, setFormData] = useState({
-    name: "",
-    regNo: "",
-    workshop: "",
-    vehMake: "",
-    email: "",
-    chassisNo: "",
-    phoneNo: "",
-    modelNo: "",
-    jobOrderNo: "",
-    date: "",
+function StockistPage({ params }: PageProps) {
+  const { user } = useAuth();
+  const jobId = params.id;
+  const [estimateId, setEstimateId] = useState<string>("");
+  const [formData, setFormData] = useState<any>({
+    jobOrderId: jobId,
+
+    customerDetails: {
+      customerName: "",
+      regNo: "",
+      vehicleMake: "",
+      chassisNo: "",
+      modelNo: "test",
+      date: "",
+      jobOrderNo: "",
+      phoneNo: "",
+      email: "",
+    },
+    partsAndServices: [],
+    costSummary: {
+      labour: 0,
+      sundries: 0,
+      vat: 0,
+      estimator: "",
+    },
   });
 
-  const [spareParts, setSpareParts] = useState([
-    {
-      sparePartNo: "",
-      partName: "",
-      description: "",
-      qty: "",
-      unitPrice: "",
-      amount: "",
-    },
-  ]);
   const toast = useToast();
   const isMobile = useBreakpointValue({ base: true, md: false });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const allDetails = await fetchEstimate(jobId);
+        console.log(allDetails._id);
+        setEstimateId(allDetails._id);
+        setFormData((prev) => ({
+          ...prev,
+          // Always update customer details from job order
+          customerDetails: allDetails.customerDetails,
+          // Update parts and cost summary only if they exist
+          ...(allDetails?.partsAndServices && {
+            partsAndServices: allDetails.partsAndServices,
+          }),
+          ...(allDetails?.costSummary && {
+            costSummary: allDetails.costSummary,
+          }),
+        }));
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to fetch data",
+          status: "error",
+          position: "top-right",
+          duration: 5000,
+        });
+      }
+    };
+
+    if (jobId) {
+      fetchData();
+    }
+  }, [jobId, toast]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -103,18 +149,32 @@ function StockistPage() {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleAddPart = () => {
-    setSpareParts([
-      ...spareParts,
-      {
-        sparePartNo: "",
-        partName: "",
-        description: "",
-        qty: "",
-        unitPrice: "",
-        amount: "",
+  const handleCostSummaryChange = (field: string, value: string | number) => {
+    setFormData((prev) => ({
+      ...prev,
+      costSummary: {
+        ...prev.costSummary,
+        [field]: typeof value === "string" ? parseFloat(value) || 0 : value,
       },
-    ]);
+    }));
+  };
+
+  const handleAddPart = () => {
+    setFormData({
+      ...formData,
+      partsAndServices: [
+        ...formData.partsAndServices,
+        {
+          // _id: "",
+          partNo: "",
+          partName: "",
+          description: "",
+          quantity: 0,
+          unitPrice: 0,
+          amount: 0,
+        },
+      ],
+    });
   };
 
   const handlePartChange = (
@@ -122,27 +182,90 @@ function StockistPage() {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const { name, value } = e.target;
-    const updatedParts = spareParts.map((part, i) => {
-      if (i === index) {
-        return { ...part, [name]: value };
+    const updatedParts = formData.partsAndServices.map((part, idx) => {
+      if (idx === index) {
+        // For numeric fields, convert value to a number
+        let updatedValue: any = value;
+        if (name === "quantity" || name === "unitPrice") {
+          updatedValue = Number(value);
+        }
+        const updatedPart = { ...part, [name]: updatedValue };
+        // Recalculate amount if quantity or unitPrice changes
+        if (name === "quantity" || name === "unitPrice") {
+          updatedPart.amount =
+            Number(updatedPart.quantity) * Number(updatedPart.unitPrice);
+        }
+        return updatedPart;
       }
       return part;
     });
-    setSpareParts(updatedParts);
+    setFormData({ ...formData, partsAndServices: updatedParts });
+  };
+  const handleSubmit = async () => {
+    try {
+      console.log(estimateId);
+      const response = await updateEstimate(estimateId, formData);
+      console.log(response);
+      toast({
+        title: "Success",
+        description: "Estimate updated successfully",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update estimate",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
   };
 
-  const handleSubmit = () => {
-    toast({
-      title: "Estimate Submitted",
-      description: "Your estimate has been submitted successfully.",
-      status: "success",
-      duration: 5000,
-      isClosable: true,
-    });
+  const handleGenerateInvoice = async () => {
+    try {
+      // Send all required data
+      const response = await createEstimate(jobId, {
+        ...formData,
+        customerDetails: {
+          ...formData.customerDetails,
+          date: new Date().toISOString().split("T")[0], // Format date as YYYY-MM-DD
+        },
+        costSummary: {
+          ...formData.costSummary,
+          estimator: user?.name || formData.costSummary.estimator, // Use logged in user's name
+        },
+      });
+      console.log(response);
+
+      // Update form with response data
+      setFormData(response.data);
+
+      toast({
+        title: "Success",
+        description: "Estimate generated successfully",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to generate estimate",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
   };
 
   return (
-    <Flex justifyContent="center" overflowX="scroll">
+    <Flex
+      // padding={{ base: 2, md: 4, xl: 0 }}
+      justifyContent="center"
+      overflowX="scroll">
       <Box width="100%" flex={1}>
         <Box>
           <Flex align="center" mb={{ base: 4, md: 6 }} gap={2}>
@@ -164,122 +287,93 @@ function StockistPage() {
               templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }}
               gap={{ base: 3, md: 4 }}>
               <VStack align="stretch">
-                <FormLabel color="gray.600" fontSize={{ base: "xs", md: "sm" }}>
+                <FormLabel color="gray.600" fontSize="sm">
                   Customer Name
                 </FormLabel>
                 <StyledInput
-                  name="name"
+                  name="customerName"
                   placeholder="Enter customer name"
-                  size={{ base: "sm", md: "md" }}
-                  value={formData.name}
+                  value={formData.customerDetails.customerName}
                   onChange={handleInputChange}
                 />
               </VStack>
               <VStack align="stretch">
-                <FormLabel color="gray.600" fontSize={{ base: "xs", md: "sm" }}>
-                  Reg No
+                <FormLabel color="gray.600" fontSize="sm">
+                  Plate Number{" "}
                 </FormLabel>
                 <StyledInput
                   name="regNo"
                   placeholder="Enter registration number"
-                  size={{ base: "sm", md: "md" }}
-                  value={formData.regNo}
+                  value={formData.customerDetails.regNo}
                   onChange={handleInputChange}
                 />
               </VStack>
+
               <VStack align="stretch">
-                <FormLabel color="gray.600" fontSize={{ base: "xs", md: "sm" }}>
-                  Workshop
-                </FormLabel>
-                <StyledInput
-                  name="workshop"
-                  placeholder="Enter workshop"
-                  size={{ base: "sm", md: "md" }}
-                  value={formData.workshop}
-                  onChange={handleInputChange}
-                />
-              </VStack>
-              <VStack align="stretch">
-                <FormLabel color="gray.600" fontSize={{ base: "xs", md: "sm" }}>
+                <FormLabel color="gray.600" fontSize="sm">
                   Veh Make
                 </FormLabel>
                 <StyledInput
-                  name="vehMake"
+                  name="vehicleMake"
                   placeholder="Enter vehicle make"
-                  size={{ base: "sm", md: "md" }}
-                  value={formData.vehMake}
+                  value={formData.customerDetails.vehicleMake}
                   onChange={handleInputChange}
                 />
               </VStack>
               <VStack align="stretch">
-                <FormLabel color="gray.600" fontSize={{ base: "xs", md: "sm" }}>
+                <FormLabel color="gray.600" fontSize="sm">
                   Email
                 </FormLabel>
                 <StyledInput
                   name="email"
                   placeholder="Enter email"
-                  size={{ base: "sm", md: "md" }}
-                  value={formData.email}
+                  value={formData.customerDetails.email}
                   onChange={handleInputChange}
                 />
               </VStack>
               <VStack align="stretch">
-                <FormLabel color="gray.600" fontSize={{ base: "xs", md: "sm" }}>
+                <FormLabel color="gray.600" fontSize="sm">
                   Chassis No
                 </FormLabel>
                 <StyledInput
                   name="chassisNo"
                   placeholder="Enter chassis number"
-                  size={{ base: "sm", md: "md" }}
-                  value={formData.chassisNo}
+                  value={formData.customerDetails.chassisNo}
                   onChange={handleInputChange}
                 />
               </VStack>
               <VStack align="stretch">
-                <FormLabel color="gray.600" fontSize={{ base: "xs", md: "sm" }}>
+                <FormLabel color="gray.600" fontSize="sm">
                   Phone No
                 </FormLabel>
                 <StyledInput
                   name="phoneNo"
                   placeholder="Enter phone number"
-                  size={{ base: "sm", md: "md" }}
-                  value={formData.phoneNo}
+                  value={formData.customerDetails.phoneNo}
                   onChange={handleInputChange}
                 />
               </VStack>
+
               <VStack align="stretch">
-                <FormLabel color="gray.600" fontSize={{ base: "xs", md: "sm" }}>
-                  Model No
-                </FormLabel>
-                <StyledInput
-                  name="modelNo"
-                  placeholder="Enter model number"
-                  size={{ base: "sm", md: "md" }}
-                  value={formData.modelNo}
-                  onChange={handleInputChange}
-                />
-              </VStack>
-              <VStack align="stretch">
-                <FormLabel color="gray.600" fontSize={{ base: "xs", md: "sm" }}>
+                <FormLabel color="gray.600" fontSize="sm">
                   Job Order No
                 </FormLabel>
                 <StyledInput
                   name="jobOrderNo"
                   placeholder="Enter job order number"
-                  size={{ base: "sm", md: "md" }}
-                  value={formData.jobOrderNo}
+                  // value={formData.customerDetails.jobOrderNo}
+                  value="JO-PT1002"
                   onChange={handleInputChange}
                 />
               </VStack>
               <VStack align="stretch">
-                <FormLabel color="gray.600" fontSize={{ base: "xs", md: "sm" }}>
+                <FormLabel color="gray.600" fontSize="sm">
                   Date
                 </FormLabel>
                 <StyledInput
                   name="date"
                   placeholder="Enter date"
-                  size={{ base: "sm", md: "md" }}
-                  value={formData.date}
+                  value={formData.customerDetails.date}
                   onChange={handleInputChange}
                 />
               </VStack>
@@ -294,8 +388,13 @@ function StockistPage() {
                 Parts & Services
               </Heading>
             </SectionTitle>
-            <Box bg="white" rounded="lg" shadow="sm" mx={{ base: -2, md: 0 }}>
-              <TableContainer minW="900px" overflowX="auto">
+            <Box
+              bg="white"
+              overflowX="scroll"
+              rounded="lg"
+              shadow="sm"
+              mx={{ base: -2, md: 0 }}>
+              <TableContainer minW="1800px" overflowX="auto">
                 <Table variant="simple" size={{ base: "sm", md: "md" }}>
                   <Thead bg="gray.50">
                     <Tr>
@@ -309,14 +408,14 @@ function StockistPage() {
                     </Tr>
                   </Thead>
                   <Tbody>
-                    {spareParts.map((part, index) => (
+                    {formData.partsAndServices.map((part, index) => (
                       <Tr key={index}>
                         <Td>
                           <StyledInput
-                            name="sparePartNo"
+                            name="partNo"
                             placeholder="Part no."
                             size={{ base: "sm", md: "md" }}
-                            value={part.sparePartNo}
+                            value={part.partNo}
                             onChange={(e) => handlePartChange(index, e)}
                           />
                         </Td>
@@ -342,10 +441,10 @@ function StockistPage() {
                         )}
                         <Td>
                           <StyledInput
-                            name="qty"
+                            name="quantity"
                             placeholder="Qty"
                             size={{ base: "sm", md: "md" }}
-                            value={part.qty}
+                            value={part.quantity}
                             onChange={(e) => handlePartChange(index, e)}
                           />
                         </Td>
@@ -364,7 +463,7 @@ function StockistPage() {
                             placeholder="Amount"
                             size={{ base: "sm", md: "md" }}
                             value={part.amount}
-                            onChange={(e) => handlePartChange(index, e)}
+                            readOnly
                           />
                         </Td>
                         <Td>
@@ -375,9 +474,13 @@ function StockistPage() {
                             colorScheme="red"
                             variant="ghost"
                             onClick={() =>
-                              setSpareParts(
-                                spareParts.filter((_, i) => i !== index)
-                              )
+                              setFormData({
+                                ...formData,
+                                partsAndServices:
+                                  formData.partsAndServices.filter(
+                                    (_, i) => i !== index
+                                  ),
+                              })
                             }
                           />
                         </Td>
@@ -406,43 +509,48 @@ function StockistPage() {
               spacing={{ base: 3, md: 4 }}
               maxW={{ base: "100%", md: "400px" }}>
               <HStack justify="space-between">
-                <Text color="gray.600" fontSize={{ base: "sm", md: "md" }}>
-                  Labour:
-                </Text>
+                <Text color="gray.600">Labour:</Text>
                 <StyledInput
-                  w={{ base: "150px", md: "200px" }}
-                  size={{ base: "sm", md: "md" }}
+                  w="200px"
                   placeholder="0.00"
+                  type="number"
+                  value={formData.costSummary.labour}
+                  onChange={(e) =>
+                    handleCostSummaryChange("labour", e.target.value)
+                  }
                 />
               </HStack>
               <HStack justify="space-between">
-                <Text color="gray.600" fontSize={{ base: "sm", md: "md" }}>
-                  Sundries:
-                </Text>
+                <Text color="gray.600">Sundries:</Text>
                 <StyledInput
-                  w={{ base: "150px", md: "200px" }}
-                  size={{ base: "sm", md: "md" }}
+                  w="200px"
                   placeholder="0.00"
+                  value={formData.costSummary.sundries}
+                  onChange={(e) =>
+                    handleCostSummaryChange("sundries", e.target.value)
+                  }
                 />
               </HStack>
               <HStack justify="space-between">
-                <Text color="gray.600" fontSize={{ base: "sm", md: "md" }}>
-                  VAT:
-                </Text>
+                <Text color="gray.600">VAT:</Text>
                 <StyledInput
-                  w={{ base: "150px", md: "200px" }}
-                  size={{ base: "sm", md: "md" }}
+                  w="200px"
                   placeholder="0.00"
+                  value={formData.costSummary.vat}
+                  onChange={(e) =>
+                    handleCostSummaryChange("vat", e.target.value)
+                  }
                 />
               </HStack>
               <HStack justify="space-between">
-                <Text color="gray.600" fontSize={{ base: "sm", md: "md" }}>
-                  Estimator
-                </Text>
+                <Text color="gray.600">Estimator Name:</Text>
                 <StyledInput
-                  w={{ base: "150px", md: "200px" }}
-                  size={{ base: "sm", md: "md" }}
-                  placeholder="Ejike Ikeji"
+                  w="200px"
+                  placeholder="Anozie Ikechi"
+                  value={user?.name}
+                  onChange={(e) =>
+                    handleCostSummaryChange("estimator", e.target.value)
+                  }
                 />
               </HStack>
             </VStack>
@@ -460,13 +568,14 @@ function StockistPage() {
               variant="outline"
               size={{ base: "xs", md: "sm" }}
               colorScheme="blue"
-              w={{ base: "full", md: "auto" }}>
+              w={{ base: "full", md: "auto" }}
+              onClick={() => window.history.back()}>
               Cancel
             </Button>
             <Button
               colorScheme="blue"
               size={{ base: "xs", md: "sm" }}
-              onClick={handleSubmit}
+              onClick={handleGenerateInvoice}
               leftIcon={<FaFileInvoice />}
               w={{ base: "full", sm: "auto" }}>
               Generate Invoice
@@ -477,12 +586,12 @@ function StockistPage() {
               onClick={handleSubmit}
               leftIcon={<FaFileInvoice />}
               w={{ base: "full", sm: "auto" }}>
-              Send to client
+              Update Estimate
             </Button>
             <Button
               colorScheme="teal"
               size={{ base: "xs", md: "sm" }}
-              onClick={handleSubmit}
+              // onClick={handleSubmit}
               leftIcon={<FaFileInvoice />}
               w={{ base: "full", sm: "auto" }}>
               Download as PDF

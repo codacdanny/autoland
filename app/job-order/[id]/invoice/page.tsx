@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState } from "react";
 import {
   Box,
   Text,
@@ -19,6 +20,8 @@ import logoBlue from "../../../assets/logoWhite.webp";
 import Sidebar from "../../../components/major/Sidebar";
 import Header from "../../../components/minor/Header";
 import { withAuth } from "@/app/utils/services/hoc";
+import { generateInvoice } from "@/app/utils/services/estimate";
+import { InvoiceData } from "@/app/utils/types/invoice";
 
 const FormContainer = styled(Box)`
   background: white;
@@ -27,93 +30,9 @@ const FormContainer = styled(Box)`
   margin: auto;
 `;
 
-// interface InvoiceItem {
-//   description: string;
-//   qty: number;
-//   discountPercentage?: number;
-//   unitPrice: number;
-//   amount: number;
-// }
-
-function InvoicePage({}: { params: { id: string } }) {
-  const invoiceData = {
-    customerName: "MR. TONY",
-    date: "07/01/25",
-    contactPerson: "070 84142179",
-    location: "OWERRI, IMO STATE",
-    staff: "Akachi Nwekwo",
-    vehicleDetails: {
-      modelMake: "LEXUS GX 460",
-      modelCode: "",
-      chassisNo: "JTJBM7FX3A5003292",
-      mileage: "",
-      color: "",
-      plateNo: "ABU 315 AG",
-      year: "2010",
-    },
-    items: [
-      {
-        description: "FRONT SEAT BELTS LH & RH",
-        qty: 1,
-        unitPrice: 45000,
-        amount: 45000,
-      },
-      {
-        description: "BACK SEAT BELTS LH & RH",
-        qty: 1,
-        unitPrice: 45000,
-        amount: 45000,
-      },
-      {
-        description: "STEP BOARD SET",
-        qty: 1,
-        unitPrice: 280000,
-        amount: 280000,
-      },
-      {
-        description: "CURTAIN AIRBAGS LH & RH",
-        qty: 1,
-        unitPrice: 900000,
-        amount: 900000,
-      },
-      {
-        description: "SPARE TYRE 265/60 R18",
-        qty: 1,
-        unitPrice: 140000,
-        amount: 140000,
-      },
-      {
-        description: "LOWER ARM RH",
-        qty: 1,
-        unitPrice: 190000,
-        amount: 190000,
-      },
-      {
-        description: "SUSPENSION ALIGNMENT",
-        qty: 1,
-        unitPrice: 30000,
-        amount: 30000,
-      },
-      { description: "BALL JOINTS", qty: 2, unitPrice: 45000, amount: 90000 },
-      { description: "FIXING OF TYRES", qty: 1, unitPrice: 3000, amount: 3000 },
-      {
-        description: "PANEL BEAT WORK, SPRAYING OF -",
-        qty: 0,
-        unitPrice: 0,
-        amount: 0,
-      },
-      {
-        description: "FRONT BUMPER & COMPLETE RIGHT SIDE",
-        qty: 1,
-        unitPrice: 480000,
-        amount: 480000,
-      },
-      { description: "SUNDRIES", qty: 1, unitPrice: 45000, amount: 45000 },
-    ],
-    totalExclVAT: 2248000,
-    vat: 3375,
-    totalInclVAT: 2251375,
-  };
+function InvoicePage({ params }: { params: { id: string } }) {
+  const [invoiceData, setInvoiceData] = useState<InvoiceData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const disclaimers = [
     "1. Estimates must be customer-approved within seven (7) days, else they will be removed from the company premises.",
@@ -123,6 +42,39 @@ function InvoicePage({}: { params: { id: string } }) {
     "5. We have a non-refund policy which states that unused funds may only be applied to subsequent repairs.",
     "6. Accepting our estimate gives us permission to utilize your car in promotional digital and social media content.",
   ];
+
+  useEffect(() => {
+    const fetchInvoiceData = async () => {
+      try {
+        const data = await generateInvoice(params.id);
+        setInvoiceData(data);
+      } catch (error) {
+        console.error("Error fetching invoice:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchInvoiceData();
+  }, [params.id]);
+
+  if (isLoading) {
+    return <Box>Loading...</Box>;
+  }
+
+  if (!invoiceData) {
+    return <Box>No invoice data found</Box>;
+  }
+
+  // Calculate totals
+  const totalAmount = invoiceData.partsAndServices.reduce(
+    (sum, item) => sum + item.amount,
+    0
+  );
+  const totalWithLabour = totalAmount + (invoiceData.costSummary?.labour || 0);
+  const totalWithSundries =
+    totalWithLabour + (invoiceData.costSummary?.sundries || 0);
+  const finalTotal = totalWithSundries + (invoiceData.costSummary?.vat || 0);
 
   return (
     <Flex>
@@ -149,24 +101,23 @@ function InvoicePage({}: { params: { id: string } }) {
                     <Td fontWeight="bold" width="200px">
                       Staff Name:
                     </Td>
-                    <Td>{invoiceData.staff}</Td>
+                    <Td>{invoiceData.costSummary?.estimator}</Td>
                   </Tr>
                   <Tr>
-                    <Td fontWeight="bold" width="200px">
-                      Customer Name:
-                    </Td>
-                    <Td>{invoiceData.customerName}</Td>
-                    <Td rowSpan={2} textAlign="right">
-                      {invoiceData.location}
-                    </Td>
+                    <Td fontWeight="bold">Customer Name:</Td>
+                    <Td>{invoiceData.customerDetails?.customerName}</Td>
                   </Tr>
                   <Tr>
                     <Td fontWeight="bold">Date:</Td>
-                    <Td>{invoiceData.date}</Td>
+                    <Td>
+                      {new Date(
+                        invoiceData.customerDetails?.date
+                      ).toLocaleDateString()}
+                    </Td>
                   </Tr>
                   <Tr>
-                    <Td fontWeight="bold">Contact Person:</Td>
-                    <Td>{invoiceData.contactPerson}</Td>
+                    <Td fontWeight="bold">Contact:</Td>
+                    <Td>{invoiceData.customerDetails?.phoneNo}</Td>
                   </Tr>
                 </Tbody>
               </Table>
@@ -181,17 +132,15 @@ function InvoicePage({}: { params: { id: string } }) {
                 <Tbody>
                   <Tr>
                     <Td fontWeight="bold">Model Make:</Td>
-                    <Td>{invoiceData.vehicleDetails.modelMake}</Td>
-                    <Td fontWeight="bold">Mileage:</Td>
-                    <Td>{invoiceData.vehicleDetails.mileage}</Td>
+                    <Td>{invoiceData.customerDetails?.vehicleMake}</Td>
+                    <Td fontWeight="bold">Model:</Td>
+                    <Td>{invoiceData.customerDetails?.modelNo}</Td>
                   </Tr>
                   <Tr>
                     <Td fontWeight="bold">Chassis No:</Td>
-                    <Td>{invoiceData.vehicleDetails.chassisNo}</Td>
-                    <Td fontWeight="bold">Plate. No:</Td>
-                    <Td>{invoiceData.vehicleDetails.plateNo}</Td>
-                    <Td fontWeight="bold">YEAR</Td>
-                    <Td>{invoiceData.vehicleDetails.year}</Td>
+                    <Td>{invoiceData.customerDetails?.chassisNo}</Td>
+                    <Td fontWeight="bold">Reg. No:</Td>
+                    <Td>{invoiceData.customerDetails?.regNo}</Td>
                   </Tr>
                 </Tbody>
               </Table>
@@ -207,21 +156,39 @@ function InvoicePage({}: { params: { id: string } }) {
                 <Tr>
                   <Th>Description</Th>
                   <Th isNumeric>Qty</Th>
-                  <Th isNumeric>Disc %</Th>
                   <Th isNumeric>Unit Price (₦)</Th>
                   <Th isNumeric>Amount (₦)</Th>
                 </Tr>
               </Thead>
               <Tbody>
-                {invoiceData.items.map((item, index) => (
+                {invoiceData.partsAndServices.map((item, index) => (
                   <Tr key={index}>
                     <Td>{item.description}</Td>
-                    <Td isNumeric>{item.qty}</Td>
-                    <Td isNumeric></Td>
-                    <Td isNumeric>{item.unitPrice.toLocaleString()}</Td>
-                    <Td isNumeric>{item.amount.toLocaleString()}</Td>
+                    <Td isNumeric>{item?.quantity}</Td>
+                    <Td isNumeric>{item?.unitPrice.toLocaleString()}</Td>
+                    <Td isNumeric>{item?.amount.toLocaleString()}</Td>
                   </Tr>
                 ))}
+                <Tr>
+                  <Td>Labour</Td>
+                  <Td isNumeric>1</Td>
+                  <Td isNumeric>
+                    {invoiceData.costSummary?.labour.toLocaleString()}
+                  </Td>
+                  <Td isNumeric>
+                    {invoiceData.costSummary?.labour.toLocaleString()}
+                  </Td>
+                </Tr>
+                <Tr>
+                  <Td>Sundries</Td>
+                  <Td isNumeric>1</Td>
+                  <Td isNumeric>
+                    {invoiceData.costSummary?.sundries.toLocaleString()}
+                  </Td>
+                  <Td isNumeric>
+                    {invoiceData.costSummary?.sundries.toLocaleString()}
+                  </Td>
+                </Tr>
               </Tbody>
             </Table>
 
@@ -229,15 +196,15 @@ function InvoicePage({}: { params: { id: string } }) {
             <Box alignSelf="flex-end">
               <HStack spacing={8} justify="flex-end">
                 <Text fontWeight="bold">Total Excl. VAT</Text>
-                <Text>₦{invoiceData.totalExclVAT.toLocaleString()}</Text>
+                <Text>₦{totalWithSundries.toLocaleString()}</Text>
               </HStack>
               <HStack spacing={8} justify="flex-end">
-                <Text fontWeight="bold">VAT (7.5%)</Text>
-                <Text>₦{invoiceData.vat.toLocaleString()}</Text>
+                <Text fontWeight="bold">VAT</Text>
+                <Text>₦{invoiceData.costSummary?.vat.toLocaleString()}</Text>
               </HStack>
               <HStack spacing={8} justify="flex-end">
                 <Text fontWeight="bold">Total Incl. VAT</Text>
-                <Text>₦{invoiceData.totalInclVAT.toLocaleString()}</Text>
+                <Text>₦{finalTotal.toLocaleString()}</Text>
               </HStack>
             </Box>
 
@@ -271,4 +238,5 @@ function InvoicePage({}: { params: { id: string } }) {
     </Flex>
   );
 }
+
 export default withAuth(InvoicePage);
