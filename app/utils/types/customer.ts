@@ -31,8 +31,8 @@ export interface CustomerResponse {
 }
 
 export interface Customer {
-  serviceHistory: any;
-  vehicles: any;
+  serviceHistory: ServiceHistory[];
+  vehicles: Vehicle[];
   birthDate: string | number | Date;
   id: string;
   fullName: string;

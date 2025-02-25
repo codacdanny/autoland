@@ -47,12 +47,13 @@ import {
   Payment,
   PaymentMetrics,
   PaymentHistory,
+  PaymentRequest,
 } from "@/app/utils/types/account";
 import {
   addPayment,
-  getPaymentMetrics,
-  updateTotalAmount,
   getPaymentHistory,
+  getPaymentSummary,
+  updatePaymentAmount,
 } from "@/app/utils/services/account";
 
 function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
@@ -60,40 +61,107 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
   const isMobile = useBreakpointValue({ base: true, md: false });
-  const [metrics, setMetrics] = useState<PaymentMetrics | null>(null);
+
+  // Initialize metrics with default values
+  const [metrics, setMetrics] = useState<PaymentMetrics>({
+    jobOrderId: jobId,
+    totalJobAmount: 0,
+    previouslyPaid: 0,
+    remainingBalance: 0,
+  });
+
   const [payments, setPayments] = useState<PaymentHistory[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-
+  const [editable, setEditable] = useState(false);
   // Form state
-  const [paymentForm, setPaymentForm] = useState<Omit<Payment, "jobOrderId">>({
+  const [paymentForm, setPaymentForm] = useState<PaymentRequest>({
+    jobOrderId: jobId,
     amount: 0,
     totalAmountDue: 0,
     paymentPhase: "",
     paymentMethod: "",
   });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [metricsData, historyData] = await Promise.all([
-          getPaymentMetrics(jobId),
-          getPaymentHistory(jobId),
-        ]);
-        setMetrics(metricsData);
-        setPayments(historyData);
-      } catch (error) {
-        toast({
-          title: "Error fetching data",
-          status: "error",
-          duration: 3000,
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const fetchPaymentData = async () => {
+    try {
+      const [summary, history] = await Promise.all([
+        getPaymentSummary(params.id),
+        getPaymentHistory(params.id),
+      ]);
 
-    fetchData();
-  }, [jobId, toast]);
+      // Set metrics with fallback values if data is missing
+      setMetrics({
+        jobOrderId: params.id,
+        totalJobAmount: summary?.totalJobAmount,
+        previouslyPaid: summary?.previouslyPaid,
+        remainingBalance: summary?.remainingBalance,
+      });
+
+      console.log(metrics);
+      // Set payments with empty array fallback
+      setPayments(history || []);
+
+      // Update payment form with total amount
+      setPaymentForm((prev) => ({
+        ...prev,
+        totalAmountDue: summary?.totalJobAmount,
+      }));
+    } catch (error) {
+      // In case of error, keep the default values
+      toast({
+        title: "Note",
+        description: "No payment records found",
+        status: "info",
+        duration: 3000,
+      });
+    }
+  };
+
+  const handleSubmitPayment = async () => {
+    try {
+      await addPayment(paymentForm);
+      await fetchPaymentData();
+      onClose();
+      toast({
+        title: "Success",
+        description: "Payment recorded successfully",
+        status: "success",
+        duration: 3000,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to record payment",
+        status: "error",
+        duration: 3000,
+      });
+    }
+  };
+
+  const handleUpdateAmount = async (newAmount: number) => {
+    try {
+      await updatePaymentAmount(params.id, newAmount);
+      await fetchPaymentData();
+      toast({
+        title: "Success",
+        description: "Payment amount updated successfully",
+        status: "success",
+        duration: 3000,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update amount",
+        status: "error",
+        duration: 3000,
+      });
+    }
+  };
+
+  // Use effect to fetch initial data
+  useEffect(() => {
+    fetchPaymentData();
+  }, [params.id]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -105,61 +173,11 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
     }));
   };
 
-  const handleSubmitPayment = async () => {
-    try {
-      await addPayment({
-        jobOrderId: jobId,
-        ...paymentForm,
-      });
-
-      // Refresh data
-      const [newMetrics, newHistory] = await Promise.all([
-        getPaymentMetrics(jobId),
-        getPaymentHistory(jobId),
-      ]);
-
-      setMetrics(newMetrics);
-      setPayments(newHistory);
-      onClose();
-
-      toast({
-        title: "Payment recorded successfully",
-        status: "success",
-        duration: 3000,
-      });
-    } catch (error) {
-      toast({
-        title: "Failed to record payment",
-        status: "error",
-        duration: 3000,
-      });
-    }
-  };
-
-  const handleEditTotalAmount = async (newAmount: number) => {
-    try {
-      await updateTotalAmount(jobId, newAmount);
-      const newMetrics = await getPaymentMetrics(jobId);
-      setMetrics(newMetrics);
-
-      toast({
-        title: "Total amount updated",
-        status: "success",
-        duration: 3000,
-      });
-    } catch (error) {
-      toast({
-        title: "Failed to update amount",
-        status: "error",
-        duration: 3000,
-      });
-    }
-  };
-
+  // Update dashboard metrics to use safe values
   const dashboardMetrics: MetricCardData[] = [
     {
       title: "Total Job Amount",
-      value: `₦${metrics?.totalJobAmount}`,
+      value: `₦${metrics.totalJobAmount.toLocaleString()}`,
       change: "100%",
       isIncrease: true,
       icon: FaWallet,
@@ -168,8 +186,11 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
     },
     {
       title: "Total Paid",
-      value: `₦${metrics?.previouslyPaid}`,
-      change: `2%`,
+      value: `₦${metrics.previouslyPaid.toLocaleString()}`,
+      change: `${(
+        (metrics.previouslyPaid / (metrics.totalJobAmount || 1)) *
+        100
+      ).toFixed(1)}%`,
       isIncrease: true,
       icon: FaClipboardList,
       color: "blue.500",
@@ -177,8 +198,11 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
     },
     {
       title: "Balance",
-      value: `₦${metrics?.remainingBalance}`,
-      change: `3%`,
+      value: `₦${metrics.remainingBalance.toLocaleString()}`,
+      change: `${(
+        (metrics.remainingBalance / (metrics.totalJobAmount || 1)) *
+        100
+      ).toFixed(1)}%`,
       isIncrease: false,
       icon: FaCheckCircle,
       color: "green.500",
@@ -243,14 +267,22 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {payments.map((payment) => (
-                    <Tr key={payment.id}>
-                      {!isMobile && <Td>{payment.paymentPhase}</Td>}
-                      <Td>{payment.date}</Td>
-                      <Td isNumeric>₦{payment.amount.toLocaleString()}</Td>
-                      {!isMobile && <Td>{payment.paymentMethod}</Td>}
+                  {payments.length > 0 ? (
+                    payments.map((payment) => (
+                      <Tr key={payment.id}>
+                        {!isMobile && <Td>{payment.paymentPhase}</Td>}
+                        <Td>{new Date(payment.date).toLocaleDateString()}</Td>
+                        <Td isNumeric>₦{payment.amount.toLocaleString()}</Td>
+                        {!isMobile && <Td>{payment.paymentMethod}</Td>}
+                      </Tr>
+                    ))
+                  ) : (
+                    <Tr>
+                      <Td colSpan={isMobile ? 2 : 4} textAlign="center">
+                        No payment records found
+                      </Td>
                     </Tr>
-                  ))}
+                  )}
                 </Tbody>
               </Table>
             </TableContainer>
@@ -307,18 +339,10 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
                     onChange={handleInputChange}
                     placeholder="Select phase"
                     size={{ base: "sm", md: "md" }}>
-                    <option value="First Payment">
-                      First Payment (Initial)
-                    </option>
-                    <option value="Second Payment">
-                      Second Payment (Interim)
-                    </option>
-                    <option value="Third Payment">
-                      Third Payment (Progress)
-                    </option>
-                    <option value="Final Payment">
-                      Final Payment (Completion)
-                    </option>
+                    <option value="First">First Payment (Initial)</option>
+                    <option value="Second">Second Payment (Interim)</option>
+                    <option value="Third">Third Payment (Progress)</option>
+                    <option value="Final">Final Payment (Completion)</option>
                   </Select>
                 </FormControl>
               </GridItem>
@@ -337,6 +361,7 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
                       colorScheme="blue"
                       onClick={() => {
                         // Add your edit logic here
+                        setEditable(!editable);
                         console.log("Edit total amount");
                       }}
                     />
@@ -349,7 +374,7 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
                       value={paymentForm.totalAmountDue}
                       onChange={handleInputChange}
                       placeholder="Enter total amount due"
-                      isReadOnly
+                      isReadOnly={editable}
                     />
                   </InputGroup>
                   <Text
@@ -400,9 +425,9 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
                     placeholder="Select method"
                     size={{ base: "sm", md: "md" }}>
                     <option value="Cash">💵 Cash</option>
-                    <option value="Bank Transfer">🏦 Bank Transfer</option>
+                    <option value="Bank">🏦 Bank Transfer</option>
                     <option value="POS">💳 POS</option>
-                    <option value="Check">📑 Check</option>
+                    <option value="Check">📑 Cheque</option>
                   </Select>
                 </FormControl>
               </GridItem>
@@ -458,19 +483,19 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
             <Button
               colorScheme="blue"
               onClick={handleSubmitPayment}
-              isDisabled={
-                !paymentForm.paymentPhase ||
-                !paymentForm.amount ||
-                !paymentForm.paymentMethod ||
-                Number(paymentForm.amount) > (metrics?.remainingBalance || 0)
-              }
-              size={{ base: "sm", md: "md" }}
+              // isDisabled={
+              //   !paymentForm.paymentPhase ||
+              //   !paymentForm.amount ||
+              //   !paymentForm.paymentMethod ||
+              //   Number(paymentForm.amount) > (metrics?.remainingBalance || 0)
+              // }
+              size="sm"
               w={{ base: "full", sm: "auto" }}>
               Save Payment
             </Button>
             <Button
               onClick={onClose}
-              size={{ base: "sm", md: "md" }}
+              size="sm"
               variant="outline"
               w={{ base: "full", sm: "auto" }}>
               Cancel
