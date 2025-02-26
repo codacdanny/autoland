@@ -16,7 +16,7 @@ export interface PaymentMetrics {
 }
 
 export interface PaymentHistory {
-  id: string;
+  _id: string;
   jobOrderId: string;
   paymentPhase: string;
   paymentMethod: string;
@@ -40,7 +40,7 @@ export interface PaymentRequest {
 }
 
 export interface PaymentRecord {
-  id: string;
+  _id: string;
   jobOrderId: string;
   paymentPhase: string;
   paymentMethod: string;

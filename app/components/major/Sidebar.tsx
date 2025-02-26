@@ -55,7 +55,7 @@ const SidebarContainer = styled(Box)`
     display: none;
   }
 
-  @media (max-width: 900px) {
+  @media (max-width: 1400px) {
     width: 100%;
     height: 100%;
   }

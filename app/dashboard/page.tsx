@@ -58,15 +58,16 @@ function Dashboard() {
       color: "orange.500",
       bgGradient: "linear(to-r, orange.400, orange.600)",
     },
+    {
+      title: "Total Expenses",
+      value: `₦${metrics?.totalOutflow || "₦0"}`,
+      change: "+8.2%",
+      isIncrease: true,
+      icon: FaClipboardList,
+      color: "blue.500",
+      bgGradient: "linear(to-r, blue.400, blue.600)",
+    },
   ];
-
-  if (loading) {
-    return (
-      <Flex justify="center" align="center" h="100vh">
-        <Spinner size="xl" />
-      </Flex>
-    );
-  }
 
   return (
     <>
@@ -83,8 +84,7 @@ function Dashboard() {
                 md: 4,
                 xl: 8,
               }}
-              mt={{ base: 10, xl: 4 }}
-            >
+              mt={{ base: 10, xl: 4 }}>
               {/* Header */}
               <Header />
 

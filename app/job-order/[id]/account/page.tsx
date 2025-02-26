@@ -53,12 +53,17 @@ import {
   addPayment,
   getPaymentHistory,
   getPaymentSummary,
-  updatePaymentAmount,
+  updatePayment,
 } from "@/app/utils/services/account";
 
 function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
   const jobId = params.id;
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isEditOpen,
+    onOpen: onEditOpen,
+    onClose: onEditClose,
+  } = useDisclosure();
   const toast = useToast();
   const isMobile = useBreakpointValue({ base: true, md: false });
 
@@ -73,6 +78,9 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
   const [payments, setPayments] = useState<PaymentHistory[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [editable, setEditable] = useState(false);
+  const [selectedPayment, setSelectedPayment] = useState<PaymentHistory | null>(
+    null
+  );
   // Form state
   const [paymentForm, setPaymentForm] = useState<PaymentRequest>({
     jobOrderId: jobId,
@@ -97,7 +105,6 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
         remainingBalance: summary?.remainingBalance,
       });
 
-      console.log(metrics);
       // Set payments with empty array fallback
       setPayments(history || []);
 
@@ -138,20 +145,39 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
     }
   };
 
-  const handleUpdateAmount = async (newAmount: number) => {
+  const handleEditPayment = async () => {
+    console.log(selectedPayment);
+
+    if (!selectedPayment?._id) {
+      toast({
+        title: "Error",
+        description: "No payment selected for update",
+        status: "error",
+        duration: 3000,
+      });
+      return;
+    }
+
     try {
-      await updatePaymentAmount(params.id, newAmount);
+      await updatePayment(selectedPayment._id, {
+        amount: Number(paymentForm.amount),
+        paymentPhase: paymentForm.paymentPhase,
+        paymentMethod: paymentForm.paymentMethod,
+        totalAmountDue: Number(paymentForm.totalAmountDue),
+      });
+
       await fetchPaymentData();
+      onEditClose();
       toast({
         title: "Success",
-        description: "Payment amount updated successfully",
+        description: "Payment updated successfully",
         status: "success",
         duration: 3000,
       });
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to update amount",
+        description: "Failed to update payment",
         status: "error",
         duration: 3000,
       });
@@ -264,16 +290,37 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
                     <Th>Date</Th>
                     <Th isNumeric>Amount</Th>
                     {!isMobile && <Th>Payment Method</Th>}
+                    <Th>Actions</Th>
                   </Tr>
                 </Thead>
                 <Tbody>
                   {payments.length > 0 ? (
                     payments.map((payment) => (
-                      <Tr key={payment.id}>
+                      <Tr key={payment._id}>
                         {!isMobile && <Td>{payment.paymentPhase}</Td>}
                         <Td>{new Date(payment.date).toLocaleDateString()}</Td>
                         <Td isNumeric>₦{payment.amount.toLocaleString()}</Td>
                         {!isMobile && <Td>{payment.paymentMethod}</Td>}
+                        <Td>
+                          <IconButton
+                            aria-label="Edit payment"
+                            icon={<FaEdit />}
+                            size="sm"
+                            colorScheme="blue"
+                            variant="ghost"
+                            onClick={() => {
+                              setSelectedPayment(payment);
+                              setPaymentForm({
+                                jobOrderId: payment.jobOrderId,
+                                amount: payment.amount,
+                                paymentPhase: payment.paymentPhase,
+                                paymentMethod: payment.paymentMethod,
+                                totalAmountDue: metrics.totalJobAmount,
+                              });
+                              onEditOpen();
+                            }}
+                          />
+                        </Td>
                       </Tr>
                     ))
                   ) : (
@@ -499,6 +546,70 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
               variant="outline"
               w={{ base: "full", sm: "auto" }}>
               Cancel
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      {/* Edit Payment Modal */}
+      <Modal
+        isOpen={isEditOpen}
+        onClose={onEditClose}
+        size={{ base: "full", md: "xl" }}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Update Payment</ModalHeader>
+          <ModalCloseButton />
+
+          <ModalBody>
+            <VStack spacing={4}>
+              <FormControl>
+                <FormLabel>Payment Phase</FormLabel>
+                <Select
+                  name="paymentPhase"
+                  value={paymentForm.paymentPhase}
+                  onChange={handleInputChange}>
+                  <option value="First">First Payment</option>
+                  <option value="Second">Second Payment</option>
+                  <option value="Third">Third Payment</option>
+                  <option value="Final">Final Payment</option>
+                </Select>
+              </FormControl>
+
+              <FormControl>
+                <FormLabel>Amount</FormLabel>
+                <InputGroup>
+                  <InputLeftAddon>₦</InputLeftAddon>
+                  <Input
+                    name="amount"
+                    type="number"
+                    value={paymentForm.amount}
+                    onChange={handleInputChange}
+                  />
+                </InputGroup>
+              </FormControl>
+
+              <FormControl>
+                <FormLabel>Payment Method</FormLabel>
+                <Select
+                  name="paymentMethod"
+                  value={paymentForm.paymentMethod}
+                  onChange={handleInputChange}>
+                  <option value="Cash">Cash</option>
+                  <option value="POS">POS</option>
+                  <option value="Bank">Bank Transfer</option>
+                  <option value="Check">Cheque</option>
+                </Select>
+              </FormControl>
+            </VStack>
+          </ModalBody>
+
+          <ModalFooter gap={3}>
+            <Button size="sm" variant="ghost" onClick={onEditClose}>
+              Cancel
+            </Button>
+            <Button size="sm" colorScheme="blue" onClick={handleEditPayment}>
+              Update Payment
             </Button>
           </ModalFooter>
         </ModalContent>
