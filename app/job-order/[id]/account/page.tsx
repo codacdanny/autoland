@@ -90,6 +90,9 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
     paymentMethod: "",
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+
   const fetchPaymentData = async () => {
     try {
       const [summary, history] = await Promise.all([
@@ -125,6 +128,7 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
   };
 
   const handleSubmitPayment = async () => {
+    setIsSubmitting(true);
     try {
       await addPayment(paymentForm);
       await fetchPaymentData();
@@ -142,10 +146,13 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
         status: "error",
         duration: 3000,
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleEditPayment = async () => {
+    setIsUpdating(true);
     console.log(selectedPayment);
 
     if (!selectedPayment?._id) {
@@ -181,6 +188,8 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
         status: "error",
         duration: 3000,
       });
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -530,21 +539,18 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
             <Button
               colorScheme="blue"
               onClick={handleSubmitPayment}
-              // isDisabled={
-              //   !paymentForm.paymentPhase ||
-              //   !paymentForm.amount ||
-              //   !paymentForm.paymentMethod ||
-              //   Number(paymentForm.amount) > (metrics?.remainingBalance || 0)
-              // }
               size="sm"
-              w={{ base: "full", sm: "auto" }}>
+              w={{ base: "full", sm: "auto" }}
+              isLoading={isSubmitting}
+              loadingText="Saving...">
               Save Payment
             </Button>
             <Button
               onClick={onClose}
               size="sm"
               variant="outline"
-              w={{ base: "full", sm: "auto" }}>
+              w={{ base: "full", sm: "auto" }}
+              isDisabled={isSubmitting}>
               Cancel
             </Button>
           </ModalFooter>
@@ -605,10 +611,19 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
           </ModalBody>
 
           <ModalFooter gap={3}>
-            <Button size="sm" variant="ghost" onClick={onEditClose}>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={onEditClose}
+              isDisabled={isUpdating}>
               Cancel
             </Button>
-            <Button size="sm" colorScheme="blue" onClick={handleEditPayment}>
+            <Button
+              size="sm"
+              colorScheme="blue"
+              onClick={handleEditPayment}
+              isLoading={isUpdating}
+              loadingText="Updating...">
               Update Payment
             </Button>
           </ModalFooter>

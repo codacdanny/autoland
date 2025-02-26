@@ -33,10 +33,10 @@ import {
 
 function RegistrationPage({ params }: PageProps) {
   const jobId = params.id;
-  console.log("from the registration page:", jobId);
 
   const toast = useToast();
   const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<JobOrderFormData>({
     sectionA: {
       clientInformation: {
@@ -219,6 +219,7 @@ function RegistrationPage({ params }: PageProps) {
   };
 
   const handleSubmit = async () => {
+    setIsSubmitting(true);
     try {
       // Update the API call to include the jobId
       await updateJobOrder(jobId, formData);
@@ -239,6 +240,8 @@ function RegistrationPage({ params }: PageProps) {
         position: "top-right",
         duration: 5000,
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -385,6 +388,7 @@ function RegistrationPage({ params }: PageProps) {
                 <ActionButton
                   colorScheme="blue"
                   size="sm"
+                  isLoading={isSubmitting}
                   onClick={handleSubmit}>
                   Update Job Order
                 </ActionButton>

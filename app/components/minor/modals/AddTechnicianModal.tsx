@@ -38,6 +38,7 @@ export const AddTechnicianModal = ({
 }: AddTechnicianModalProps) => {
   const toast = useToast();
   const [formData, setFormData] = useState<TechnicianFormData>(initialData);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -61,6 +62,7 @@ export const AddTechnicianModal = ({
       return;
     }
 
+    setIsSubmitting(true);
     try {
       await addTechnician(formData);
       await onSuccess(); // Wait for refresh to complete
@@ -80,6 +82,8 @@ export const AddTechnicianModal = ({
         position: "top-right",
         duration: 3000,
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -93,7 +97,7 @@ export const AddTechnicianModal = ({
           borderColor="gray.400">
           Add New Technician
         </ModalHeader>
-        <ModalCloseButton />
+        <ModalCloseButton color="gray.800" />
         <ModalBody py={6} color="gray.800">
           <Stack spacing={6}>
             <FormControl isRequired>
@@ -258,7 +262,9 @@ export const AddTechnicianModal = ({
               colorScheme="blue"
               onClick={handleSubmit}
               width="full"
-              size="sm">
+              size="sm"
+              isLoading={isSubmitting}
+              loadingText="Adding...">
               Add Technician
             </Button>
           </Stack>

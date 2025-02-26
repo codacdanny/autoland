@@ -82,6 +82,8 @@ const SectionTitle = styled(Heading)`
 function EstimatePage({ params }: PageProps) {
   const { user } = useAuth();
   const jobId = params.id;
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [formData, setFormData] = useState<EstimateFormData>({
     customerDetails: {
       customerName: "",
@@ -178,25 +180,6 @@ function EstimatePage({ params }: PageProps) {
     });
   };
 
-  // const handlePartChange = (
-  //   index: number,
-  //   e: React.ChangeEvent<HTMLInputElement>
-  // ) => {
-  //   const { name, value } = e.target;
-  //   const updatedParts = formData.partsAndServices.map((part, idx) => {
-  //     if (idx === index) {
-  //       const updatedPart = { ...part, [name]: value };
-  //       // Calculate amount if quantity or unitPrice changes
-  //       if (name === "quantity" || name === "unitPrice") {
-  //         updatedPart.amount =
-  //           Number(updatedPart.quantity) * Number(updatedPart.unitPrice);
-  //       }
-  //       return updatedPart;
-  //     }
-  //     return part;
-  //   });
-  //   setFormData({ ...formData, partsAndServices: updatedParts });
-  // };
   const handlePartChange = (
     index: number,
     e: React.ChangeEvent<HTMLInputElement>
@@ -221,30 +204,31 @@ function EstimatePage({ params }: PageProps) {
     });
     setFormData({ ...formData, partsAndServices: updatedParts });
   };
-  const handleSubmit = async () => {
-    try {
-      const response = await updateEstimate(jobId, formData);
-      console.log(response);
+  // const handleSubmit = async () => {
+  //   try {
+  //     const response = await updateEstimate(jobId, formData);
+  //     console.log(response);
 
-      toast({
-        title: "Success",
-        description: "Estimate updated successfully",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to update estimate",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-  };
+  //     toast({
+  //       title: "Success",
+  //       description: "Estimate updated successfully",
+  //       status: "success",
+  //       duration: 5000,
+  //       isClosable: true,
+  //     });
+  //   } catch (error) {
+  //     toast({
+  //       title: "Error",
+  //       description: "Failed to update estimate",
+  //       status: "error",
+  //       duration: 5000,
+  //       isClosable: true,
+  //     });
+  //   }
+  // };
 
   const handleGenerateEstimate = async () => {
+    setIsSubmitting(true);
     try {
       // Send all required data
       const response = await createEstimate(jobId, {
@@ -277,6 +261,8 @@ function EstimatePage({ params }: PageProps) {
         duration: 5000,
         isClosable: true,
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -446,7 +432,7 @@ function EstimatePage({ params }: PageProps) {
                     </Tr>
                   </Thead>
                   <Tbody>
-                    {formData.partsAndServices.map((part, index) => (
+                    {formData?.partsAndServices.map((part, index) => (
                       <Tr key={index}>
                         <Td>
                           <StyledInput
@@ -612,6 +598,7 @@ function EstimatePage({ params }: PageProps) {
             </Button>
             <Button
               colorScheme="blue"
+              isLoading={isSubmitting}
               size={{ base: "xs", md: "sm" }}
               onClick={handleGenerateEstimate}
               leftIcon={<FaFileInvoice />}

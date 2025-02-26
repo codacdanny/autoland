@@ -29,6 +29,7 @@ import {
   Input,
   Textarea,
   Spinner,
+  VStack,
 } from "@chakra-ui/react";
 import { FaCalendarAlt, FaClock, FaEdit, FaTimes } from "react-icons/fa";
 import styled from "@emotion/styled";
@@ -40,10 +41,10 @@ import { Appointment } from "../utils/types/appointment";
 import {
   deleteAppointment,
   fetchAppointments,
-  editAppointment,
 } from "../utils/services/appointments";
 import { getCookie } from "cookies-next";
 import { useAuth } from "../utils/services/context";
+import { format, parseISO } from "date-fns";
 
 const StyledTable = styled(Table)`
   th {
@@ -130,45 +131,6 @@ function AppointmentsPage() {
     }
   };
 
-  const handleEditAppointment = async () => {
-    if (selectedAppointment && user) {
-      const token = getCookie("token");
-      const data = {
-        status: editStatus,
-        date: editDate,
-        description: editDescription,
-      };
-      if (!token) return;
-      try {
-        const updatedAppointment = await editAppointment(
-          selectedAppointment.id,
-          token,
-          data
-        );
-        setAppointments(
-          appointments.map((apt) =>
-            apt.id === updatedAppointment.id ? updatedAppointment : apt
-          )
-        );
-        toast({
-          title: "Appointment updated successfully.",
-          position: "top-right",
-          status: "success",
-          duration: 3000,
-        });
-        onClose();
-      } catch (error) {
-        console.error("Failed to edit appointment:", error);
-        toast({
-          title: "Error updating appointment.",
-          position: "top-right",
-          status: "error",
-          duration: 3000,
-        });
-      }
-    }
-  };
-
   const handleEditClick = (appointment: Appointment) => {
     setSelectedAppointment(appointment);
     setEditDate(appointment.dateTime);
@@ -204,6 +166,21 @@ function AppointmentsPage() {
         return "orange";
       default:
         return "blue";
+    }
+  };
+
+  const formatDateTime = (dateTimeStr: string) => {
+    try {
+      const date = parseISO(dateTimeStr);
+      return {
+        date: format(date, "MMM dd, yyyy"),
+        time: format(date, "hh:mm a"),
+      };
+    } catch (error) {
+      return {
+        date: "Invalid Date",
+        time: "Invalid Time",
+      };
     }
   };
 
@@ -280,14 +257,28 @@ function AppointmentsPage() {
                           </Td>
                           <Td>{appointment.service}</Td>
                           <Td>
-                            <HStack>
-                              <Icon
-                                as={FaClock}
-                                color="blue.500"
-                                fontSize="xs"
-                              />
-                              <Text>{`${appointment.dateTime} ${appointment.dateTime}`}</Text>
-                            </HStack>
+                            <VStack align="start" spacing={0}>
+                              <HStack>
+                                <Icon
+                                  as={FaCalendarAlt}
+                                  color="blue.500"
+                                  fontSize="xs"
+                                />
+                                <Text fontWeight="medium">
+                                  {formatDateTime(appointment.dateTime).date}
+                                </Text>
+                              </HStack>
+                              <HStack>
+                                <Icon
+                                  as={FaClock}
+                                  color="blue.500"
+                                  fontSize="xs"
+                                />
+                                <Text color="gray.600" fontSize="sm">
+                                  {formatDateTime(appointment.dateTime).time}
+                                </Text>
+                              </HStack>
+                            </VStack>
                           </Td>
                           <Td>{appointment?.vehicle}</Td>
                           <Td>
@@ -301,14 +292,6 @@ function AppointmentsPage() {
                           </Td>
                           <Td>
                             <HStack spacing={2}>
-                              <Button
-                                size="sm"
-                                colorScheme="blue"
-                                variant="ghost"
-                                leftIcon={<FaEdit />}
-                                onClick={() => handleEditClick(appointment)}>
-                                Edit
-                              </Button>
                               <Button
                                 size="sm"
                                 colorScheme="green"
@@ -336,111 +319,6 @@ function AppointmentsPage() {
                   </StyledTable>
                 </Box>
               </Box>
-
-              {/* Edit Appointment Modal */}
-              <Modal isOpen={isOpen} onClose={onClose} size="xl">
-                <ModalOverlay backdropFilter="blur(10px)" bg="blackAlpha.600" />
-                <StyledModal>
-                  <ModalHeader
-                    borderBottom="1px solid"
-                    borderColor="gray.300"
-                    py={4}
-                    fontSize="lg"
-                    color="white"
-                    fontWeight="bold"
-                    bgGradient="linear(to-r, blue.400, blue.600)"
-                    borderTopRadius="20px">
-                    Edit Appointment
-                  </ModalHeader>
-                  <ModalCloseButton color="white" />
-                  <ModalBody
-                    py={6}
-                    color="gray.200"
-                    bg="gray.800"
-                    borderRadius="md">
-                    <Stack spacing={4}>
-                      <Text fontWeight="bold" fontSize="lg" color="white">
-                        Appointment Details
-                      </Text>
-                      <Text color="gray.300">
-                        ID: {selectedAppointment?.id}
-                      </Text>
-                      <Text color="gray.300">
-                        Customer: {selectedAppointment?.customerName}
-                      </Text>
-                      <Text color="gray.300">
-                        Service: {selectedAppointment?.service}
-                      </Text>
-                      <Text color="gray.300">
-                        Current Date: {selectedAppointment?.dateTime}
-                      </Text>
-                      <Text color="gray.300">
-                        Current Time: {selectedAppointment?.dateTime}
-                      </Text>
-                      <Text color="gray.300">
-                        Vehicle Info: {selectedAppointment?.vehicle}
-                      </Text>
-                      <Text color="gray.300">
-                        Status: {selectedAppointment?.status}
-                      </Text>
-
-                      <FormControl>
-                        <FormLabel
-                          htmlFor="edit-date"
-                          fontWeight="medium"
-                          color="white">
-                          New Date
-                        </FormLabel>
-                        <Input
-                          border="1px solid #4A5568"
-                          borderRadius="md"
-                          focusBorderColor="blue.300"
-                          id="edit-date"
-                          type="datetime-local"
-                          value={editDate}
-                          onChange={(e) => setEditDate(e.target.value)}
-                          p={3}
-                          bg="gray.700"
-                          color="white"
-                        />
-                      </FormControl>
-
-                      <FormControl>
-                        <FormLabel
-                          htmlFor="edit-description"
-                          fontWeight="medium"
-                          color="white">
-                          Description
-                        </FormLabel>
-                        <Textarea
-                          id="edit-description"
-                          placeholder="Explain why the appointment was moved"
-                          value={editDescription}
-                          onChange={(e) => setEditDescription(e.target.value)}
-                          border="1px solid #4A5568"
-                          borderRadius="md"
-                          focusBorderColor="blue.300"
-                          p={3}
-                          bg="gray.700"
-                          color="white"
-                        />
-                      </FormControl>
-
-                      <Button
-                        colorScheme="blue"
-                        onClick={handleEditAppointment}
-                        mt={4}
-                        bgGradient="linear(to-r, blue.400, blue.600)"
-                        _hover={{
-                          bgGradient: "linear(to-r, blue.500, blue.700)",
-                        }}
-                        color="white">
-                        Save
-                      </Button>
-                    </Stack>
-                  </ModalBody>
-                </StyledModal>
-              </Modal>
             </Box>
           </MainContent>
         </Flex>

@@ -49,6 +49,7 @@ export const EditTechnicianModal = ({
     team: "",
     status: "On Duty",
   });
+  const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
     if (technician) {
@@ -78,6 +79,7 @@ export const EditTechnicianModal = ({
       return;
     }
 
+    setIsUpdating(true);
     try {
       if (!technician?._id) throw new Error("No technician ID found");
 
@@ -100,6 +102,8 @@ export const EditTechnicianModal = ({
         position: "top-right",
         duration: 3000,
       });
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -285,7 +289,9 @@ export const EditTechnicianModal = ({
               colorScheme="blue"
               onClick={handleSubmit}
               width="full"
-              size="sm">
+              size="sm"
+              isLoading={isUpdating}
+              loadingText="Updating...">
               Update Technician
             </Button>
           </Stack>

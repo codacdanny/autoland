@@ -555,6 +555,8 @@ function MembersPage() {
                 <StyledInput
                   name="name"
                   value={formData.name}
+                  _placeholder={{ color: "#666" }}
+                  color="gray.800"
                   onChange={handleInputChange}
                   placeholder="Enter user's full name"
                   //   _placeholder={{ color: "gray.400" }}
@@ -569,6 +571,8 @@ function MembersPage() {
                   name="phone"
                   value={formData.phone}
                   onChange={handleInputChange}
+                  _placeholder={{ color: "#666" }}
+                  color="gray.800"
                   placeholder="Enter phone number"
                 />
               </FormControl>
@@ -582,6 +586,8 @@ function MembersPage() {
                   type="email"
                   value={formData.email}
                   onChange={handleInputChange}
+                  _placeholder={{ color: "#666" }}
+                  color="gray.800"
                   placeholder="Enter email address"
                 />
               </FormControl>
@@ -686,6 +692,8 @@ function MembersPage() {
                       <HStack>
                         <StyledInput
                           placeholder="Car Model (e.g., Toyota Camry)"
+                          _placeholder={{ color: "#666" }}
+                          color="gray.800"
                           value={newCar.carModel}
                           onChange={(e) =>
                             setNewCar((prev: any) => ({

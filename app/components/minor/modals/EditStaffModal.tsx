@@ -45,6 +45,8 @@ export const EditStaffModal = ({
     role: "",
     status: "On Duty",
   });
+  const [isUpdating, setIsUpdating] = useState(false);
+
   useEffect(() => {
     if (staff) {
       setFormData(staff);
@@ -71,6 +73,7 @@ export const EditStaffModal = ({
       return;
     }
 
+    setIsUpdating(true);
     try {
       if (!staff?._id) throw new Error("No staff ID found");
 
@@ -93,6 +96,8 @@ export const EditStaffModal = ({
         position: "top-right",
         duration: 3000,
       });
+    } finally {
+      setIsUpdating(false);
     }
   };
   return (
@@ -105,7 +110,7 @@ export const EditStaffModal = ({
           borderColor="gray.400">
           Edit Staff
         </ModalHeader>
-        <ModalCloseButton />
+        <ModalCloseButton color="gray.800" />
         <ModalBody color="gray.800" py={6}>
           <Stack spacing={6}>
             <FormControl isRequired>
@@ -248,7 +253,9 @@ export const EditStaffModal = ({
               colorScheme="blue"
               onClick={handleSubmit}
               width="full"
-              size="sm">
+              size="sm"
+              isLoading={isUpdating}
+              loadingText="Updating...">
               Update Staff
             </Button>
           </Stack>

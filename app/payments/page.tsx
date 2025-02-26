@@ -119,6 +119,8 @@ function PaymentsPage() {
   const [category, setCategory] = useState("fuel"); // Default category
 
   const [editExpense, setEditExpense] = useState<Expense | null>(null); // State to hold the expense being edited
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
     const loadMetrics = async () => {
@@ -187,6 +189,15 @@ function PaymentsPage() {
       color: "orange.500",
       bgGradient: "linear(to-r, orange.400, orange.600)",
     },
+    {
+      title: "Total Expenses",
+      value: `₦${metrics?.totalOutflow || "₦0"}`,
+      change: "+8.2%",
+      isIncrease: true,
+      icon: FaClipboardList,
+      color: "blue.500",
+      bgGradient: "linear(to-r, blue.400, blue.600)",
+    },
   ];
 
   const handleEditExpense = (expense: Expense) => {
@@ -217,32 +228,35 @@ function PaymentsPage() {
   };
 
   const handleUpdateExpense = async () => {
-    if (editExpense) {
-      try {
-        await updateExpense(editExpense.expenseId, editExpense);
-        // Call the update function with expenseId and data
-        const response = await fetchExpenses(category, currentPage, 10); // Refresh the expenses list after updating
-        setExpenses(response.data.expenses);
-        setTotalPages(response.data.pagination.totalPages);
-        toast({
-          title: "Expense updated.",
-          status: "success",
-          position: "top-right",
-          duration: 3000,
-        });
-        onEditClose(); // Close the modal
-      } catch (error) {
-        console.error("Failed to update expense:", error);
-        toast({
-          title: "Error updating expense.",
-          status: "error",
-          position: "top-right",
-          duration: 3000,
-        });
-      }
+    if (!editExpense) return;
+
+    setIsUpdating(true);
+    try {
+      await updateExpense(editExpense.expenseId, editExpense);
+      const response = await fetchExpenses(category, currentPage, 10);
+      setExpenses(response.data.expenses);
+      setTotalPages(response.data.pagination.totalPages);
+      onEditClose();
+      toast({
+        title: "Success",
+        description: "Expense updated successfully",
+        status: "success",
+        duration: 3000,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update expense",
+        status: "error",
+        duration: 3000,
+      });
+    } finally {
+      setIsUpdating(false);
     }
   };
+
   const handleAddExpense = async () => {
+    setIsSubmitting(true);
     try {
       const newExpenseData = {
         category: newExpense.category,
@@ -250,23 +264,25 @@ function PaymentsPage() {
         amount: newExpense.amount,
         paymentMethod: newExpense.paymentMethod,
       };
-      console.log(newExpenseData);
 
-      await addExpense(newExpenseData); // Call the addExpense function
-      // setExpenses((prevExpenses) => [...prevExpenses, addedExpense]); // Add the new expense to the state
-      // toast({
-      //   title: "Expense added successfully.",
-      //   status: "success",
-      //   duration: 3000,
-      // });
-      onClose(); // Close the modal
-    } catch (error) {
-      console.error("Failed to add expense:", error);
+      await addExpense(newExpenseData);
+      await fetchExpenses(category, currentPage, 10); // Refresh the list
+      onClose();
       toast({
-        title: "Error adding expense.",
+        title: "Success",
+        description: "Expense added successfully",
+        status: "success",
+        duration: 3000,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to add expense",
         status: "error",
         duration: 3000,
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -312,10 +328,13 @@ function PaymentsPage() {
                       boxSize={6}
                     />
                     <Text fontWeight="medium" fontSize="sm">
-                      Generate Report
+                      Generate Report{" "}
+                      <span style={{ color: "#777", fontSize: "12px" }}>
+                        coming soon
+                      </span>
                     </Text>
                     <Button colorScheme="purple" variant="outline" size="sm">
-                      Download Report
+                      Download Report{" "}
                     </Button>
                   </VStack>
                 </ExpenseCard>
@@ -329,7 +348,10 @@ function PaymentsPage() {
                       boxSize={6}
                     />
                     <Text fontWeight="medium" fontSize="sm">
-                      Analytics
+                      Analytics{" "}
+                      <span style={{ color: "#777", fontSize: "12px" }}>
+                        coming soon
+                      </span>
                     </Text>
                     <Button colorScheme="green" variant="outline" size="sm">
                       View Analytics
@@ -599,7 +621,9 @@ function PaymentsPage() {
                         colorScheme="blue"
                         size="sm"
                         width="full"
-                        onClick={handleAddExpense}>
+                        onClick={handleAddExpense}
+                        isLoading={isSubmitting}
+                        loadingText="Adding...">
                         Add Expense
                       </Button>
                     </VStack>
@@ -746,7 +770,9 @@ function PaymentsPage() {
                           colorScheme="blue"
                           size="sm"
                           width="full"
-                          onClick={handleUpdateExpense}>
+                          onClick={handleUpdateExpense}
+                          isLoading={isUpdating}
+                          loadingText="Updating...">
                           Update Expense
                         </Button>
                       </VStack>

@@ -37,6 +37,8 @@ import {
 function CreateJobOrderPage() {
   const toast = useToast();
   const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
   const [formData, setFormData] = useState<JobOrderFormData>({
     sectionA: {
       clientInformation: {
@@ -195,6 +197,7 @@ function CreateJobOrderPage() {
   };
 
   const handleSubmit = async () => {
+    setIsSubmitting(true);
     try {
       // API call to save job order
       await createJobOrder(formData);
@@ -216,6 +219,8 @@ function CreateJobOrderPage() {
         position: "top-right",
         duration: 5000,
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -319,13 +324,19 @@ function CreateJobOrderPage() {
               <ActionButton
                 size="sm"
                 colorScheme="blue"
-                onClick={() => {}}
+                onClick={() => {
+                  router.push("/dashboard");
+                }}
                 color="gray.600"
                 border="1px solid"
                 borderColor="gray.300">
                 Cancel
               </ActionButton>
-              <ActionButton colorScheme="blue" size="sm" onClick={handleSubmit}>
+              <ActionButton
+                isLoading={isSubmitting}
+                colorScheme="blue"
+                size="sm"
+                onClick={handleSubmit}>
                 Create Job Order
               </ActionButton>
             </Flex>

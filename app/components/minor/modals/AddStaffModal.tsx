@@ -38,6 +38,7 @@ export const AddStaffModal = ({
 }: AddStaffModalProps) => {
   const toast = useToast();
   const [formData, setFormData] = useState<StaffFormData>(initialData);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -66,6 +67,7 @@ export const AddStaffModal = ({
       return;
     }
 
+    setIsSubmitting(true);
     try {
       await addStaff(formData);
       await onSuccess();
@@ -85,6 +87,8 @@ export const AddStaffModal = ({
         position: "top-right",
         duration: 3000,
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -98,7 +102,7 @@ export const AddStaffModal = ({
           borderColor="gray.400">
           Add New Staff Member
         </ModalHeader>
-        <ModalCloseButton />
+        <ModalCloseButton color="gray.800" />
         <ModalBody color="gray.800" py={6}>
           <Stack spacing={6}>
             <FormControl isRequired>
@@ -255,7 +259,9 @@ export const AddStaffModal = ({
               colorScheme="blue"
               onClick={handleSubmit}
               width="full"
-              size="sm">
+              size="sm"
+              isLoading={isSubmitting}
+              loadingText="Adding...">
               Add Staff Member
             </Button>
           </Stack>

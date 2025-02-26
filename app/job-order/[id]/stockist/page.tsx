@@ -107,6 +107,8 @@ function StockistPage({ params }: PageProps) {
 
   const toast = useToast();
   const isMobile = useBreakpointValue({ base: true, md: false });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -201,6 +203,7 @@ function StockistPage({ params }: PageProps) {
     setFormData({ ...formData, partsAndServices: updatedParts });
   };
   const handleSubmit = async () => {
+    setIsSubmitting(true);
     try {
       console.log(estimateId);
       const response = await updateEstimate(estimateId, formData);
@@ -220,10 +223,13 @@ function StockistPage({ params }: PageProps) {
         duration: 5000,
         isClosable: true,
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleGenerateInvoice = async () => {
+    setIsGenerating(true);
     try {
       // Send all required data
       const response = await createEstimate(jobId, {
@@ -268,6 +274,8 @@ function StockistPage({ params }: PageProps) {
         duration: 5000,
         isClosable: true,
       });
+    } finally {
+      setIsGenerating(false);
     }
   };
 
@@ -586,7 +594,9 @@ function StockistPage({ params }: PageProps) {
               size={{ base: "xs", md: "sm" }}
               onClick={handleGenerateInvoice}
               leftIcon={<FaFileInvoice />}
-              w={{ base: "full", sm: "auto" }}>
+              w={{ base: "full", sm: "auto" }}
+              isLoading={isGenerating}
+              loadingText="Generating...">
               Generate Invoice
             </Button>
             <Button
@@ -594,7 +604,9 @@ function StockistPage({ params }: PageProps) {
               size={{ base: "xs", md: "sm" }}
               onClick={handleSubmit}
               leftIcon={<FaFileInvoice />}
-              w={{ base: "full", sm: "auto" }}>
+              w={{ base: "full", sm: "auto" }}
+              isLoading={isSubmitting}
+              loadingText="Updating...">
               Update Estimate
             </Button>
             {/* <Button
