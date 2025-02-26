@@ -124,4 +124,4 @@ function OnlineBooking() {
     </>
   );
 }
-export default withAuth(OnlineBooking);
+export default withAuth(OnlineBooking, ["workshopManager", "frontDesk"]);

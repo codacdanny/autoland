@@ -218,4 +218,4 @@ function BookingPage() {
     </>
   );
 }
-export default withAuth(BookingPage);
+export default withAuth(BookingPage, ["workshopManager", "frontDesk"]);

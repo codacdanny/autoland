@@ -170,4 +170,4 @@ function UsersPage() {
     </Flex>
   );
 }
-export default withAuth(UsersPage);
+export default withAuth(UsersPage, ["workshopManager"]);

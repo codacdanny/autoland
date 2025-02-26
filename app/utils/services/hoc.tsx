@@ -1,44 +1,43 @@
-import { Flex, Spinner } from "@chakra-ui/react";
+"use client";
 import { useRouter } from "next/navigation";
-import { JSX, useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useAuth } from "./context";
+import { Box, Spinner, Center } from "@chakra-ui/react";
 
 export function withAuth<P extends object>(
-  WrappedComponent: React.ComponentType<P>
+  WrappedComponent: React.ComponentType<P>,
+  allowedRoles?: string[]
 ) {
-  return function ProtectedRoute(props: P): JSX.Element {
+  return function WithAuthComponent(props: P) {
+    const { user, loading } = useAuth();
     const router = useRouter();
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-      const token = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("token="))
-        ?.split("=")[1];
-
-      if (!token) {
-        router.push("/"); // Redirect to login page if no token
-      } else {
-        setIsAuthenticated(true); // Set authenticated to true if token exists
+      if (!loading) {
+        if (!user) {
+          router.push("/");
+        } else if (allowedRoles && !allowedRoles.includes(user.role)) {
+          router.push("/unauthorised");
+        }
       }
-      setIsLoading(false); // Mark loading as complete
-    }, [router]);
+    }, [user, loading, router]);
 
-    // Don't render anything until loading is complete
-    if (isLoading) {
+    if (loading) {
       return (
-        <Flex justify="center" align="center" h="100vh">
-          <Spinner size="xl" />
-        </Flex>
-      ); // Show a loading spinner or message
+        <Center h="100vh">
+          <Spinner size="xl" color="blue.500" />
+        </Center>
+      );
     }
 
-    // Don't render the wrapped component if not authenticated
-    if (!isAuthenticated) {
-      router.push("/"); // Return nothing or a fallback UI
+    if (!user) {
+      return null;
     }
 
-    // Render the wrapped component if authenticated
+    if (allowedRoles && !allowedRoles.includes(user.role)) {
+      return null;
+    }
+
     return <WrappedComponent {...props} />;
   };
 }

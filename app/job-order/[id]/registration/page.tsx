@@ -396,4 +396,4 @@ function RegistrationPage({ params }: PageProps) {
     </Flex>
   );
 }
-export default withAuth(RegistrationPage);
+export default withAuth(RegistrationPage, ["workshopManager", "frontDesk"]);

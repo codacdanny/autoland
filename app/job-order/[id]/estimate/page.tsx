@@ -258,7 +258,6 @@ function EstimatePage({ params }: PageProps) {
           estimator: user?.name || formData.costSummary.estimator, // Use logged in user's name
         },
       });
-      console.log(response);
 
       // Update form with response data
       setFormData(response.data);
@@ -313,7 +312,7 @@ function EstimatePage({ params }: PageProps) {
                 <StyledInput
                   name="customerName"
                   placeholder="Enter customer name"
-                  value={formData.customerDetails.customerName}
+                  value={formData?.customerDetails.customerName}
                   onChange={handleInputChange}
                 />
               </VStack>
@@ -324,7 +323,7 @@ function EstimatePage({ params }: PageProps) {
                 <StyledInput
                   name="regNo"
                   placeholder="Enter registration number"
-                  value={formData.customerDetails.regNo}
+                  value={formData?.customerDetails.regNo}
                   onChange={handleInputChange}
                 />
               </VStack>
@@ -346,7 +345,7 @@ function EstimatePage({ params }: PageProps) {
                 <StyledInput
                   name="vehicleMake"
                   placeholder="Enter vehicle make"
-                  value={formData.customerDetails.vehicleMake}
+                  value={formData?.customerDetails.vehicleMake}
                   onChange={handleInputChange}
                 />
               </VStack>
@@ -357,7 +356,7 @@ function EstimatePage({ params }: PageProps) {
                 <StyledInput
                   name="email"
                   placeholder="Enter email"
-                  value={formData.customerDetails.email}
+                  value={formData?.customerDetails.email}
                   onChange={handleInputChange}
                 />
               </VStack>
@@ -368,7 +367,7 @@ function EstimatePage({ params }: PageProps) {
                 <StyledInput
                   name="chassisNo"
                   placeholder="Enter chassis number"
-                  value={formData.customerDetails.chassisNo}
+                  value={formData?.customerDetails.chassisNo}
                   onChange={handleInputChange}
                 />
               </VStack>
@@ -379,7 +378,7 @@ function EstimatePage({ params }: PageProps) {
                 <StyledInput
                   name="phoneNo"
                   placeholder="Enter phone number"
-                  value={formData.customerDetails.phoneNo}
+                  value={formData?.customerDetails.phoneNo}
                   onChange={handleInputChange}
                 />
               </VStack>
@@ -401,8 +400,7 @@ function EstimatePage({ params }: PageProps) {
                 <StyledInput
                   name="jobOrderNo"
                   placeholder="Enter job order number"
-                  // value={formData.customerDetails.jobOrderNo}
-                  value="JO-PT1002"
+                  value={formData?.customerDetails.jobOrderNo}
                   onChange={handleInputChange}
                 />
               </VStack>
@@ -413,7 +411,7 @@ function EstimatePage({ params }: PageProps) {
                 <StyledInput
                   name="date"
                   placeholder="Enter date"
-                  value={formData.customerDetails.date}
+                  value={formData?.customerDetails.date}
                   onChange={handleInputChange}
                 />
               </VStack>
@@ -517,7 +515,7 @@ function EstimatePage({ params }: PageProps) {
                               setFormData({
                                 ...formData,
                                 partsAndServices:
-                                  formData.partsAndServices.filter(
+                                  formData?.partsAndServices.filter(
                                     (_, i) => i !== index
                                   ),
                               })
@@ -554,7 +552,7 @@ function EstimatePage({ params }: PageProps) {
                   w="200px"
                   placeholder="0.00"
                   type="number"
-                  value={formData.costSummary.labour}
+                  value={formData?.costSummary.labour}
                   onChange={(e) =>
                     handleCostSummaryChange("labour", e.target.value)
                   }
@@ -565,7 +563,7 @@ function EstimatePage({ params }: PageProps) {
                 <StyledInput
                   w="200px"
                   placeholder="0.00"
-                  value={formData.costSummary.sundries}
+                  value={formData?.costSummary.sundries}
                   onChange={(e) =>
                     handleCostSummaryChange("sundries", e.target.value)
                   }
@@ -576,7 +574,7 @@ function EstimatePage({ params }: PageProps) {
                 <StyledInput
                   w="200px"
                   placeholder="0.00"
-                  value={formData.costSummary.vat}
+                  value={formData?.costSummary.vat}
                   onChange={(e) =>
                     handleCostSummaryChange("vat", e.target.value)
                   }
@@ -620,26 +618,26 @@ function EstimatePage({ params }: PageProps) {
               w={{ base: "full", sm: "auto" }}>
               Generate Estimate
             </Button>
-            <Button
+            {/* <Button
               colorScheme="purple"
               size={{ base: "xs", md: "sm" }}
               onClick={handleSubmit}
               leftIcon={<FaFileInvoice />}
               w={{ base: "full", sm: "auto" }}>
               Send to client
-            </Button>
-            <Button
+            </Button> */}
+            {/* <Button
               colorScheme="teal"
               size={{ base: "xs", md: "sm" }}
               onClick={handleSubmit}
               leftIcon={<FaFileInvoice />}
               w={{ base: "full", sm: "auto" }}>
               Download as PDF
-            </Button>
+            </Button> */}
           </Flex>
         </Box>
       </Box>
     </Flex>
   );
 }
-export default withAuth(EstimatePage);
+export default withAuth(EstimatePage, ["workshopManager", "frontDesk"]);

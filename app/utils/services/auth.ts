@@ -7,6 +7,8 @@ import {
   SignupResponse,
   UserRole,
 } from "../types/auth";
+import { useAuth } from "./context";
+import { useRouter } from "next/navigation";
 
 // Define types
 
@@ -54,3 +56,17 @@ export const authService = {
     }
   },
 };
+
+export const checkPermission = (allowedRoles: string[]) => {
+  const { user } = useAuth();
+  const router = useRouter();
+
+  if (!user || !allowedRoles.includes(user.role)) {
+    router.push("/unauthorised");
+    return false;
+  }
+
+  return true;
+};
+
+// Usage example:

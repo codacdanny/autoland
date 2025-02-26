@@ -126,8 +126,7 @@ function TechniciansPage() {
               colorScheme="blue"
               leftIcon={<FaPlus />}
               onClick={onAddModalOpen}
-              size="sm"
-            >
+              size="sm">
               Add Technician
             </Button>
           </Flex>
@@ -171,4 +170,4 @@ function TechniciansPage() {
   );
 }
 
-export default withAuth(TechniciansPage);
+export default withAuth(TechniciansPage, ["workshopManager"]);

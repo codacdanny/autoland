@@ -617,4 +617,7 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
     </Flex>
   );
 }
-export default withAuth(CustomerJobOrderAccount);
+export default withAuth(CustomerJobOrderAccount, [
+  "workshopManager",
+  "accountant",
+]);

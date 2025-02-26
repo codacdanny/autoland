@@ -223,16 +223,14 @@ function AppointmentsPage() {
                 xl: 8,
               }}
               mt={{ base: 10, xl: 4 }}
-              overflowX="scroll"
-            >
+              overflowX="scroll">
               <Header />
               <Flex
                 justify="space-between"
                 gap={4}
                 wrap="wrap"
                 align="center"
-                mb={6}
-              >
+                mb={6}>
                 <Heading size="sm" color="gray.700">
                   Appointments
                 </Heading>
@@ -253,8 +251,7 @@ function AppointmentsPage() {
                   minWidth="1800px"
                   shadow="sm"
                   rounded="lg"
-                  bg="white"
-                >
+                  bg="white">
                   <StyledTable>
                     <Thead>
                       <Tr>
@@ -298,8 +295,7 @@ function AppointmentsPage() {
                               colorScheme={getStatusColor(appointment.status)}
                               borderRadius="full"
                               px={3}
-                              py={1}
-                            >
+                              py={1}>
                               {appointment.status}
                             </Badge>
                           </Td>
@@ -310,8 +306,7 @@ function AppointmentsPage() {
                                 colorScheme="blue"
                                 variant="ghost"
                                 leftIcon={<FaEdit />}
-                                onClick={() => handleEditClick(appointment)}
-                              >
+                                onClick={() => handleEditClick(appointment)}>
                                 Edit
                               </Button>
                               <Button
@@ -320,8 +315,7 @@ function AppointmentsPage() {
                                 variant="ghost"
                                 onClick={() =>
                                   handleStatusChange(appointment.id, "approved")
-                                }
-                              >
+                                }>
                                 Approve
                               </Button>
                               {appointment.status !== "cancelled" && (
@@ -330,8 +324,7 @@ function AppointmentsPage() {
                                   colorScheme="red"
                                   variant="ghost"
                                   leftIcon={<FaTimes />}
-                                  onClick={() => handleDelete(appointment.id)}
-                                >
+                                  onClick={() => handleDelete(appointment.id)}>
                                   Cancel
                                 </Button>
                               )}
@@ -356,8 +349,7 @@ function AppointmentsPage() {
                     color="white"
                     fontWeight="bold"
                     bgGradient="linear(to-r, blue.400, blue.600)"
-                    borderTopRadius="20px"
-                  >
+                    borderTopRadius="20px">
                     Edit Appointment
                   </ModalHeader>
                   <ModalCloseButton color="white" />
@@ -365,8 +357,7 @@ function AppointmentsPage() {
                     py={6}
                     color="gray.200"
                     bg="gray.800"
-                    borderRadius="md"
-                  >
+                    borderRadius="md">
                     <Stack spacing={4}>
                       <Text fontWeight="bold" fontSize="lg" color="white">
                         Appointment Details
@@ -397,8 +388,7 @@ function AppointmentsPage() {
                         <FormLabel
                           htmlFor="edit-date"
                           fontWeight="medium"
-                          color="white"
-                        >
+                          color="white">
                           New Date
                         </FormLabel>
                         <Input
@@ -419,8 +409,7 @@ function AppointmentsPage() {
                         <FormLabel
                           htmlFor="edit-description"
                           fontWeight="medium"
-                          color="white"
-                        >
+                          color="white">
                           Description
                         </FormLabel>
                         <Textarea
@@ -445,8 +434,7 @@ function AppointmentsPage() {
                         _hover={{
                           bgGradient: "linear(to-r, blue.500, blue.700)",
                         }}
-                        color="white"
-                      >
+                        color="white">
                         Save
                       </Button>
                     </Stack>
@@ -464,4 +452,4 @@ function AppointmentsPage() {
     </>
   );
 }
-export default withAuth(AppointmentsPage);
+export default withAuth(AppointmentsPage, ["workshopManager", "frontDesk"]);

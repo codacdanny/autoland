@@ -53,3 +53,12 @@ export interface EstimateFormData {
 export interface EstimateResponse {
   data: EstimateFormData;
 }
+export interface StockistFormData {
+  jobOrderId?: string;
+
+  customerDetails: CustomerDetails;
+  partsAndServices: PartAndService[];
+  costSummary: CostSummary;
+  createdAt?: string;
+  updatedAt?: string;
+}

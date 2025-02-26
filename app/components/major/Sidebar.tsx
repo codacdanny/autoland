@@ -40,6 +40,7 @@ import logo from "../../assets/logo.webp";
 import { ComponentType, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
+import { deleteCookie } from "cookies-next";
 
 const SidebarContainer = styled(Box)`
   background: #002050;
@@ -238,9 +239,9 @@ const SidebarContent = ({ onClose }: SidebarContentProps) => {
 
   const handleLogout = () => {
     // Clear any stored tokens/session data
-    localStorage.removeItem("autoland_token");
+    deleteCookie("token");
     // Redirect to login page
-    router.push("/login");
+    router.push("/");
   };
 
   return (

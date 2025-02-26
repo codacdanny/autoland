@@ -239,4 +239,4 @@ function AutoclubSettings() {
     </Flex>
   );
 }
-export default withAuth(AutoclubSettings);
+export default withAuth(AutoclubSettings, ["workshopManager", "autoclub"]);

@@ -150,8 +150,7 @@ function CustomersPage() {
             md: 4,
             xl: 8,
           }}
-          mt={{ base: 10, xl: 4 }}
-        >
+          mt={{ base: 10, xl: 4 }}>
           <Header />
 
           {/* Search and Title Section */}
@@ -185,8 +184,7 @@ function CustomersPage() {
                           <Text
                             fontSize="xs"
                             fontWeight="semibold"
-                            color="gray.600"
-                          >
+                            color="gray.600">
                             {customer.email}
                           </Text>
                         </Box>
@@ -205,8 +203,7 @@ function CustomersPage() {
                           customer.outstandingPayment > 0
                             ? "red.500"
                             : "green.500"
-                        }
-                      >
+                        }>
                         ${customer.outstandingPayment}
                       </Text>
                     </Td>
@@ -215,8 +212,7 @@ function CustomersPage() {
                         colorScheme={
                           customer.outstandingPayment > 0 ? "red" : "green"
                         }
-                        borderRadius="full"
-                      >
+                        borderRadius="full">
                         {customer.currentJobOrderStatus}
                       </Badge>
                     </Td>
@@ -255,8 +251,7 @@ function CustomersPage() {
               <DrawerHeader
                 fontSize="medium"
                 fontWeight="extrabold"
-                borderBottomWidth="1px"
-              >
+                borderBottomWidth="1px">
                 Customer Details
               </DrawerHeader>
               <DrawerBody>
@@ -309,8 +304,7 @@ function CustomersPage() {
                         size="sm"
                         placeholder="Select vehicle for job order"
                         onChange={(e) => setSelectedVehicle(e.target.value)}
-                        mb={4}
-                      >
+                        mb={4}>
                         {selectedCustomer.vehicles?.map((vehicle, idx) => (
                           <option
                             style={{
@@ -319,8 +313,7 @@ function CustomersPage() {
                               fontSize: "14px",
                             }}
                             key={idx}
-                            value={vehicle.name}
-                          >
+                            value={vehicle.name}>
                             {vehicle.name} ({vehicle.year})
                           </option>
                         ))}
@@ -336,8 +329,7 @@ function CustomersPage() {
                             p={2}
                             bg="white"
                             borderRadius="md"
-                            fontSize="sm"
-                          >
+                            fontSize="sm">
                             <HStack justify="space-between">
                               <Text>Job Order ID: {history.jobOrderId}</Text>
                               <Text color="gray.600">
@@ -362,4 +354,4 @@ function CustomersPage() {
   );
 }
 
-export default withAuth(CustomersPage);
+export default withAuth(CustomersPage, ["workshopManager", "frontDesk"]);

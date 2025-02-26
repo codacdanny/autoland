@@ -230,8 +230,7 @@ function CreateJobOrderPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           p={{ base: 2, md: 4, xl: 8 }}
-          mt={{ base: 10, xl: 4 }}
-        >
+          mt={{ base: 10, xl: 4 }}>
           <FormContainer>
             <Flex align="center" mb={8}>
               <Icon as={FaClipboard} fontSize="sm" color="blue.500" mr={3} />
@@ -323,8 +322,7 @@ function CreateJobOrderPage() {
                 onClick={() => {}}
                 color="gray.600"
                 border="1px solid"
-                borderColor="gray.300"
-              >
+                borderColor="gray.300">
                 Cancel
               </ActionButton>
               <ActionButton colorScheme="blue" size="sm" onClick={handleSubmit}>
@@ -338,4 +336,4 @@ function CreateJobOrderPage() {
   );
 }
 
-export default withAuth(CreateJobOrderPage);
+export default withAuth(CreateJobOrderPage, ["workshopManager", "frontDesk"]);

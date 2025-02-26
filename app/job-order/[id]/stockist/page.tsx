@@ -35,7 +35,7 @@ import {
 } from "@/app/utils/services/estimate";
 
 import { useAuth } from "@/app/utils/services/context";
-import { EstimateFormData } from "@/app/utils/types/estimate";
+import { EstimateFormData, StockistFormData } from "@/app/utils/types/estimate";
 
 const StyledInput = styled(Input)`
   background: rgba(247, 250, 252, 0.8);
@@ -293,7 +293,7 @@ function StockistPage({ params }: PageProps) {
                 <StyledInput
                   name="customerName"
                   placeholder="Enter customer name"
-                  value={formData.customerDetails.customerName}
+                  value={formData?.customerDetails.customerName}
                   onChange={handleInputChange}
                 />
               </VStack>
@@ -304,7 +304,7 @@ function StockistPage({ params }: PageProps) {
                 <StyledInput
                   name="regNo"
                   placeholder="Enter registration number"
-                  value={formData.customerDetails.regNo}
+                  value={formData?.customerDetails.regNo}
                   onChange={handleInputChange}
                 />
               </VStack>
@@ -316,7 +316,7 @@ function StockistPage({ params }: PageProps) {
                 <StyledInput
                   name="vehicleMake"
                   placeholder="Enter vehicle make"
-                  value={formData.customerDetails.vehicleMake}
+                  value={formData?.customerDetails.vehicleMake}
                   onChange={handleInputChange}
                 />
               </VStack>
@@ -327,7 +327,7 @@ function StockistPage({ params }: PageProps) {
                 <StyledInput
                   name="email"
                   placeholder="Enter email"
-                  value={formData.customerDetails.email}
+                  value={formData?.customerDetails.email}
                   onChange={handleInputChange}
                 />
               </VStack>
@@ -338,7 +338,7 @@ function StockistPage({ params }: PageProps) {
                 <StyledInput
                   name="chassisNo"
                   placeholder="Enter chassis number"
-                  value={formData.customerDetails.chassisNo}
+                  value={formData?.customerDetails.chassisNo}
                   onChange={handleInputChange}
                 />
               </VStack>
@@ -349,7 +349,7 @@ function StockistPage({ params }: PageProps) {
                 <StyledInput
                   name="phoneNo"
                   placeholder="Enter phone number"
-                  value={formData.customerDetails.phoneNo}
+                  value={formData?.customerDetails.phoneNo}
                   onChange={handleInputChange}
                 />
               </VStack>
@@ -361,8 +361,7 @@ function StockistPage({ params }: PageProps) {
                 <StyledInput
                   name="jobOrderNo"
                   placeholder="Enter job order number"
-                  // value={formData.customerDetails.jobOrderNo}
-                  value="JO-PT1002"
+                  value={formData?.customerDetails.jobOrderNo}
                   onChange={handleInputChange}
                 />
               </VStack>
@@ -373,7 +372,7 @@ function StockistPage({ params }: PageProps) {
                 <StyledInput
                   name="date"
                   placeholder="Enter date"
-                  value={formData.customerDetails.date}
+                  value={formData?.customerDetails.date}
                   onChange={handleInputChange}
                 />
               </VStack>
@@ -408,7 +407,7 @@ function StockistPage({ params }: PageProps) {
                     </Tr>
                   </Thead>
                   <Tbody>
-                    {formData.partsAndServices.map((part, index) => (
+                    {formData?.partsAndServices.map((part, index) => (
                       <Tr key={index}>
                         <Td>
                           <StyledInput
@@ -477,7 +476,7 @@ function StockistPage({ params }: PageProps) {
                               setFormData({
                                 ...formData,
                                 partsAndServices:
-                                  formData.partsAndServices.filter(
+                                  formData?.partsAndServices.filter(
                                     (_, i) => i !== index
                                   ),
                               })
@@ -514,7 +513,7 @@ function StockistPage({ params }: PageProps) {
                   w="200px"
                   placeholder="0.00"
                   type="number"
-                  value={formData.costSummary.labour}
+                  value={formData?.costSummary.labour}
                   onChange={(e) =>
                     handleCostSummaryChange("labour", e.target.value)
                   }
@@ -525,7 +524,7 @@ function StockistPage({ params }: PageProps) {
                 <StyledInput
                   w="200px"
                   placeholder="0.00"
-                  value={formData.costSummary.sundries}
+                  value={formData?.costSummary.sundries}
                   onChange={(e) =>
                     handleCostSummaryChange("sundries", e.target.value)
                   }
@@ -536,7 +535,7 @@ function StockistPage({ params }: PageProps) {
                 <StyledInput
                   w="200px"
                   placeholder="0.00"
-                  value={formData.costSummary.vat}
+                  value={formData?.costSummary.vat}
                   onChange={(e) =>
                     handleCostSummaryChange("vat", e.target.value)
                   }
@@ -588,18 +587,18 @@ function StockistPage({ params }: PageProps) {
               w={{ base: "full", sm: "auto" }}>
               Update Estimate
             </Button>
-            <Button
+            {/* <Button
               colorScheme="teal"
               size={{ base: "xs", md: "sm" }}
               // onClick={handleSubmit}
               leftIcon={<FaFileInvoice />}
               w={{ base: "full", sm: "auto" }}>
               Download as PDF
-            </Button>
+            </Button> */}
           </Flex>
         </Box>
       </Box>
     </Flex>
   );
 }
-export default withAuth(StockistPage);
+export default withAuth(StockistPage, ["workshopManager", "accountant"]);

@@ -143,7 +143,7 @@ export const EditStaffModal = ({
               />
             </FormControl>
 
-            <FormControl isRequired>
+            {/* <FormControl isRequired>
               <FormLabel color="gray.600">Password</FormLabel>
               <StyledInput
                 name="password"
@@ -154,7 +154,7 @@ export const EditStaffModal = ({
                 _placeholder={{ color: "rgb(172, 175, 179)" }}
                 color="black"
               />
-            </FormControl>
+            </FormControl> */}
 
             <HStack spacing={4}>
               <FormControl flex={1}>
