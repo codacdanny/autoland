@@ -7,6 +7,7 @@ import {
 } from "../types/estimate";
 import { getCookie } from "cookies-next";
 import { fetchJobOrder } from "./JobOrder";
+import { InvoiceData } from "../types/invoice";
 
 interface EstimateData {
   partsAndServices?: PartAndService[];
@@ -142,10 +143,15 @@ export const createEstimate = async (
   }
 };
 
-export const generateInvoice = async (jobId: string): Promise<any> => {
+interface InvoiceResponse {
+  success: boolean;
+  data: InvoiceData;
+}
+
+export const generateInvoice = async (jobId: string): Promise<InvoiceData> => {
   const token = getCookie("token");
   try {
-    const response = await axios.get(
+    const response = await axios.get<InvoiceResponse>(
       `${process.env.NEXT_PUBLIC_API_URL}/workshops/estimates/invoice/${jobId}`,
       {
         headers: { Authorization: `Bearer ${token}` },

@@ -66,16 +66,6 @@ function InvoicePage({ params }: { params: { id: string } }) {
     return <Box>No invoice data found</Box>;
   }
 
-  // Calculate totals
-  const totalAmount = invoiceData.partsAndServices.reduce(
-    (sum, item) => sum + item.amount,
-    0
-  );
-  const totalWithLabour = totalAmount + (invoiceData.costSummary?.labour || 0);
-  const totalWithSundries =
-    totalWithLabour + (invoiceData.costSummary?.sundries || 0);
-  const finalTotal = totalWithSundries + (invoiceData.costSummary?.vat || 0);
-
   return (
     <Flex>
       <Sidebar />
@@ -83,7 +73,7 @@ function InvoicePage({ params }: { params: { id: string } }) {
         <Header />
         <FormContainer>
           <VStack align="stretch" spacing={6}>
-            {/* Header */}
+            {/* Logo and Header */}
             <Flex justifyContent="center" alignContent="center">
               <Image src={logoBlue} alt="logo" />
             </Flex>
@@ -101,23 +91,21 @@ function InvoicePage({ params }: { params: { id: string } }) {
                     <Td fontWeight="bold" width="200px">
                       Staff Name:
                     </Td>
-                    <Td>{invoiceData.costSummary?.estimator}</Td>
+                    <Td>{invoiceData?.staffName}</Td>
                   </Tr>
                   <Tr>
                     <Td fontWeight="bold">Customer Name:</Td>
-                    <Td>{invoiceData.customerDetails?.customerName}</Td>
+                    <Td>{invoiceData?.customerName}</Td>
                   </Tr>
                   <Tr>
                     <Td fontWeight="bold">Date:</Td>
                     <Td>
-                      {new Date(
-                        invoiceData.customerDetails?.date
-                      ).toLocaleDateString()}
+                      {new Date(invoiceData?.date || "").toLocaleDateString()}
                     </Td>
                   </Tr>
                   <Tr>
                     <Td fontWeight="bold">Contact:</Td>
-                    <Td>{invoiceData.customerDetails?.phoneNo}</Td>
+                    <Td>{invoiceData?.contactPerson}</Td>
                   </Tr>
                 </Tbody>
               </Table>
@@ -132,21 +120,27 @@ function InvoicePage({ params }: { params: { id: string } }) {
                 <Tbody>
                   <Tr>
                     <Td fontWeight="bold">Model Make:</Td>
-                    <Td>{invoiceData.customerDetails?.vehicleMake}</Td>
-                    <Td fontWeight="bold">Model:</Td>
-                    <Td>{invoiceData.customerDetails?.modelNo}</Td>
+                    <Td>{invoiceData?.vehicleDetails.modelMake}</Td>
+                    <Td fontWeight="bold">Year:</Td>
+                    <Td>{invoiceData?.vehicleDetails.year}</Td>
                   </Tr>
                   <Tr>
                     <Td fontWeight="bold">Chassis No:</Td>
-                    <Td>{invoiceData.customerDetails?.chassisNo}</Td>
-                    <Td fontWeight="bold">Reg. No:</Td>
-                    <Td>{invoiceData.customerDetails?.regNo}</Td>
+                    <Td>{invoiceData?.vehicleDetails.chassisNo}</Td>
+                    <Td fontWeight="bold">Plate No:</Td>
+                    <Td>{invoiceData?.vehicleDetails.plateNo}</Td>
+                  </Tr>
+                  <Tr>
+                    <Td fontWeight="bold">Mileage:</Td>
+                    <Td>
+                      {invoiceData?.vehicleDetails.mileage.toLocaleString()} km
+                    </Td>
                   </Tr>
                 </Tbody>
               </Table>
             </Box>
 
-            {/* Items Table */}
+            {/* Parts and Services Table */}
             <Table
               variant="simple"
               size="sm"
@@ -161,34 +155,14 @@ function InvoicePage({ params }: { params: { id: string } }) {
                 </Tr>
               </Thead>
               <Tbody>
-                {invoiceData.partsAndServices.map((item, index) => (
+                {invoiceData?.partsAndServices.map((item, index) => (
                   <Tr key={index}>
                     <Td>{item.description}</Td>
-                    <Td isNumeric>{item?.quantity}</Td>
-                    <Td isNumeric>{item?.unitPrice.toLocaleString()}</Td>
-                    <Td isNumeric>{item?.amount.toLocaleString()}</Td>
+                    <Td isNumeric>{item.quantity}</Td>
+                    <Td isNumeric>{item.unitPrice.toLocaleString()}</Td>
+                    <Td isNumeric>{item.amount.toLocaleString()}</Td>
                   </Tr>
                 ))}
-                <Tr>
-                  <Td>Labour</Td>
-                  <Td isNumeric>1</Td>
-                  <Td isNumeric>
-                    {invoiceData.costSummary?.labour.toLocaleString()}
-                  </Td>
-                  <Td isNumeric>
-                    {invoiceData.costSummary?.labour.toLocaleString()}
-                  </Td>
-                </Tr>
-                <Tr>
-                  <Td>Sundries</Td>
-                  <Td isNumeric>1</Td>
-                  <Td isNumeric>
-                    {invoiceData.costSummary?.sundries.toLocaleString()}
-                  </Td>
-                  <Td isNumeric>
-                    {invoiceData.costSummary?.sundries.toLocaleString()}
-                  </Td>
-                </Tr>
               </Tbody>
             </Table>
 
@@ -196,15 +170,17 @@ function InvoicePage({ params }: { params: { id: string } }) {
             <Box alignSelf="flex-end">
               <HStack spacing={8} justify="flex-end">
                 <Text fontWeight="bold">Total Excl. VAT</Text>
-                <Text>₦{totalWithSundries.toLocaleString()}</Text>
+                <Text>
+                  ₦{invoiceData?.totalSummary.totalExclVAT.toLocaleString()}
+                </Text>
               </HStack>
               <HStack spacing={8} justify="flex-end">
                 <Text fontWeight="bold">VAT</Text>
-                <Text>₦{invoiceData.costSummary?.vat.toLocaleString()}</Text>
+                <Text>₦{invoiceData?.totalSummary.vat}</Text>
               </HStack>
               <HStack spacing={8} justify="flex-end">
                 <Text fontWeight="bold">Total Incl. VAT</Text>
-                <Text>₦{finalTotal.toLocaleString()}</Text>
+                <Text>₦{invoiceData?.totalSummary.totalInclVAT}</Text>
               </HStack>
             </Box>
 

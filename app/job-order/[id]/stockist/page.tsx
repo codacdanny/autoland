@@ -35,7 +35,7 @@ import {
 } from "@/app/utils/services/estimate";
 
 import { useAuth } from "@/app/utils/services/context";
-import { EstimateFormData, StockistFormData } from "@/app/utils/types/estimate";
+import { StockistFormData } from "@/app/utils/types/stockist";
 
 const StyledInput = styled(Input)`
   background: rgba(247, 250, 252, 0.8);
@@ -82,7 +82,7 @@ function StockistPage({ params }: PageProps) {
   const { user } = useAuth();
   const jobId = params.id;
   const [estimateId, setEstimateId] = useState<string>("");
-  const [formData, setFormData] = useState<any>({
+  const [formData, setFormData] = useState<StockistFormData>({
     jobOrderId: jobId,
 
     customerDetails: {
@@ -165,7 +165,6 @@ function StockistPage({ params }: PageProps) {
       partsAndServices: [
         ...formData.partsAndServices,
         {
-          // _id: "",
           partNo: "",
           partName: "",
           description: "",
@@ -228,7 +227,11 @@ function StockistPage({ params }: PageProps) {
     try {
       // Send all required data
       const response = await createEstimate(jobId, {
-        ...formData,
+        _id: estimateId || "",
+        jobOrderId: {
+          _id: jobId,
+          jobOrderId: jobId,
+        },
         customerDetails: {
           ...formData.customerDetails,
           date: new Date().toISOString().split("T")[0], // Format date as YYYY-MM-DD
@@ -237,11 +240,18 @@ function StockistPage({ params }: PageProps) {
           ...formData.costSummary,
           estimator: user?.name || formData.costSummary.estimator, // Use logged in user's name
         },
+        partsAndServices: formData.partsAndServices,
       });
       console.log(response);
 
       // Update form with response data
-      setFormData(response.data);
+      setFormData({
+        ...formData,
+        customerDetails: response.data.customerDetails,
+        partsAndServices: response.data.partsAndServices,
+        costSummary: response.data.costSummary,
+        jobOrderId: jobId,
+      });
 
       toast({
         title: "Success",

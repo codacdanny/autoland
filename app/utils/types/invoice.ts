@@ -1,32 +1,30 @@
+export interface VehicleDetails {
+  modelMake: string;
+  chassisNo: string;
+  plateNo: string;
+  year: number;
+  mileage: number;
+}
+
+export interface PartsAndService {
+  description: string;
+  quantity: number;
+  unitPrice: number;
+  amount: number;
+}
+
+export interface TotalSummary {
+  totalExclVAT: number;
+  vat: string;
+  totalInclVAT: string;
+}
+
 export interface InvoiceData {
-  customerDetails: {
-    customerName: string;
-    regNo: string;
-    vehicleMake: string;
-    chassisNo: string;
-    modelNo: string;
-    date: string;
-    jobOrderNo: string;
-    phoneNo: string;
-    email: string;
-  };
-  costSummary: {
-    labour: number;
-    sundries: number;
-    vat: number;
-    estimator: string;
-  };
-  partsAndServices: Array<{
-    partNo: string;
-    partName: string;
-    description: string;
-    quantity: number;
-    unitPrice: number;
-    amount: number;
-  }>;
-  _id: string;
-  jobOrderId: {
-    _id: string;
-    jobOrderId: string;
-  };
+  staffName: string;
+  customerName: string;
+  date: string;
+  contactPerson: string;
+  vehicleDetails: VehicleDetails;
+  partsAndServices: PartsAndService[];
+  totalSummary: TotalSummary;
 }
