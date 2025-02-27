@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useState, useEffect } from "react";
 import {
@@ -15,13 +16,13 @@ import {
 } from "@chakra-ui/react";
 
 import { FaClipboard } from "react-icons/fa";
-import Sidebar from "@/app/components/major/Sidebar";
+import Sidebar from "@/app/components/major/SidebarMenu";
 import TabA from "@/app/components/minor/TabA";
 import TabB from "@/app/components/minor/TabB";
 import TabD from "@/app/components/minor/TabD";
 import TabC from "@/app/components/minor/TabC";
 
-import { withAuth } from "@/app/utils/services/hoc";
+import { withAuth } from "@/app/utils/services/ProtectecRoute";
 import { JobOrderFormData } from "@/app/utils/types/formData";
 import { fetchJobOrder, updateJobOrder } from "@/app/utils/services/JobOrder";
 import { useRouter } from "next/navigation";
@@ -192,7 +193,10 @@ function RegistrationPage({ params }: PageProps) {
     }
   }, [jobId, toast]);
 
-  const updateSection = (section: keyof JobOrderFormData, value: any) => {
+  const updateSection = (
+    section: keyof JobOrderFormData,
+    value: string | number | boolean | object
+  ) => {
     setFormData((prev) => ({
       ...prev,
       [section]: value,
@@ -265,19 +269,22 @@ function RegistrationPage({ params }: PageProps) {
             md: 4,
             xl: 8,
           }}
-          mt={{ base: 10, xl: 4 }}>
+          mt={{ base: 10, xl: 4 }}
+        >
           <FormContainer>
             <Box>
               <Flex
                 align="center"
                 mb={{ base: 4, md: 8 }}
                 direction={{ base: "column", sm: "row" }}
-                gap={2}>
+                gap={2}
+              >
                 <Icon as={FaClipboard} fontSize="sm" color="blue.500" mr={3} />
                 <Heading
                   size={{ base: "xs", md: "sm" }}
                   color="gray.700"
-                  fontWeight="600">
+                  fontWeight="600"
+                >
                   Update Job Order
                 </Heading>
               </Flex>
@@ -286,22 +293,26 @@ function RegistrationPage({ params }: PageProps) {
                 <TabList display="flex" flexWrap="wrap">
                   <Tab
                     fontSize={{ base: "xs", md: "sm" }}
-                    px={{ base: 2, md: 4 }}>
+                    px={{ base: 2, md: 4 }}
+                  >
                     Section A
                   </Tab>
                   <Tab
                     fontSize={{ base: "xs", md: "sm" }}
-                    px={{ base: 2, md: 4 }}>
+                    px={{ base: 2, md: 4 }}
+                  >
                     Section B
                   </Tab>
                   <Tab
                     fontSize={{ base: "xs", md: "sm" }}
-                    px={{ base: 2, md: 4 }}>
+                    px={{ base: 2, md: 4 }}
+                  >
                     Section C
                   </Tab>
                   <Tab
                     fontSize={{ base: "xs", md: "sm" }}
-                    px={{ base: 2, md: 4 }}>
+                    px={{ base: 2, md: 4 }}
+                  >
                     Section D
                   </Tab>
                 </TabList>
@@ -382,14 +393,16 @@ function RegistrationPage({ params }: PageProps) {
                   }}
                   color="gray.600"
                   border="1px solid"
-                  borderColor="gray.300">
+                  borderColor="gray.300"
+                >
                   Cancel
                 </ActionButton>
                 <ActionButton
                   colorScheme="blue"
                   size="sm"
                   isLoading={isSubmitting}
-                  onClick={handleSubmit}>
+                  onClick={handleSubmit}
+                >
                   Update Job Order
                 </ActionButton>
               </Flex>

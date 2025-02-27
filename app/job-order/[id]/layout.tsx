@@ -1,6 +1,6 @@
 import { Box, Flex } from "@chakra-ui/react";
-import Sidebar from "@/app/components/major/Sidebar";
-import MainContent from "@/app/components/minor/MainContent";
+import Sidebar from "@/app/components/major/SidebarMenu";
+import MainContent from "@/app/components/minor/MainContainer";
 
 export default function JobOrderLayout({
   children,

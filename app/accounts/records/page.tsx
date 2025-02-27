@@ -1,10 +1,10 @@
 "use client";
 
-import Sidebar from "../../components/major/Sidebar";
-import Header from "../../components/minor/Header";
-import MainContent from "../../components/minor/MainContent";
+import Sidebar from "../../components/major/SidebarMenu";
+import Header from "../../components/minor/HeaderNav";
+import MainContent from "../../components/minor/MainContainer";
 import MetricCards from "../../components/minor/MetricCards";
-import { withAuth } from "../../utils/services/hoc";
+import { withAuth } from "../../utils/services/ProtectecRoute";
 import { MetricCardData } from "@/app/utils/types/metrics";
 import { Box, Flex } from "@chakra-ui/react";
 import { FaCheckCircle } from "react-icons/fa";

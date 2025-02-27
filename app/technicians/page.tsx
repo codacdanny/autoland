@@ -18,10 +18,10 @@ import {
 import { AddTechnicianModal } from "../components/minor/modals/AddTechnicianModal";
 import { EditTechnicianModal } from "../components/minor/modals/EditTechnicianModal";
 import { TechniciansTable } from "../components/minor/tables/TechniciansTable";
-import Sidebar from "../components/major/Sidebar";
-import MainContent from "../components/minor/MainContent";
-import Header from "../components/minor/Header";
-import { withAuth } from "../utils/services/hoc";
+import Sidebar from "../components/major/SidebarMenu";
+import MainContent from "../components/minor/MainContainer";
+import Header from "../components/minor/HeaderNav";
+import { withAuth } from "../utils/services/ProtectecRoute";
 
 function TechniciansPage() {
   const [techniciansData, setTechniciansData] = useState<Technician[]>([]);
@@ -126,7 +126,8 @@ function TechniciansPage() {
               colorScheme="blue"
               leftIcon={<FaPlus />}
               onClick={onAddModalOpen}
-              size="sm">
+              size="sm"
+            >
               Add Technician
             </Button>
           </Flex>

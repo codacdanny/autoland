@@ -14,8 +14,8 @@ import {
   TabPanels,
   TabPanel,
 } from "@chakra-ui/react";
-import Sidebar from "../components/major/Sidebar";
-import MainContent from "../components/minor/MainContent";
+import Sidebar from "../components/major/SidebarMenu";
+import MainContent from "../components/minor/MainContainer";
 import { motion } from "framer-motion";
 import { FaClipboard } from "react-icons/fa";
 
@@ -24,7 +24,7 @@ import TabB from "../components/minor/TabB";
 import TabC from "../components/minor/TabC";
 import TabD from "../components/minor/TabD";
 import { JobOrderFormData } from "../utils/types/formData";
-import { withAuth } from "../utils/services/hoc";
+import { withAuth } from "../utils/services/ProtectecRoute";
 import { createJobOrder } from "../utils/services/JobOrder";
 import { useRouter } from "next/navigation";
 import {
@@ -235,7 +235,8 @@ function CreateJobOrderPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           p={{ base: 2, md: 4, xl: 8 }}
-          mt={{ base: 10, xl: 4 }}>
+          mt={{ base: 10, xl: 4 }}
+        >
           <FormContainer>
             <Flex align="center" mb={8}>
               <Icon as={FaClipboard} fontSize="sm" color="blue.500" mr={3} />
@@ -329,14 +330,16 @@ function CreateJobOrderPage() {
                 }}
                 color="gray.600"
                 border="1px solid"
-                borderColor="gray.300">
+                borderColor="gray.300"
+              >
                 Cancel
               </ActionButton>
               <ActionButton
                 isLoading={isSubmitting}
                 colorScheme="blue"
                 size="sm"
-                onClick={handleSubmit}>
+                onClick={handleSubmit}
+              >
                 Create Job Order
               </ActionButton>
             </Flex>

@@ -312,7 +312,7 @@ const SidebarContent = ({ onClose }: SidebarContentProps) => {
   );
 };
 
-export default function Sidebar({ onClose }: SidebarContentProps) {
+export default function SidebarMenu({ onClose }: SidebarContentProps) {
   const { isOpen, onOpen, onClose: onDrawerClose } = useDisclosure();
   const isMobile = useBreakpointValue({ base: true, xl: false });
 

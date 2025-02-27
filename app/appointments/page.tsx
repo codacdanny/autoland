@@ -33,10 +33,10 @@ import {
 } from "@chakra-ui/react";
 import { FaCalendarAlt, FaClock, FaEdit, FaTimes } from "react-icons/fa";
 import styled from "@emotion/styled";
-import Sidebar from "../components/major/Sidebar";
-import MainContent from "../components/minor/MainContent";
-import Header from "../components/minor/Header";
-import { withAuth } from "../utils/services/hoc";
+import Sidebar from "../components/major/SidebarMenu";
+import MainContent from "../components/minor/MainContainer";
+import Header from "../components/minor/HeaderNav";
+import { withAuth } from "../utils/services/ProtectecRoute";
 import { Appointment } from "../utils/types/appointment";
 import {
   deleteAppointment,
@@ -200,14 +200,16 @@ function AppointmentsPage() {
                 xl: 8,
               }}
               mt={{ base: 10, xl: 4 }}
-              overflowX="scroll">
+              overflowX="scroll"
+            >
               <Header />
               <Flex
                 justify="space-between"
                 gap={4}
                 wrap="wrap"
                 align="center"
-                mb={6}>
+                mb={6}
+              >
                 <Heading size="sm" color="gray.700">
                   Appointments
                 </Heading>
@@ -228,7 +230,8 @@ function AppointmentsPage() {
                   minWidth="1800px"
                   shadow="sm"
                   rounded="lg"
-                  bg="white">
+                  bg="white"
+                >
                   <StyledTable>
                     <Thead>
                       <Tr>
@@ -286,7 +289,8 @@ function AppointmentsPage() {
                               colorScheme={getStatusColor(appointment.status)}
                               borderRadius="full"
                               px={3}
-                              py={1}>
+                              py={1}
+                            >
                               {appointment.status}
                             </Badge>
                           </Td>
@@ -298,7 +302,8 @@ function AppointmentsPage() {
                                 variant="ghost"
                                 onClick={() =>
                                   handleStatusChange(appointment.id, "approved")
-                                }>
+                                }
+                              >
                                 Approve
                               </Button>
                               {appointment.status !== "cancelled" && (
@@ -307,7 +312,8 @@ function AppointmentsPage() {
                                   colorScheme="red"
                                   variant="ghost"
                                   leftIcon={<FaTimes />}
-                                  onClick={() => handleDelete(appointment.id)}>
+                                  onClick={() => handleDelete(appointment.id)}
+                                >
                                   Cancel
                                 </Button>
                               )}

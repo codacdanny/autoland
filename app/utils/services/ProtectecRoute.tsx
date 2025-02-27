@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useAuth } from "./context";
-import { Box, Spinner, Center } from "@chakra-ui/react";
+import { Spinner, Center } from "@chakra-ui/react";
 
 export function withAuth<P extends object>(
   WrappedComponent: React.ComponentType<P>,

@@ -1,6 +1,6 @@
 import { Box, Container } from "@chakra-ui/react";
 
-export default function MainContent({
+export default function MainContainer({
   children,
 }: {
   children: React.ReactNode;

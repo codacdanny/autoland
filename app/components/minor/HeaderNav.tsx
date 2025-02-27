@@ -14,7 +14,7 @@ import { FaSearch } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { useAuth } from "@/app/utils/services/context";
 
-const Header = () => {
+const HeaderNav = () => {
   const { user, loading } = useAuth();
 
   const { onOpen } = useDisclosure();
@@ -110,4 +110,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default HeaderNav;

@@ -9,10 +9,10 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
-import Sidebar from "@/app/components/major/Sidebar";
-import MainContent from "@/app/components/minor/MainContent";
-import Header from "@/app/components/minor/Header";
-import { withAuth } from "../utils/services/hoc";
+import Sidebar from "@/app/components/major/SidebarMenu";
+import MainContent from "@/app/components/minor/MainContainer";
+import Header from "@/app/components/minor/HeaderNav";
+import { withAuth } from "../utils/services/ProtectecRoute";
 import { Staff } from "../utils/types/staff";
 import { deleteStaff, fetchStaff } from "../utils/services/staff";
 import { StaffTable } from "../components/minor/tables/StaffTable";
@@ -117,7 +117,8 @@ function UsersPage() {
             md: 4,
             xl: 8,
           }}
-          mt={{ base: 10, xl: 4 }}>
+          mt={{ base: 10, xl: 4 }}
+        >
           <Header />
           <Flex justify="space-between" align="center" mb={4}>
             <Heading size="sm">Users</Heading>
@@ -127,7 +128,8 @@ function UsersPage() {
                 color="white"
                 leftIcon={<FaPlus />}
                 onClick={onAddModalOpen}
-                size="sm">
+                size="sm"
+              >
                 Add User
               </Button>
             </Flex>

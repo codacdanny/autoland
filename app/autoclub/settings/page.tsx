@@ -1,7 +1,7 @@
 "use client";
-import Sidebar from "@/app/components/major/Sidebar";
-import Header from "@/app/components/minor/Header";
-import MainContent from "@/app/components/minor/MainContent";
+import Sidebar from "@/app/components/major/SidebarMenu";
+import Header from "@/app/components/minor/HeaderNav";
+import MainContent from "@/app/components/minor/MainContainer";
 import MetricCards from "@/app/components/minor/MetricCards";
 import { MetricCardData } from "@/app/utils/types/metrics";
 import { SubscriptionTier } from "@/app/utils/types/autoclub";
@@ -29,7 +29,7 @@ import { FaWallet } from "react-icons/fa6";
 import { useState } from "react";
 import { SubscriptionTierCard } from "@/app/components/major/autoclub/SubscriptionTierCard";
 import { SubscriptionTierForm } from "@/app/components/major/autoclub/SubscriptionTierForm";
-import { withAuth } from "@/app/utils/services/hoc";
+import { withAuth } from "@/app/utils/services/ProtectecRoute";
 
 // Sample subscription tiers data
 const initialTiers: SubscriptionTier[] = [
@@ -181,7 +181,8 @@ function AutoclubSettings() {
             md: 4,
             xl: 8,
           }}
-          mt={{ base: 10, xl: 4 }}>
+          mt={{ base: 10, xl: 4 }}
+        >
           <Header />
           <MetricCards metrics={JobOrderMetrics} />
 
@@ -194,7 +195,8 @@ function AutoclubSettings() {
               leftIcon={<FaPlus />}
               colorScheme="blue"
               onClick={handleAddTier}
-              size="sm">
+              size="sm"
+            >
               Add New Tier
             </Button>
           </Flex>
@@ -205,7 +207,8 @@ function AutoclubSettings() {
               md: "repeat(2, 1fr)",
               lg: "repeat(4, 1fr)",
             }}
-            gap={6}>
+            gap={6}
+          >
             {subscriptionTiers.map((tier) => (
               <SubscriptionTierCard
                 key={tier.id}

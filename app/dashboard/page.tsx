@@ -1,13 +1,13 @@
 "use client";
 import { Box, Flex, Spinner } from "@chakra-ui/react";
 import { FaWallet, FaClipboardList, FaClock } from "react-icons/fa";
-import Sidebar from "../components/major/Sidebar";
-import MainContent from "../components/minor/MainContent";
-import Header from "../components/minor/Header";
+import Sidebar from "../components/major/SidebarMenu";
+import MainContent from "../components/minor/MainContainer";
+import Header from "../components/minor/HeaderNav";
 import { MetricCardData } from "../utils/types/metrics";
 import MetricCards from "../components/minor/MetricCards";
 import JobOrderTable from "../components/major/JobOrderTable";
-import { withAuth } from "../utils/services/hoc";
+import { withAuth } from "../utils/services/ProtectecRoute";
 import { useAuth } from "../utils/services/context";
 import { DashboardMetrics } from "../utils/types/dashboardMetrics";
 import { useEffect, useState } from "react";
@@ -84,7 +84,8 @@ function Dashboard() {
                 md: 4,
                 xl: 8,
               }}
-              mt={{ base: 10, xl: 4 }}>
+              mt={{ base: 10, xl: 4 }}
+            >
               {/* Header */}
               <Header />
 

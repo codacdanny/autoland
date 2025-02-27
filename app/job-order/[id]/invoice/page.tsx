@@ -17,9 +17,9 @@ import {
 import styled from "@emotion/styled";
 import Image from "next/image";
 import logoBlue from "../../../assets/logoWhite.webp";
-import Sidebar from "../../../components/major/Sidebar";
-import Header from "../../../components/minor/Header";
-import { withAuth } from "@/app/utils/services/hoc";
+import Sidebar from "../../../components/major/SidebarMenu";
+import Header from "../../../components/minor/HeaderNav";
+import { withAuth } from "@/app/utils/services/ProtectecRoute";
 import { generateInvoice } from "@/app/utils/services/estimate";
 import { InvoiceData } from "@/app/utils/types/invoice";
 
@@ -145,7 +145,8 @@ function InvoicePage({ params }: { params: { id: string } }) {
               variant="simple"
               size="sm"
               border="1px"
-              borderColor="gray.200">
+              borderColor="gray.200"
+            >
               <Thead bg="gray.50">
                 <Tr>
                   <Th>Description</Th>
