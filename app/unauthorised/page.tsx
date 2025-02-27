@@ -34,8 +34,8 @@ export default function UnauthorizedPage() {
             Access Denied
           </Heading>
           <Text color={textColor} textAlign="center" fontSize="lg">
-            You don't have permission to access this page. Please contact your
-            administrator if you think this is a mistake.
+            {`  You don't have permission to access this page. Please contact your
+            administrator if you think this is a mistake.`}
           </Text>
           <Button
             colorScheme="blue"

@@ -44,7 +44,6 @@ import { FaWallet } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import { withAuth } from "@/app/utils/services/ProtectecRoute";
 import {
-  Payment,
   PaymentMetrics,
   PaymentHistory,
   PaymentRequest,
@@ -76,7 +75,6 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
   });
 
   const [payments, setPayments] = useState<PaymentHistory[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [editable, setEditable] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState<PaymentHistory | null>(
     null
@@ -243,6 +241,15 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
       color: "green.500",
       bgGradient: "linear(to-r, green.400, green.600)",
     },
+    {
+      title: "Total Job Amount",
+      value: `₦${metrics.totalJobAmount.toLocaleString()}`,
+      change: "100%",
+      isIncrease: true,
+      icon: FaWallet,
+      color: "purple.500",
+      bgGradient: "linear(to-r, purple.400, purple.600)",
+    },
   ];
 
   return (
@@ -259,23 +266,20 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
           xl: 0,
         }}
         mt={{ base: 10, xl: 4 }}
-        width="100%"
-      >
+        width="100%">
         <Header />
         <MetricCards metrics={dashboardMetrics} />
 
         <VStack
           spacing={{ base: 4, md: 6 }}
           align="stretch"
-          mt={{ base: 6, md: 8 }}
-        >
+          mt={{ base: 6, md: 8 }}>
           <Flex
             justify="space-between"
             align="center"
             direction={{ base: "column", sm: "row" }}
             gap={{ base: 2 }}
-            wrap="wrap"
-          >
+            wrap="wrap">
             <Text fontSize={{ base: "sm", md: "md" }} fontWeight="bold">
               Payment History
             </Text>
@@ -283,8 +287,7 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
               size={{ base: "xs", md: "sm" }}
               colorScheme="blue"
               onClick={onOpen}
-              w={{ base: "full", sm: "auto" }}
-            >
+              w={{ base: "full", sm: "auto" }}>
               Record New Payment
             </Button>
           </Flex>
@@ -294,8 +297,7 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
             rounded="lg"
             shadow="sm"
             overflow="hidden"
-            mx={{ base: -2, md: 0 }}
-          >
+            mx={{ base: -2, md: 0 }}>
             <TableContainer overflowX="auto">
               <Table variant="simple" size={{ base: "sm", md: "md" }}>
                 <Thead>
@@ -355,8 +357,7 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        size={{ base: "full", md: "xl" }}
-      >
+        size={{ base: "full", md: "xl" }}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader
@@ -364,14 +365,12 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
             borderColor="gray.200"
             fontSize={{ base: "md", md: "lg" }}
             py={{ base: 3, md: 4 }}
-            mb={8}
-          >
+            mb={8}>
             <Stack
               direction={{ base: "column", sm: "row" }}
               justify="space-between"
               align={{ base: "start", sm: "center" }}
-              spacing={{ base: 2, sm: 0 }}
-            >
+              spacing={{ base: 2, sm: 0 }}>
               <Text fontSize={{ base: "sm", md: "md" }}>
                 {" "}
                 Record New Payment
@@ -383,8 +382,7 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
                 fontSize={{ base: "2xs", md: "sm" }}
                 px={2}
                 py={1}
-                borderRadius="full"
-              >
+                borderRadius="full">
                 Balance: ₦{metrics?.remainingBalance.toLocaleString()}
               </Badge>
             </Stack>
@@ -403,8 +401,7 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
                     value={paymentForm.paymentPhase}
                     onChange={handleInputChange}
                     placeholder="Select phase"
-                    size={{ base: "sm", md: "md" }}
-                  >
+                    size={{ base: "sm", md: "md" }}>
                     <option value="First">First Payment (Initial)</option>
                     <option value="Second">Second Payment (Interim)</option>
                     <option value="Third">Third Payment (Progress)</option>
@@ -446,8 +443,7 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
                   <Text
                     fontSize={{ base: "2xs", md: "sm" }}
                     color="gray.300"
-                    mt={1}
-                  >
+                    mt={1}>
                     Maximum allowed: ₦
                     {metrics?.remainingBalance.toLocaleString()}
                   </Text>
@@ -473,8 +469,7 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
                   <Text
                     fontSize={{ base: "2xs", md: "sm" }}
                     color="gray.300"
-                    mt={1}
-                  >
+                    mt={1}>
                     Maximum allowed: ₦
                     {metrics?.remainingBalance.toLocaleString()}
                   </Text>
@@ -491,8 +486,7 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
                     value={paymentForm.paymentMethod}
                     onChange={handleInputChange}
                     placeholder="Select method"
-                    size={{ base: "sm", md: "md" }}
-                  >
+                    size={{ base: "sm", md: "md" }}>
                     <option value="Cash">💵 Cash</option>
                     <option value="Bank">🏦 Bank Transfer</option>
                     <option value="POS">💳 POS</option>
@@ -510,8 +504,7 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
                   <Grid
                     templateColumns="repeat(2, 1fr)"
                     gap={{ base: 1, md: 2 }}
-                    fontSize={{ base: "xs", md: "sm" }}
-                  >
+                    fontSize={{ base: "xs", md: "sm" }}>
                     <Text color="gray.300">Total Job Amount:</Text>
                     <Text fontWeight="bold">
                       ₦{metrics?.totalJobAmount.toLocaleString()}
@@ -531,8 +524,7 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
                         metrics?.remainingBalance === 0
                           ? "green.500"
                           : "orange.500"
-                      }
-                    >
+                      }>
                       ₦
                       {(
                         (metrics?.remainingBalance || 0) -
@@ -550,16 +542,14 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
             borderTop="1px solid"
             borderColor="gray.200"
             flexDir={{ base: "column", sm: "row" }}
-            gap={{ base: 2, sm: 4 }}
-          >
+            gap={{ base: 2, sm: 4 }}>
             <Button
               colorScheme="blue"
               onClick={handleSubmitPayment}
               size="sm"
               w={{ base: "full", sm: "auto" }}
               isLoading={isSubmitting}
-              loadingText="Saving..."
-            >
+              loadingText="Saving...">
               Save Payment
             </Button>
             <Button
@@ -567,8 +557,7 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
               size="sm"
               variant="outline"
               w={{ base: "full", sm: "auto" }}
-              isDisabled={isSubmitting}
-            >
+              isDisabled={isSubmitting}>
               Cancel
             </Button>
           </ModalFooter>
@@ -579,8 +568,7 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
       <Modal
         isOpen={isEditOpen}
         onClose={onEditClose}
-        size={{ base: "full", md: "xl" }}
-      >
+        size={{ base: "full", md: "xl" }}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Update Payment</ModalHeader>
@@ -593,8 +581,7 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
                 <Select
                   name="paymentPhase"
                   value={paymentForm.paymentPhase}
-                  onChange={handleInputChange}
-                >
+                  onChange={handleInputChange}>
                   <option value="First">First Payment</option>
                   <option value="Second">Second Payment</option>
                   <option value="Third">Third Payment</option>
@@ -620,8 +607,7 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
                 <Select
                   name="paymentMethod"
                   value={paymentForm.paymentMethod}
-                  onChange={handleInputChange}
-                >
+                  onChange={handleInputChange}>
                   <option value="Cash">Cash</option>
                   <option value="POS">POS</option>
                   <option value="Bank">Bank Transfer</option>
@@ -636,8 +622,7 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
               size="sm"
               variant="ghost"
               onClick={onEditClose}
-              isDisabled={isUpdating}
-            >
+              isDisabled={isUpdating}>
               Cancel
             </Button>
             <Button
@@ -645,8 +630,7 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
               colorScheme="blue"
               onClick={handleEditPayment}
               isLoading={isUpdating}
-              loadingText="Updating..."
-            >
+              loadingText="Updating...">
               Update Payment
             </Button>
           </ModalFooter>

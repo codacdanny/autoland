@@ -158,9 +158,9 @@ function RegistrationPage({ params }: PageProps) {
         reverseCamera: false,
       },
       fuelLevel: 0,
-      assignTechnicians: "",
     },
     sectionD: {
+      assignTechnicians: "",
       customerJobOrderStatus: "Disapprove",
       jobOrderStatus: "Inprogress",
       repairStatus: "Pending",
@@ -269,22 +269,19 @@ function RegistrationPage({ params }: PageProps) {
             md: 4,
             xl: 8,
           }}
-          mt={{ base: 10, xl: 4 }}
-        >
+          mt={{ base: 10, xl: 4 }}>
           <FormContainer>
             <Box>
               <Flex
                 align="center"
                 mb={{ base: 4, md: 8 }}
                 direction={{ base: "column", sm: "row" }}
-                gap={2}
-              >
+                gap={2}>
                 <Icon as={FaClipboard} fontSize="sm" color="blue.500" mr={3} />
                 <Heading
                   size={{ base: "xs", md: "sm" }}
                   color="gray.700"
-                  fontWeight="600"
-                >
+                  fontWeight="600">
                   Update Job Order
                 </Heading>
               </Flex>
@@ -293,26 +290,22 @@ function RegistrationPage({ params }: PageProps) {
                 <TabList display="flex" flexWrap="wrap">
                   <Tab
                     fontSize={{ base: "xs", md: "sm" }}
-                    px={{ base: 2, md: 4 }}
-                  >
+                    px={{ base: 2, md: 4 }}>
                     Section A
                   </Tab>
                   <Tab
                     fontSize={{ base: "xs", md: "sm" }}
-                    px={{ base: 2, md: 4 }}
-                  >
+                    px={{ base: 2, md: 4 }}>
                     Section B
                   </Tab>
                   <Tab
                     fontSize={{ base: "xs", md: "sm" }}
-                    px={{ base: 2, md: 4 }}
-                  >
+                    px={{ base: 2, md: 4 }}>
                     Section C
                   </Tab>
                   <Tab
                     fontSize={{ base: "xs", md: "sm" }}
-                    px={{ base: 2, md: 4 }}
-                  >
+                    px={{ base: 2, md: 4 }}>
                     Section D
                   </Tab>
                 </TabList>
@@ -360,12 +353,6 @@ function RegistrationPage({ params }: PageProps) {
                           fuelLevel: value,
                         })
                       }
-                      onTechniciansChange={(value: string) =>
-                        updateSection("sectionC", {
-                          ...formData.sectionC,
-                          assignTechnicians: value,
-                        })
-                      }
                     />
                   </TabPanel>
                   {/* Section D: Job Order & Repair Status, Car Received By */}
@@ -376,6 +363,12 @@ function RegistrationPage({ params }: PageProps) {
                         updateSection("sectionD", {
                           ...formData.sectionD,
                           [field]: value,
+                        })
+                      }
+                      onTechniciansChange={(value: string) =>
+                        updateSection("sectionD", {
+                          ...formData.sectionD,
+                          assignTechnicians: value,
                         })
                       }
                     />
@@ -393,16 +386,14 @@ function RegistrationPage({ params }: PageProps) {
                   }}
                   color="gray.600"
                   border="1px solid"
-                  borderColor="gray.300"
-                >
+                  borderColor="gray.300">
                   Cancel
                 </ActionButton>
                 <ActionButton
                   colorScheme="blue"
                   size="sm"
                   isLoading={isSubmitting}
-                  onClick={handleSubmit}
-                >
+                  onClick={handleSubmit}>
                   Update Job Order
                 </ActionButton>
               </Flex>

@@ -18,22 +18,15 @@ import { SectionTitle } from "./styling/sectionTitle";
 interface TabDFormData {
   bodyCheckList: { [key: string]: boolean };
   fuelLevel: number;
-  assignTechnicians: string;
 }
 
 interface TabDProps {
   formData: TabDFormData;
   onChange: (field: string, value: boolean) => void;
   onFuelChange: (value: number) => void;
-  onTechniciansChange: (value: string) => void;
 }
 
-const TabD: React.FC<TabDProps> = ({
-  formData,
-  onChange,
-  onFuelChange,
-  onTechniciansChange,
-}) => {
+const TabD: React.FC<TabDProps> = ({ formData, onChange, onFuelChange }) => {
   const [showTooltip, setShowTooltip] = React.useState(false);
 
   const handleChecklistChange = (field: string, value: boolean) => {
@@ -127,26 +120,6 @@ const TabD: React.FC<TabDProps> = ({
             </Tooltip>
           </Slider>
         </Box>
-
-        <SectionTitle mt={{ base: 6, md: 8 }}>
-          <Icon
-            as={FaTools}
-            fontSize={{ base: "xs", md: "sm" }}
-            color="blue.500"
-          />
-          <Box fontSize={{ base: "xs", md: "sm" }}>Assign Technicians</Box>
-        </SectionTitle>
-        <VStack align="stretch" mt={4}>
-          <Select
-            name="assignTechnicians"
-            placeholder="Select Team"
-            value={formData.assignTechnicians}
-            onChange={(e) => onTechniciansChange(e.target.value)}>
-            <option value="Team A">Team A</option>
-            <option value="Team B">Team B</option>
-            <option value="Team C">Team C</option>
-          </Select>
-        </VStack>
       </Box>
     </>
   );
