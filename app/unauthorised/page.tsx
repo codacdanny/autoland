@@ -29,7 +29,7 @@ export default function UnauthorizedPage() {
         shadow="base"
         rounded={{ sm: "lg" }}>
         <VStack spacing="6" align="center">
-          <Icon as={FaLock} w={12} h={12} color="red.500" />
+          <Icon as={FaLock} w={12} h={12} color="red.800" />
           <Heading size="xl" color="red.500">
             Access Denied
           </Heading>
