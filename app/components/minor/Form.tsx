@@ -131,7 +131,23 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
       <Checkbox
         key={option.value}
         isChecked={values[option.value] || false}
-        onChange={(e) => onChange(option.value, e.target.checked)}>
+        onChange={(e) => onChange(option.value, e.target.checked)}
+        sx={{
+          "span.chakra-checkbox__control": {
+            background: "gray.300",
+            borderColor: "gray.300",
+            _checked: {
+              background: "blue.200",
+              borderColor: "blue.700",
+            },
+            _hover: {
+              background: "gray.200",
+            },
+          },
+          "span.chakra-checkbox__label": {
+            marginLeft: "2",
+          },
+        }}>
         <Text fontSize="sm">{option.label}</Text>
       </Checkbox>
     ))}

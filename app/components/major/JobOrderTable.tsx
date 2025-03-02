@@ -185,7 +185,7 @@ export default function JobOrderTable() {
                       colorScheme={
                         order.paymentStatus === "Complete" ? "green" : "red"
                       }
-                      variant="subtle"
+                      variant="solid"
                       px={3}
                       py={1}
                       borderRadius="full">
@@ -205,6 +205,7 @@ export default function JobOrderTable() {
                       }
                       display="flex"
                       alignItems="center"
+                      variant="solid"
                       gap={1}
                       px={3}
                       py={1}
@@ -229,6 +230,7 @@ export default function JobOrderTable() {
                       }
                       display="flex"
                       alignItems="center"
+                      variant="solid"
                       gap={1}
                       px={3}
                       py={1}
@@ -253,6 +255,7 @@ export default function JobOrderTable() {
                       }
                       display="flex"
                       alignItems="center"
+                      variant="solid"
                       gap={1}
                       px={3}
                       py={1}

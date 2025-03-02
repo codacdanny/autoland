@@ -92,6 +92,9 @@ export const StaffTable = ({
                 <Td>{staff?.role}</Td>
                 <Td>
                   <Badge
+                    borderRadius="xl"
+                    p={1}
+                    variant="solid"
                     colorScheme={staff.status === "On Duty" ? "green" : "red"}>
                     {staff.status}
                   </Badge>

@@ -13,21 +13,11 @@ import {
   Badge,
   Button,
   useToast,
-  Modal,
-  ModalOverlay,
   ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalCloseButton,
-  Stack,
   HStack,
   useDisclosure,
   Icon,
   Text,
-  FormControl,
-  FormLabel,
-  Input,
-  Textarea,
   Spinner,
   VStack,
 } from "@chakra-ui/react";
@@ -200,16 +190,14 @@ function AppointmentsPage() {
                 xl: 8,
               }}
               mt={{ base: 10, xl: 4 }}
-              overflowX="scroll"
-            >
+              overflowX="scroll">
               <Header />
               <Flex
                 justify="space-between"
                 gap={4}
                 wrap="wrap"
                 align="center"
-                mb={6}
-              >
+                mb={6}>
                 <Heading size="sm" color="gray.700">
                   Appointments
                 </Heading>
@@ -230,8 +218,7 @@ function AppointmentsPage() {
                   minWidth="1800px"
                   shadow="sm"
                   rounded="lg"
-                  bg="white"
-                >
+                  bg="white">
                   <StyledTable>
                     <Thead>
                       <Tr>
@@ -288,9 +275,9 @@ function AppointmentsPage() {
                             <Badge
                               colorScheme={getStatusColor(appointment.status)}
                               borderRadius="full"
+                              variant="solid"
                               px={3}
-                              py={1}
-                            >
+                              py={1}>
                               {appointment.status}
                             </Badge>
                           </Td>
@@ -302,8 +289,7 @@ function AppointmentsPage() {
                                 variant="ghost"
                                 onClick={() =>
                                   handleStatusChange(appointment.id, "approved")
-                                }
-                              >
+                                }>
                                 Approve
                               </Button>
                               {appointment.status !== "cancelled" && (
@@ -312,8 +298,7 @@ function AppointmentsPage() {
                                   colorScheme="red"
                                   variant="ghost"
                                   leftIcon={<FaTimes />}
-                                  onClick={() => handleDelete(appointment.id)}
-                                >
+                                  onClick={() => handleDelete(appointment.id)}>
                                   Cancel
                                 </Button>
                               )}

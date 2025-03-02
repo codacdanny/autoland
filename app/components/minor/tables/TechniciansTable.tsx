@@ -83,6 +83,9 @@ export const TechniciansTable = ({
                 <Td>{technician?.team}</Td>
                 <Td>
                   <Badge
+                    borderRadius="xl"
+                    p={1}
+                    variant="solid"
                     colorScheme={
                       technician?.status === "On Duty" ? "green" : "red"
                     }>

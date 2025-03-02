@@ -130,8 +130,7 @@ const GridHeader = ({ children }: { children: React.ReactNode }) => (
     fontWeight="semibold"
     color="gray.600"
     textTransform="uppercase"
-    p={4}
-  >
+    p={4}>
     {children}
   </Text>
 );
@@ -310,8 +309,7 @@ function MembersPage() {
             md: 4,
             xl: 8,
           }}
-          mt={{ base: 10, xl: 4 }}
-        >
+          mt={{ base: 10, xl: 4 }}>
           <Header />
           <Flex justify="space-between" align="center" mb={4}>
             <Heading size="sm">AutoClub Members</Heading>
@@ -321,8 +319,7 @@ function MembersPage() {
                 color="white"
                 leftIcon={<FaPlus />}
                 onClick={onModalOpen}
-                size="sm"
-              >
+                size="sm">
                 Add Member
               </Button>
             </Flex>
@@ -333,8 +330,7 @@ function MembersPage() {
             animate={{ opacity: 1, y: 0 }}
             borderRadius="2xl"
             bg="white"
-            boxShadow="md"
-          >
+            boxShadow="md">
             <Box overflowX="auto">
               <Box minWidth="1200px">
                 <Box
@@ -343,8 +339,7 @@ function MembersPage() {
                   gap={4}
                   bg="gray.50"
                   borderRadius="lg"
-                  mb={2}
-                >
+                  mb={2}>
                   <GridHeader>Member Name</GridHeader>
                   <GridHeader>Phone</GridHeader>
                   <GridHeader>Email</GridHeader>
@@ -372,8 +367,7 @@ function MembersPage() {
                           bg: "gray.50",
                         }}
                         transition="all 0.2s"
-                        cursor="pointer"
-                      >
+                        cursor="pointer">
                         <Flex align="center">
                           <Text fontWeight="medium">{user.name}</Text>
                         </Flex>
@@ -391,11 +385,10 @@ function MembersPage() {
                         <Flex align="center">
                           <Badge
                             colorScheme="blue"
-                            variant="subtle"
+                            variant="solid"
                             px={3}
                             py={1}
-                            borderRadius="full"
-                          >
+                            borderRadius="full">
                             {user.cars?.length || 0} Cars
                           </Badge>
                         </Flex>
@@ -409,11 +402,10 @@ function MembersPage() {
                                 ? "yellow"
                                 : "gray"
                             }
-                            variant="subtle"
+                            variant="solid"
                             px={3}
                             py={1}
-                            borderRadius="full"
-                          >
+                            borderRadius="full">
                             {user.subscription}
                           </Badge>
                         </Flex>
@@ -428,11 +420,10 @@ function MembersPage() {
                             colorScheme={
                               user.status === "Active" ? "green" : "red"
                             }
-                            variant="subtle"
+                            variant="solid"
                             px={3}
                             py={1}
-                            borderRadius="full"
-                          >
+                            borderRadius="full">
                             {user.status}
                           </Badge>
                         </Flex>
@@ -484,16 +475,14 @@ function MembersPage() {
                           borderRadius="lg"
                           mt={2}
                           border="1px dashed"
-                          borderColor="gray.200"
-                        >
+                          borderColor="gray.200">
                           <VStack align="stretch" spacing={4}>
                             <Box>
                               <Text
                                 fontSize="sm"
                                 fontWeight="medium"
                                 color="gray.700"
-                                mb={3}
-                              >
+                                mb={3}>
                                 Registered Vehicles ({user.cars?.length || 0})
                               </Text>
                               {user.cars && user.cars.length > 0 ? (
@@ -505,24 +494,25 @@ function MembersPage() {
                                       bg="white"
                                       p={3}
                                       borderRadius="md"
-                                      boxShadow="sm"
-                                    >
+                                      boxShadow="sm">
                                       <HStack spacing={4}>
                                         <Text fontSize="sm" fontWeight="medium">
                                           {car.carModel}
                                         </Text>
-                                        <Badge colorScheme="blue" fontSize="xs">
+                                        <Badge
+                                          variant="solid"
+                                          colorScheme="blue"
+                                          fontSize="xs">
                                           {car.plateNumber}
                                         </Badge>
                                       </HStack>
                                       <Badge
                                         colorScheme="green"
-                                        variant="subtle"
+                                        variant="solid"
                                         px={2}
                                         py={1}
                                         borderRadius="full"
-                                        fontSize="xs"
-                                      >
+                                        fontSize="xs">
                                         Active
                                       </Badge>
                                     </HStack>
@@ -555,8 +545,7 @@ function MembersPage() {
             borderColor="gray.100"
             py={4}
             fontSize="lg"
-            color="gray.700"
-          >
+            color="gray.700">
             {isEditMode ? "Edit Member" : "Add New Member"}
           </ModalHeader>
           <ModalCloseButton color="gray.800" />
@@ -627,12 +616,10 @@ function MembersPage() {
                   name="subscription"
                   value={formData.subscription}
                   onChange={handleInputChange}
-                  placeholder="Select subscription"
-                >
+                  placeholder="Select subscription">
                   <option
                     style={{ backgroundColor: "#fdfdfd" }}
-                    value="Plantinum"
-                  >
+                    value="Plantinum">
                     Platinum
                   </option>
                   <option style={{ backgroundColor: "#fdfdfd" }} value="Gold">
@@ -643,8 +630,7 @@ function MembersPage() {
                   </option>
                   <option
                     style={{ backgroundColor: "#fdfdfd" }}
-                    value="Diamond"
-                  >
+                    value="Diamond">
                     Diamond
                   </option>
                 </StyledSelect>
@@ -658,8 +644,7 @@ function MembersPage() {
                   value={formData.status}
                   onChange={(value) =>
                     setFormData((prev) => ({ ...prev, status: value }))
-                  }
-                >
+                  }>
                   <Stack direction="row" spacing={4}>
                     <Radio
                       value="Active"
@@ -673,8 +658,7 @@ function MembersPage() {
                             borderColor: "blue.500",
                           },
                         },
-                      }}
-                    >
+                      }}>
                       <Text fontSize="sm" color="gray.800">
                         Active
                       </Text>
@@ -691,8 +675,7 @@ function MembersPage() {
                             borderColor: "red.500",
                           },
                         },
-                      }}
-                    >
+                      }}>
                       <Text fontSize="sm" color="gray.800">
                         Inactive
                       </Text>
@@ -738,8 +721,7 @@ function MembersPage() {
                         onClick={handleAddCar}
                         size="sm"
                         width="fit-content"
-                        leftIcon={<FaPlus />}
-                      >
+                        leftIcon={<FaPlus />}>
                         Add
                       </Button>
                     </Flex>
@@ -751,8 +733,7 @@ function MembersPage() {
                         justify="space-between"
                         bg="gray.50"
                         p={2}
-                        borderRadius="md"
-                      >
+                        borderRadius="md">
                         <Text fontSize="sm">
                           {car.carModel} - {car.plateNumber}
                         </Text>
@@ -779,8 +760,7 @@ function MembersPage() {
                 size="sm"
                 fontSize="sm"
                 onClick={handleSubmit}
-                width="full"
-              >
+                width="full">
                 {isEditMode ? "Update User" : "Add User"}
               </Button>
             </Stack>

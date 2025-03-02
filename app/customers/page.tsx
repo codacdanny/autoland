@@ -11,38 +11,19 @@ import {
   Thead,
   Tr,
   useDisclosure,
-  Drawer,
-  DrawerBody,
-  DrawerHeader,
-  DrawerOverlay,
-  DrawerContent,
-  DrawerCloseButton,
-  VStack,
   Text,
   Badge,
-  Select,
-  Divider,
   useToast,
   Avatar,
-  Icon,
   HStack,
   IconButton,
 } from "@chakra-ui/react";
-import {
-  // FaCar,
-  FaUser,
-  FaPhone,
-  FaEnvelope,
-  FaDollarSign,
-  FaAngleRight,
-  FaAngleLeft,
-} from "react-icons/fa";
+import { FaAngleRight, FaAngleLeft } from "react-icons/fa";
 import styled from "@emotion/styled";
 import Sidebar from "@/app/components/major/SidebarMenu";
 import MainContent from "@/app/components/minor/MainContainer";
 import Header from "@/app/components/minor/HeaderNav";
 // import { useRouter } from "next/navigation";
-import { FaCakeCandles } from "react-icons/fa6";
 import { withAuth } from "../utils/services/ProtectecRoute";
 import {
   fetchCustomerDetails,
@@ -111,7 +92,6 @@ function CustomersPage() {
 
   const handleRowClick = async (customer: Customer) => {
     setSelectedCustomer(customer);
-    console.log(customer);
 
     try {
       const response = await fetchCustomerDetails(customer.id); // Fetch customer details
@@ -150,8 +130,7 @@ function CustomersPage() {
             md: 4,
             xl: 8,
           }}
-          mt={{ base: 10, xl: 4 }}
-        >
+          mt={{ base: 10, xl: 4 }}>
           <Header />
 
           {/* Search and Title Section */}
@@ -162,68 +141,91 @@ function CustomersPage() {
           </Flex>
 
           {/* Customers Table */}
-          <Box bg="white" rounded="lg" shadow="sm" overflow="hidden">
-            <StyledTable>
-              <Thead>
-                <Tr>
-                  <Th color="gray.600">Customer</Th>
-                  <Th color="gray.600">Contact</Th>
-                  <Th color="gray.600">Plate Number</Th>
-                  <Th color="gray.600">Vehicles</Th>
-                  <Th color="gray.600">Outstanding</Th>
-                  <Th color="gray.600">Status</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {customers.map((customer, index) => (
-                  <Tr key={index} onClick={() => handleRowClick(customer)}>
-                    <Td>
-                      <HStack>
-                        <Avatar size="sm" name={customer.fullName} />
-                        <Box>
-                          <Text fontWeight="medium">{customer.fullName}</Text>
-                          <Text
-                            fontSize="xs"
-                            fontWeight="semibold"
-                            color="gray.600"
-                          >
-                            {customer.email}
-                          </Text>
-                        </Box>
-                      </HStack>
-                    </Td>
-                    <Td>{customer.phoneNumber}</Td>
-                    <Td>{customer.plateNumber}</Td>
-                    <Td>
-                      <Badge colorScheme="blue" borderRadius="full">
-                        {customer.totalVehicles} vehicles
-                      </Badge>
-                    </Td>
-                    <Td>
-                      <Text
-                        color={
-                          customer.outstandingPayment > 0
-                            ? "red.500"
-                            : "green.500"
-                        }
-                      >
-                        ${customer.outstandingPayment}
-                      </Text>
-                    </Td>
-                    <Td>
-                      <Badge
-                        colorScheme={
-                          customer.outstandingPayment > 0 ? "red" : "green"
-                        }
-                        borderRadius="full"
-                      >
-                        {customer.currentJobOrderStatus}
-                      </Badge>
-                    </Td>
+          <Box
+            overflowX="auto"
+            shadow="sm"
+            rounded="lg"
+            bg="white"
+            css={{
+              "&::-webkit-scrollbar": {
+                height: "8px",
+              },
+              "&::-webkit-scrollbar-track": {
+                background: "#f1f1f1",
+                borderRadius: "4px",
+              },
+              "&::-webkit-scrollbar-thumb": {
+                background: "#cbd5e0",
+                borderRadius: "4px",
+                "&:hover": {
+                  background: "#a0aec0",
+                },
+              },
+            }}>
+            <Box minW="1600px">
+              <StyledTable>
+                <Thead>
+                  <Tr>
+                    <Th color="gray.600">Customer</Th>
+                    <Th color="gray.600">Contact</Th>
+                    <Th color="gray.600">Plate Number</Th>
+                    <Th color="gray.600">Vehicles</Th>
+                    {/* <Th color="gray.600">Outstanding</Th> */}
+                    <Th color="gray.600">Status</Th>
                   </Tr>
-                ))}
-              </Tbody>
-            </StyledTable>
+                </Thead>
+                <Tbody>
+                  {customers.map((customer, index) => (
+                    <Tr key={index} onClick={() => handleRowClick(customer)}>
+                      <Td>
+                        <HStack>
+                          <Avatar size="sm" name={customer.fullName} />
+                          <Box>
+                            <Text fontWeight="medium">{customer.fullName}</Text>
+                            <Text
+                              fontSize="xs"
+                              fontWeight="semibold"
+                              color="gray.600">
+                              {customer.email}
+                            </Text>
+                          </Box>
+                        </HStack>
+                      </Td>
+                      <Td>{customer.phoneNumber}</Td>
+                      <Td>{customer.plateNumber}</Td>
+                      <Td>
+                        <Badge
+                          variant="solid"
+                          colorScheme="blue"
+                          borderRadius="full">
+                          {customer.totalVehicles} vehicles
+                        </Badge>
+                      </Td>
+                      {/* <Td>
+                        <Text
+                          color={
+                            customer.outstandingPayment > 0
+                              ? "red.500"
+                              : "green.500"
+                          }>
+                          ${customer.outstandingPayment}
+                        </Text>
+                      </Td> */}
+                      <Td>
+                        <Badge
+                          variant="solid"
+                          colorScheme={
+                            customer.outstandingPayment > 0 ? "red" : "green"
+                          }
+                          borderRadius="full">
+                          {customer.currentJobOrderStatus}
+                        </Badge>
+                      </Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </StyledTable>
+            </Box>
           </Box>
 
           {/* Pagination Controls */}
@@ -248,22 +250,21 @@ function CustomersPage() {
           </HStack>
 
           {/* Customer Details Drawer */}
-          <Drawer isOpen={isOpen} onClose={onClose} size="md">
+          {/* <Drawer isOpen={isOpen} onClose={onClose} size="md">
             <DrawerOverlay />
             <DrawerContent bgColor="gray.100" color="gray.600">
               <DrawerCloseButton />
               <DrawerHeader
                 fontSize="medium"
                 fontWeight="extrabold"
-                borderBottomWidth="1px"
-              >
+                borderBottomWidth="1px">
                 Customer Details
               </DrawerHeader>
-              <DrawerBody>
-                {selectedCustomer && (
-                  <VStack spacing={6} align="stretch">
-                    {/* Customer Info Section */}
-                    <Box>
+              <DrawerBody> */}
+          {/* {selectedCustomer && (
+                  <VStack spacing={6} align="stretch"> */}
+          {/* Customer Info Section */}
+          {/* <Box>
                       <Heading size="xz" mb={4}>
                         Personal Information
                       </Heading>
@@ -298,10 +299,10 @@ function CustomersPage() {
                       </VStack>
                     </Box>
 
-                    <Divider />
+                    <Divider /> */}
 
-                    {/* Vehicles Section */}
-                    <Box>
+          {/* Vehicles Section */}
+          {/* <Box>
                       <Heading size="xs" mb={4}>
                         Vehicles
                       </Heading>
@@ -309,8 +310,7 @@ function CustomersPage() {
                         size="sm"
                         placeholder="Select vehicle for job order"
                         onChange={(e) => setSelectedVehicle(e.target.value)}
-                        mb={4}
-                      >
+                        mb={4}>
                         {selectedCustomer.vehicles?.map((vehicle, idx) => (
                           <option
                             style={{
@@ -319,8 +319,7 @@ function CustomersPage() {
                               fontSize: "14px",
                             }}
                             key={idx}
-                            value={vehicle.name}
-                          >
+                            value={vehicle.name}>
                             {vehicle.name} ({vehicle.year})
                           </option>
                         ))}
@@ -336,8 +335,7 @@ function CustomersPage() {
                             p={2}
                             bg="white"
                             borderRadius="md"
-                            fontSize="sm"
-                          >
+                            fontSize="sm">
                             <HStack justify="space-between">
                               <Text>Job Order ID: {history.jobOrderId}</Text>
                               <Text color="gray.600">
@@ -355,7 +353,7 @@ function CustomersPage() {
                 )}
               </DrawerBody>
             </DrawerContent>
-          </Drawer>
+          </Drawer> */}
         </Box>
       </MainContent>
     </Flex>

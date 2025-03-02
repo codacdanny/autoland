@@ -49,7 +49,7 @@ const HeaderNav = () => {
             fontSize={{ base: "sm", md: "lg" }}
             fontWeight="bold">
             Hi, {user?.name}!{" "}
-            <span style={{ fontSize: "12px", color: "#dbdbd9" }}>
+            <span style={{ fontSize: "12px", color: "#666" }}>
               ({user?.role})
             </span>
             👋
@@ -66,12 +66,12 @@ const HeaderNav = () => {
           {/* Enhanced Search Bar */}
           <InputGroup maxW={{ base: "200px", md: "300px" }}>
             <InputLeftElement pointerEvents="none">
-              <FaSearch color="#dbdbd9" />
+              <FaSearch color="#666" />
             </InputLeftElement>
             <Input
               placeholder="Search..."
-              _placeholder={{ color: "gray.300", fontSize: "sm" }}
-              bg="gray.50"
+              _placeholder={{ color: "gray.500", fontSize: "sm" }}
+              bg="gray.200"
               color="gray.500"
               border="1px solid"
               borderColor="gray.200"

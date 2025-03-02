@@ -37,7 +37,7 @@ function Dashboard() {
       isIncrease: true,
       icon: FaWallet,
       color: "purple.500",
-      bgGradient: "linear(to-r, purple.400, purple.600)",
+      bgGradient: "linear(to-r, rgb(44, 31, 158), rgb(14, 10, 241))",
     },
     {
       title: "Total Outflow",
@@ -46,7 +46,7 @@ function Dashboard() {
       isIncrease: true,
       icon: FaClipboardList,
       color: "blue.500",
-      bgGradient: "linear(to-r, blue.400, blue.600)",
+      bgGradient: "linear(to-r, blue.800, blue.00)",
     },
 
     {
@@ -56,7 +56,7 @@ function Dashboard() {
       isIncrease: false,
       icon: FaClock,
       color: "orange.500",
-      bgGradient: "linear(to-r, orange.400, orange.600)",
+      bgGradient: "linear(to-r, orange.800, orange.900)",
     },
     {
       title: "Total Expenses",
@@ -65,7 +65,7 @@ function Dashboard() {
       isIncrease: true,
       icon: FaClipboardList,
       color: "blue.500",
-      bgGradient: "linear(to-r, blue.400, blue.600)",
+      bgGradient: "linear(to-r, rgb(4, 51, 112), rgb(6, 29, 105))",
     },
   ];
 
@@ -84,8 +84,7 @@ function Dashboard() {
                 md: 4,
                 xl: 8,
               }}
-              mt={{ base: 10, xl: 4 }}
-            >
+              mt={{ base: 10, xl: 4 }}>
               {/* Header */}
               <Header />
 

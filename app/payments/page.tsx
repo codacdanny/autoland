@@ -168,7 +168,7 @@ function PaymentsPage() {
       isIncrease: true,
       icon: FaWallet,
       color: "purple.500",
-      bgGradient: "linear(to-r, purple.400, purple.600)",
+      bgGradient: "linear(to-r, rgb(44, 31, 158), rgb(14, 10, 241))",
     },
     {
       title: "Total Outflow",
@@ -187,7 +187,7 @@ function PaymentsPage() {
       isIncrease: false,
       icon: FaClock,
       color: "orange.500",
-      bgGradient: "linear(to-r, orange.400, orange.600)",
+      bgGradient: "linear(to-r, orange.800, orange.900)",
     },
     {
       title: "Total Expenses",
@@ -196,7 +196,7 @@ function PaymentsPage() {
       isIncrease: true,
       icon: FaClipboardList,
       color: "blue.500",
-      bgGradient: "linear(to-r, blue.400, blue.600)",
+      bgGradient: "linear(to-r, rgb(4, 51, 112), rgb(6, 29, 105))",
     },
   ];
 
@@ -302,8 +302,7 @@ function PaymentsPage() {
               <Grid
                 templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }}
                 gap={6}
-                mb={8}
-              >
+                mb={8}>
                 <ExpenseCard>
                   <VStack align="stretch" spacing={4}>
                     <Icon as={FaWallet} color="blue.500" boxSize={6} />
@@ -314,8 +313,7 @@ function PaymentsPage() {
                       colorScheme="blue"
                       leftIcon={<FaPlus />}
                       size="sm"
-                      onClick={onOpen}
-                    >
+                      onClick={onOpen}>
                       Add New Expense
                     </Button>
                   </VStack>
@@ -376,15 +374,13 @@ function PaymentsPage() {
                       placeholder="Category"
                       size="sm"
                       maxW="200px"
-                      onChange={(e) => setCategory(e.target.value)}
-                    >
+                      onChange={(e) => setCategory(e.target.value)}>
                       <option
                         style={{
                           backgroundColor: "#eee",
                           color: "gray.500",
                         }}
-                        value="fuel"
-                      >
+                        value="fuel">
                         Fuel
                       </option>
                       <option
@@ -392,8 +388,7 @@ function PaymentsPage() {
                           backgroundColor: "#eee",
                           color: "gray.500",
                         }}
-                        value="equipment"
-                      >
+                        value="equipment">
                         Equipment
                       </option>
                       <option
@@ -401,8 +396,7 @@ function PaymentsPage() {
                           backgroundColor: "#eee",
                           color: "gray.500",
                         }}
-                        value="maintenance"
-                      >
+                        value="maintenance">
                         Maintenance
                       </option>
                       <option
@@ -410,8 +404,7 @@ function PaymentsPage() {
                           backgroundColor: "#eee",
                           color: "gray.500",
                         }}
-                        value="others"
-                      >
+                        value="others">
                         Others
                       </option>
                     </Select>
@@ -509,15 +502,13 @@ function PaymentsPage() {
                               ...newExpense,
                               category: e.target.value,
                             })
-                          }
-                        >
+                          }>
                           <option
                             style={{
                               backgroundColor: "#eee",
                               color: "gray.500",
                             }}
-                            value="fuel"
-                          >
+                            value="fuel">
                             Fuel
                           </option>
                           <option
@@ -525,8 +516,7 @@ function PaymentsPage() {
                               backgroundColor: "#eee",
                               color: "gray.500",
                             }}
-                            value="equipment"
-                          >
+                            value="equipment">
                             Equipment
                           </option>
                           <option
@@ -534,8 +524,7 @@ function PaymentsPage() {
                               backgroundColor: "#eee",
                               color: "gray.500",
                             }}
-                            value="maintenance"
-                          >
+                            value="maintenance">
                             Maintenance
                           </option>
                           <option
@@ -543,8 +532,7 @@ function PaymentsPage() {
                               backgroundColor: "#eee",
                               color: "gray.500",
                             }}
-                            value="others"
-                          >
+                            value="others">
                             Others
                           </option>
                         </Select>
@@ -593,15 +581,13 @@ function PaymentsPage() {
                               ...newExpense,
                               paymentMethod: e.target.value,
                             })
-                          }
-                        >
+                          }>
                           <option
                             style={{
                               backgroundColor: "#eee",
                               color: "gray.500",
                             }}
-                            value="Cash"
-                          >
+                            value="Cash">
                             Cash
                           </option>
                           <option
@@ -609,8 +595,7 @@ function PaymentsPage() {
                               backgroundColor: "#eee",
                               color: "gray.500",
                             }}
-                            value="Bank Transfer"
-                          >
+                            value="Bank Transfer">
                             Bank Transfer
                           </option>
                           <option
@@ -618,8 +603,7 @@ function PaymentsPage() {
                               backgroundColor: "#eee",
                               color: "gray.500",
                             }}
-                            value="Card Payment"
-                          >
+                            value="Card Payment">
                             Card Payment
                           </option>
                           <option
@@ -627,8 +611,7 @@ function PaymentsPage() {
                               backgroundColor: "#eee",
                               color: "gray.500",
                             }}
-                            value="POS"
-                          >
+                            value="POS">
                             POS
                           </option>
                         </Select>
@@ -640,8 +623,7 @@ function PaymentsPage() {
                         width="full"
                         onClick={handleAddExpense}
                         isLoading={isSubmitting}
-                        loadingText="Adding..."
-                      >
+                        loadingText="Adding...">
                         Add Expense
                       </Button>
                     </VStack>
@@ -670,15 +652,13 @@ function PaymentsPage() {
                                 ...editExpense,
                                 category: e.target.value,
                               })
-                            }
-                          >
+                            }>
                             <option
                               style={{
                                 backgroundColor: "#eee",
                                 color: "gray.500",
                               }}
-                              value="fuel"
-                            >
+                              value="fuel">
                               Fuel
                             </option>
                             <option
@@ -686,8 +666,7 @@ function PaymentsPage() {
                                 backgroundColor: "#eee",
                                 color: "gray.500",
                               }}
-                              value="equipment"
-                            >
+                              value="equipment">
                               Equipment
                             </option>
                             <option
@@ -695,8 +674,7 @@ function PaymentsPage() {
                                 backgroundColor: "#eee",
                                 color: "gray.500",
                               }}
-                              value="maintenance"
-                            >
+                              value="maintenance">
                               Maintenance
                             </option>
                             <option
@@ -704,8 +682,7 @@ function PaymentsPage() {
                                 backgroundColor: "#eee",
                                 color: "gray.500",
                               }}
-                              value="others"
-                            >
+                              value="others">
                               Others
                             </option>
                           </Select>
@@ -753,15 +730,13 @@ function PaymentsPage() {
                                 ...editExpense,
                                 paymentMethod: e.target.value,
                               })
-                            }
-                          >
+                            }>
                             <option
                               style={{
                                 backgroundColor: "#eee",
                                 color: "gray.500",
                               }}
-                              value="Cash"
-                            >
+                              value="Cash">
                               Cash
                             </option>
                             <option
@@ -769,8 +744,7 @@ function PaymentsPage() {
                                 backgroundColor: "#eee",
                                 color: "gray.500",
                               }}
-                              value="Bank Transfer"
-                            >
+                              value="Bank Transfer">
                               Bank Transfer
                             </option>
                             <option
@@ -778,8 +752,7 @@ function PaymentsPage() {
                                 backgroundColor: "#eee",
                                 color: "gray.500",
                               }}
-                              value="Card Payment"
-                            >
+                              value="Card Payment">
                               Card Payment
                             </option>
                             <option
@@ -787,8 +760,7 @@ function PaymentsPage() {
                                 backgroundColor: "#eee",
                                 color: "gray.500",
                               }}
-                              value="POS"
-                            >
+                              value="POS">
                               POS
                             </option>
                           </Select>
@@ -800,8 +772,7 @@ function PaymentsPage() {
                           width="full"
                           onClick={handleUpdateExpense}
                           isLoading={isUpdating}
-                          loadingText="Updating..."
-                        >
+                          loadingText="Updating...">
                           Update Expense
                         </Button>
                       </VStack>
