@@ -118,4 +118,20 @@ export const memberService = {
       throw new Error("An unexpected error occurred");
     }
   },
+   updateMember: async (
+    memberId: string,
+    data: { serviceFrequencyPerYear: number }
+  ) => {
+    try {
+      const response = await api.patch(`/workshops/members/${memberId}`, data);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        throw new Error(
+          error.response?.data?.message || "Failed to update member"
+        );
+      }
+      throw new Error("An unexpected error occurred");
+    }
+  },
 };

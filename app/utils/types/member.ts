@@ -29,6 +29,7 @@ export interface Member {
   status: string;
   membershipPackage?: string;
   subscription?: Subscription;
+  serviceFrequencyPerYear: number;
   cars: Car[];
   qrCode?: string;
   createdAt: string;

@@ -90,32 +90,32 @@ function CustomersPage() {
     setCurrentPage(page);
   };
 
-  const handleRowClick = async (customer: Customer) => {
-    setSelectedCustomer(customer);
+  // const handleRowClick = async (customer: Customer) => {
+  //   setSelectedCustomer(customer);
 
-    try {
-      const response = await fetchCustomerDetails(customer.id); // Fetch customer details
-      const customerDetails = response.data.customerDetails; // Extract customer details
-      const vehicles = response.data.vehicles; // Extract vehicles
-      const serviceHistory = response.data.serviceHistory; // Extract service history
+  //   try {
+  //     const response = await fetchCustomerDetails(customer.id); // Fetch customer details
+  //     const customerDetails = response.data.customerDetails; // Extract customer details
+  //     const vehicles = response.data.vehicles; // Extract vehicles
+  //     const serviceHistory = response.data.serviceHistory; // Extract service history
 
-      // Update selectedCustomer with detailed information
-      setSelectedCustomer({
-        ...customer,
-        ...customerDetails,
-        vehicles: vehicles,
-        serviceHistory: serviceHistory,
-      });
-    } catch (error) {
-      console.error("Failed to load customer details:", error);
-      toast({
-        title: "Error loading customer details.",
-        status: "error",
-        duration: 3000,
-      });
-    }
-    onOpen(); // Open the drawer
-  };
+  //     // Update selectedCustomer with detailed information
+  //     setSelectedCustomer({
+  //       ...customer,
+  //       ...customerDetails,
+  //       vehicles: vehicles,
+  //       serviceHistory: serviceHistory,
+  //     });
+  //   } catch (error) {
+  //     console.error("Failed to load customer details:", error);
+  //     toast({
+  //       title: "Error loading customer details.",
+  //       status: "error",
+  //       duration: 3000,
+  //     });
+  //   }
+  //   onOpen(); // Open the drawer
+  // };
 
   return (
     <Flex>
@@ -176,7 +176,7 @@ function CustomersPage() {
                 </Thead>
                 <Tbody>
                   {customers.map((customer, index) => (
-                    <Tr key={index} onClick={() => handleRowClick(customer)}>
+                    <Tr key={index}>
                       <Td>
                         <HStack>
                           <Avatar size="sm" name={customer.fullName} />

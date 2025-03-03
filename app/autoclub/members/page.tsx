@@ -38,6 +38,7 @@ import { CarDetail } from "@/app/utils/types/autoclub";
 import { withAuth } from "@/app/utils/services/ProtectecRoute";
 import { memberService } from "@/app/utils/services/member";
 import { Member } from "@/app/utils/types/member";
+import { EditServiceFrequencyModal } from "@/app/components/major/autoclub/EditServiceFrequencyModal";
 
 const StyledModal = styled(ModalContent)`
   background: linear-gradient(
@@ -131,6 +132,16 @@ function MembersPage() {
   const [expandedRow, setExpandedRow] = useState<string | null>(null);
   const [members, setMembers] = useState<Member[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [editingFrequency, setEditingFrequency] = useState<{
+    memberId: string;
+    currentFrequency: number;
+  } | null>(null);
+
+  const {
+    isOpen: isFrequencyModalOpen,
+    onOpen: onFrequencyModalOpen,
+    onClose: onFrequencyModalClose,
+  } = useDisclosure();
 
   useEffect(() => {
     const fetchMembers = async () => {
@@ -165,13 +176,6 @@ function MembersPage() {
       ...prev,
       [name]: value,
     }));
-  };
-
-  const handleEdit = (user: UserFormData) => {
-    setEditingUser(user);
-    setFormData(user);
-    setIsEditMode(true);
-    onModalOpen();
   };
 
   const handleDelete = async (userId: string) => {
@@ -322,6 +326,50 @@ function MembersPage() {
     });
   };
 
+  const handleEditFrequency = (memberId: string, currentFrequency: number) => {
+    setEditingFrequency({ memberId, currentFrequency });
+    onFrequencyModalOpen();
+  };
+
+  const handleUpdateFrequency = async (frequency: number) => {
+    if (!editingFrequency) return;
+
+    try {
+      await memberService.updateMember(editingFrequency.memberId, {
+        serviceFrequencyPerYear: frequency,
+      });
+
+      // Update the member in the local state
+      setMembers((prev) =>
+        prev.map((member) =>
+          member._id === editingFrequency.memberId
+            ? { ...member, serviceFrequencyPerYear: frequency }
+            : member
+        )
+      );
+
+      toast({
+        title: "Success",
+        description: "Service frequency updated successfully",
+        status: "success",
+        duration: 3000,
+      });
+      await memberService.getAllMembers();
+      onFrequencyModalClose();
+      setEditingFrequency(null);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Failed to update service frequency",
+        status: "error",
+        duration: 3000,
+      });
+    }
+  };
+
   const filteredUsers = members.filter((member) =>
     member.fullName.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -453,8 +501,7 @@ function MembersPage() {
 
                         <Flex align="center">
                           <Text color="gray.600" fontSize="sm">
-                            {user.subscription?.serviceFrequencyPerYear ||
-                              "N/A"}
+                            {user.serviceFrequencyPerYear || "N/A"}
                           </Text>
                         </Flex>
 
@@ -472,37 +519,7 @@ function MembersPage() {
                           </Badge>
                         </Flex>
 
-                        <Flex gap={2}>
-                          <IconButton
-                            aria-label="Edit member"
-                            icon={<FaEdit />}
-                            size="sm"
-                            colorScheme="blue"
-                            variant="ghost"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleEdit({
-                                name: user.fullName,
-                                phone: user.phoneNumber,
-                                email: user.email,
-                                password: "",
-                                subscription:
-                                  user.subscription?.tier ||
-                                  user.membershipPackage ||
-                                  "",
-                                status: user.status,
-                                servicesUsed: String(
-                                  user.subscription?.serviceFrequencyPerYear ||
-                                    ""
-                                ),
-                                cars:
-                                  user.cars?.map((car) => ({
-                                    carModel: car.model,
-                                    plateNumber: car.plateNumber,
-                                  })) || [],
-                              });
-                            }}
-                          />
+                        <Flex alignItems="center" gap={2}>
                           <IconButton
                             aria-label="Delete member"
                             icon={<FaTrash />}
@@ -526,6 +543,18 @@ function MembersPage() {
                             }}
                             alignSelf="flex-end"
                             w={{ base: "full", sm: "auto" }}
+                          />
+                          <IconButton
+                            icon={<FaEdit />}
+                            aria-label="Edit service frequency"
+                            variant="ghost"
+                            colorScheme="blue"
+                            onClick={() =>
+                              handleEditFrequency(
+                                user._id,
+                                user.serviceFrequencyPerYear
+                              )
+                            }
                           />
                         </Flex>
                       </Box>
@@ -837,6 +866,17 @@ function MembersPage() {
           </ModalBody>
         </StyledModal>
       </Modal>
+      {editingFrequency && (
+        <EditServiceFrequencyModal
+          isOpen={isFrequencyModalOpen}
+          onClose={() => {
+            onFrequencyModalClose();
+            setEditingFrequency(null);
+          }}
+          currentFrequency={editingFrequency.currentFrequency}
+          onSubmit={handleUpdateFrequency}
+        />
+      )}
     </Flex>
   );
 }
