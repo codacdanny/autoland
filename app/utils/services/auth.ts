@@ -7,10 +7,7 @@ import {
   SignupResponse,
   UserRole,
 } from "../types/auth";
-// import { useAuth } from "./context";
-// import { useRouter } from "next/navigation";
 
-// Define types
 
 // API base URL - you should store this in an environment variable
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
