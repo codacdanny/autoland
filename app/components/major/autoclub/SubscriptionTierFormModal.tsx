@@ -15,28 +15,39 @@ import {
 } from "@chakra-ui/react";
 import { FaPlus, FaTrash } from "react-icons/fa";
 import { useState } from "react";
-import { ServiceFeature, SubscriptionTier } from "@/app/utils/types/autoclub";
+import { SubscriptionTier } from "@/app/utils/types/member";
+
+// Use the imported SubscriptionTier type
+interface Service {
+  name: string;
+  allowedTimes: number;
+  _id?: string;
+}
 
 interface Props {
   tier?: SubscriptionTier;
   onSubmit: (tier: SubscriptionTier) => void;
   onCancel: () => void;
 }
-export const SubscriptionTierForm = ({ tier, onSubmit, onCancel }: Props) => {
-  const [formData, setFormData] = useState<Partial<SubscriptionTier>>({
-    name: tier?.name || undefined,
+
+export const SubscriptionTierFormModal = ({
+  tier,
+  onSubmit,
+  onCancel,
+}: Props) => {
+  const [formData, setFormData] = useState<SubscriptionTier>({
+    tier: tier?.tier || "",
     price: tier?.price || 0,
-    maxCars: tier?.maxCars || 1,
-    serviceFrequency: tier?.serviceFrequency || 1,
-    color: tier?.color || "blue",
-    features: tier?.features || [],
-    isActive: tier?.isActive ?? true,
+    serviceFrequencyPerYear: tier?.serviceFrequencyPerYear || 1,
+    services: tier?.services || [],
+    _id: tier?._id,
+    createdAt: tier?.createdAt,
+    updatedAt: tier?.updatedAt,
   });
 
-  const [newFeature, setNewFeature] = useState<Partial<ServiceFeature>>({
+  const [newService, setNewService] = useState<Service>({
     name: "",
-    description: "",
-    frequency: 1,
+    allowedTimes: 1,
   });
 
   const handleInputChange = (
@@ -46,41 +57,35 @@ export const SubscriptionTierForm = ({ tier, onSubmit, onCancel }: Props) => {
     setFormData((prev) => ({
       ...prev,
       [name]:
-        name === "price" || name === "maxCars" || name === "serviceFrequency"
+        name === "price" || name === "serviceFrequencyPerYear"
           ? Number(value)
           : value,
     }));
   };
 
-  const handleAddFeature = () => {
-    if (newFeature.name && newFeature.frequency) {
-      const feature: ServiceFeature = {
-        id: Date.now().toString(),
-        name: newFeature.name,
-        description: newFeature.description || "",
-        frequency: newFeature.frequency || 1,
-      };
+  const handleAddService = () => {
+    if (newService.name && newService.allowedTimes) {
       setFormData((prev) => ({
         ...prev,
-        features: [...(prev.features || []), feature],
+        services: [...prev.services, { ...newService }],
       }));
-      setNewFeature({ name: "", description: "", frequency: 1 });
+      setNewService({ name: "", allowedTimes: 1 });
     }
   };
 
-  const handleRemoveFeature = (id: string) => {
+  const handleRemoveService = (index: number) => {
     setFormData((prev) => ({
       ...prev,
-      features: prev.features?.filter((f) => f.id !== id) || [],
+      services: prev.services.filter((_, i) => i !== index),
     }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.price) {
+    if (!formData.tier || !formData.price) {
       return;
     }
-    onSubmit(formData as SubscriptionTier);
+    onSubmit(formData);
   };
 
   return (
@@ -89,17 +94,19 @@ export const SubscriptionTierForm = ({ tier, onSubmit, onCancel }: Props) => {
         <FormControl isRequired>
           <FormLabel>Tier Name</FormLabel>
           <Select
-            name="name"
-            value={formData.name}
+            name="tier"
+            value={formData.tier}
             onChange={handleInputChange}
-            outline="1px solid #333">
+            outline="1px solid #333"
+          >
             <option
               style={{
                 backgroundColor: "#eee",
                 color: "gray.500",
                 fontSize: "14px",
               }}
-              value="Platinum">
+              value="Platinum"
+            >
               Platinum
             </option>
             <option
@@ -108,7 +115,8 @@ export const SubscriptionTierForm = ({ tier, onSubmit, onCancel }: Props) => {
                 color: "gray.500",
                 fontSize: "14px",
               }}
-              value="Diamond">
+              value="Diamond"
+            >
               Diamond
             </option>
             <option
@@ -117,7 +125,8 @@ export const SubscriptionTierForm = ({ tier, onSubmit, onCancel }: Props) => {
                 color: "gray.500",
                 fontSize: "14px",
               }}
-              value="Gold">
+              value="Gold"
+            >
               Gold
             </option>
             <option
@@ -126,7 +135,8 @@ export const SubscriptionTierForm = ({ tier, onSubmit, onCancel }: Props) => {
                 color: "gray.500",
                 fontSize: "14px",
               }}
-              value="Silver">
+              value="Silver"
+            >
               Silver
             </option>
           </Select>
@@ -138,19 +148,9 @@ export const SubscriptionTierForm = ({ tier, onSubmit, onCancel }: Props) => {
             outline="1px solid #333"
             borderRadius="5px"
             min={0}
-            value={formData.price}>
+            value={formData.price}
+          >
             <NumberInputField name="price" onChange={handleInputChange} />
-          </NumberInput>
-        </FormControl>
-
-        <FormControl isRequired>
-          <FormLabel>Maximum Cars</FormLabel>
-          <NumberInput
-            outline="1px solid #333"
-            borderRadius="5px"
-            min={1}
-            value={formData.maxCars}>
-            <NumberInputField name="maxCars" onChange={handleInputChange} />
           </NumberInput>
         </FormControl>
 
@@ -160,59 +160,13 @@ export const SubscriptionTierForm = ({ tier, onSubmit, onCancel }: Props) => {
             outline="1px solid #333"
             borderRadius="5px"
             min={1}
-            value={formData.serviceFrequency}>
+            value={formData.serviceFrequencyPerYear}
+          >
             <NumberInputField
-              name="serviceFrequency"
+              name="serviceFrequencyPerYear"
               onChange={handleInputChange}
             />
           </NumberInput>
-        </FormControl>
-
-        <FormControl>
-          <FormLabel>Color Theme</FormLabel>
-          <Select
-            name="color"
-            value={formData.color}
-            onChange={handleInputChange}
-            outline="1px solid #333"
-            borderRadius="5px">
-            <option
-              style={{
-                backgroundColor: "#eee",
-                color: "gray.500",
-                fontSize: "14px",
-              }}
-              value="purple">
-              Purple
-            </option>
-            <option
-              style={{
-                backgroundColor: "#eee",
-                color: "gray.500",
-                fontSize: "14px",
-              }}
-              value="blue">
-              Blue
-            </option>
-            <option
-              style={{
-                backgroundColor: "#eee",
-                color: "gray.500",
-                fontSize: "14px",
-              }}
-              value="green">
-              Green
-            </option>
-            <option
-              style={{
-                backgroundColor: "#eee",
-                color: "gray.500",
-                fontSize: "14px",
-              }}
-              value="orange">
-              Orange
-            </option>
-          </Select>
         </FormControl>
 
         <Box>
@@ -220,16 +174,16 @@ export const SubscriptionTierForm = ({ tier, onSubmit, onCancel }: Props) => {
             Services
           </Heading>
           <VStack spacing={4}>
-            {formData.features?.map((feature) => (
-              <HStack key={feature.id} width="full">
-                <Text flex={1}>{feature.name}</Text>
-                <Text>{feature.frequency}x</Text>
+            {formData.services.map((service, index) => (
+              <HStack key={service._id || index} width="full">
+                <Text flex={1}>{service.name}</Text>
+                <Text>{service.allowedTimes}x</Text>
                 <IconButton
                   icon={<FaTrash />}
                   aria-label="Remove service"
                   variant="ghost"
                   colorScheme="red"
-                  onClick={() => handleRemoveFeature(feature.id)}
+                  onClick={() => handleRemoveService(index)}
                 />
               </HStack>
             ))}
@@ -239,19 +193,19 @@ export const SubscriptionTierForm = ({ tier, onSubmit, onCancel }: Props) => {
                 outline="1px solid #333"
                 placeholder="Service name"
                 _placeholder={{ color: "gray.500" }}
-                value={newFeature.name}
+                value={newService.name}
                 onChange={(e) =>
-                  setNewFeature((prev) => ({ ...prev, name: e.target.value }))
+                  setNewService((prev) => ({ ...prev, name: e.target.value }))
                 }
               />
-              <NumberInput min={1} value={newFeature.frequency} maxW="100px">
+              <NumberInput min={1} value={newService.allowedTimes} maxW="100px">
                 <NumberInputField
                   placeholder="Times"
                   outline="1px solid #333"
                   onChange={(e) =>
-                    setNewFeature((prev) => ({
+                    setNewService((prev) => ({
                       ...prev,
-                      frequency: Number(e.target.value),
+                      allowedTimes: Number(e.target.value),
                     }))
                   }
                 />
@@ -259,8 +213,9 @@ export const SubscriptionTierForm = ({ tier, onSubmit, onCancel }: Props) => {
               <Button
                 leftIcon={<FaPlus />}
                 size="sm"
-                onClick={handleAddFeature}
-                colorScheme="blue">
+                onClick={handleAddService}
+                colorScheme="blue"
+              >
                 Add
               </Button>
             </HStack>

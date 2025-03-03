@@ -1,20 +1,17 @@
 import CarDetail from "../../autoclub/members/page";
+import { SubscriptionTier } from "./member";
 export interface ServiceFeature {
   id: string;
   name: string;
   description: string;
   frequency: number; // Number of times this service can be used
 }
-
-export interface SubscriptionTier {
-  id: string;
-  name: "Platinum" | "Diamond" | "Gold" | "Silver";
-  price: number;
-  maxCars: number;
-  serviceFrequency: number; // Total number of services allowed
-  features: ServiceFeature[];
-  color: string;
-  isActive: boolean;
+// Define the type for dashboard stats
+export interface DashboardStats {
+  platinumUsers: number;
+  diamondUsers: number;
+  goldUsers: number;
+  silverUsers: number;
 }
 
 export interface AutoClubMember {
