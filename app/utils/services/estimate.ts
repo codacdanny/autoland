@@ -26,7 +26,6 @@ export const fetchEstimate = async (jobId: string): Promise<any> => {
         },
       }
     );
-    console.log(response.data.data);
 
     return response.data.data;
   } catch (error) {
@@ -40,8 +39,7 @@ export const updateEstimate = async (
   data: any
 ): Promise<any> => {
   const token = getCookie("token");
-  console.log("ESTIMATE ID=>", estimateId);
-  console.log("ESTIMATE data=>", data);
+
   try {
     const response = await axios.put(
       `${process.env.NEXT_PUBLIC_API_URL}/workshops/estimates/${estimateId}`,
@@ -126,7 +124,7 @@ export const createEstimate = async (
       partsAndServices: data.partsAndServices,
       costSummary: data.costSummary,
     };
-    console.log(requestData);
+
     const response = await axios.post(
       `${process.env.NEXT_PUBLIC_API_URL}/workshops/estimates`,
       requestData,

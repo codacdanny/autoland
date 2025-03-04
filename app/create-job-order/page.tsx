@@ -201,7 +201,7 @@ function CreateJobOrderPage() {
     try {
       // API call to save job order
       await createJobOrder(formData);
-      console.log("Submitting form data:", formData);
+
       toast({
         title: "Success",
         description: "Job order created successfully",

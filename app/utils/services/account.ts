@@ -18,7 +18,7 @@ export const addPayment = async (
   const response = await axios.post(`${BASE_URL}/workshops/payments`, payment, {
     headers: { Authorization: `Bearer ${token}` },
   });
-  console.log(response.data.data);
+
   return response.data.data;
 };
 
@@ -66,8 +66,6 @@ export const updatePayment = async (
       headers: { Authorization: `Bearer ${token}` },
     }
   );
-  console.log(paymentId);
 
-  console.log(data);
   return response.data;
 };

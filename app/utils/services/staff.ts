@@ -14,9 +14,6 @@ export const fetchStaff = async (): Promise<Staff[]> => {
       }
     );
 
-    // Add debug log
-    console.log("Raw API response:", response.data);
-
     // Ensure we return an array
     const staffData = response.data.data.users;
     return staffData;

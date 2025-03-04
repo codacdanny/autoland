@@ -114,7 +114,7 @@ function StockistPage({ params }: PageProps) {
     const fetchData = async () => {
       try {
         const allDetails = await fetchEstimate(jobId);
-        console.log(allDetails._id);
+
         setEstimateId(allDetails._id);
         setFormData((prev) => ({
           ...prev,
@@ -205,9 +205,8 @@ function StockistPage({ params }: PageProps) {
   const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
-      console.log(estimateId);
       const response = await updateEstimate(estimateId, formData);
-      console.log(response);
+
       toast({
         title: "Success",
         description: "Estimate updated successfully",
@@ -248,7 +247,6 @@ function StockistPage({ params }: PageProps) {
         },
         partsAndServices: formData.partsAndServices,
       });
-      console.log(response);
 
       // Update form with response data
       setFormData({
@@ -283,8 +281,7 @@ function StockistPage({ params }: PageProps) {
     <Flex
       // padding={{ base: 2, md: 4, xl: 0 }}
       justifyContent="center"
-      overflowX="scroll"
-    >
+      overflowX="scroll">
       <Box width="100%" flex={1}>
         <Box>
           <Flex align="center" mb={{ base: 4, md: 6 }} gap={2}>
@@ -304,8 +301,7 @@ function StockistPage({ params }: PageProps) {
             </SectionTitle>
             <Grid
               templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }}
-              gap={{ base: 3, md: 4 }}
-            >
+              gap={{ base: 3, md: 4 }}>
               <VStack align="stretch">
                 <FormLabel color="gray.600" fontSize="sm">
                   Customer Name
@@ -412,8 +408,7 @@ function StockistPage({ params }: PageProps) {
               overflowX="scroll"
               rounded="lg"
               shadow="sm"
-              mx={{ base: -2, md: 0 }}
-            >
+              mx={{ base: -2, md: 0 }}>
               <TableContainer minW="1800px" overflowX="auto">
                 <Table variant="simple" size={{ base: "sm", md: "md" }}>
                   <Thead bg="gray.50">
@@ -516,8 +511,7 @@ function StockistPage({ params }: PageProps) {
               size={{ base: "xs", md: "sm" }}
               variant="ghost"
               onClick={handleAddPart}
-              mt={4}
-            >
+              mt={4}>
               Add Part
             </Button>
           </Box>
@@ -528,8 +522,7 @@ function StockistPage({ params }: PageProps) {
             <VStack
               align="stretch"
               spacing={{ base: 3, md: 4 }}
-              maxW={{ base: "100%", md: "400px" }}
-            >
+              maxW={{ base: "100%", md: "400px" }}>
               <HStack justify="space-between">
                 <Text color="gray.600">Labour:</Text>
                 <StyledInput
@@ -585,15 +578,13 @@ function StockistPage({ params }: PageProps) {
             gap={{ base: 2, md: 4 }}
             direction={{ base: "column", md: "row" }}
             wrap="wrap"
-            mb={{ base: 6, md: 8 }}
-          >
+            mb={{ base: 6, md: 8 }}>
             <Button
               variant="outline"
               size={{ base: "xs", md: "sm" }}
               colorScheme="blue"
               w={{ base: "full", md: "auto" }}
-              onClick={() => window.history.back()}
-            >
+              onClick={() => window.history.back()}>
               Cancel
             </Button>
             <Button
@@ -603,8 +594,7 @@ function StockistPage({ params }: PageProps) {
               leftIcon={<FaFileInvoice />}
               w={{ base: "full", sm: "auto" }}
               isLoading={isGenerating}
-              loadingText="Generating..."
-            >
+              loadingText="Generating...">
               Generate Invoice
             </Button>
             <Button
@@ -614,8 +604,7 @@ function StockistPage({ params }: PageProps) {
               leftIcon={<FaFileInvoice />}
               w={{ base: "full", sm: "auto" }}
               isLoading={isSubmitting}
-              loadingText="Updating..."
-            >
+              loadingText="Updating...">
               Update Estimate
             </Button>
             {/* <Button

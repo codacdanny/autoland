@@ -151,7 +151,6 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
 
   const handleEditPayment = async () => {
     setIsUpdating(true);
-    console.log(selectedPayment);
 
     if (!selectedPayment?._id) {
       toast({
@@ -425,7 +424,6 @@ function CustomerJobOrderAccount({ params }: { params: { id: string } }) {
                       onClick={() => {
                         // Add your edit logic here
                         setEditable(!editable);
-                        console.log("Edit total amount");
                       }}
                     />
                   </Flex>

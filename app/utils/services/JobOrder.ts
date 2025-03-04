@@ -24,8 +24,6 @@ export const createJobOrder = async (
 ): Promise<JobOrderFormData> => {
   const token = getCookie("token");
   try {
-    console.log(data);
-
     const response = await axios.post(
       `${process.env.NEXT_PUBLIC_API_URL}/workshops/job-orders`,
       data,

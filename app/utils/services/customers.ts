@@ -16,7 +16,7 @@ export const fetchCustomers = async (
         },
       }
     );
-    // console.log(response.data.data);
+
     return response.data; // Return the customers data
   } catch (error) {
     console.error("Error fetching customers:", error);

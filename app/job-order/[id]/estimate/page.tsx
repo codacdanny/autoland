@@ -116,7 +116,6 @@ function EstimatePage({ params }: PageProps) {
 
         // Then try to fetch existing estimate details
         const estimateDetails = await fetchEstimateDetails(jobId);
-        console.log("ESTIMATE DETAILS=>", estimateDetails);
 
         setFormData((prev) => ({
           ...prev,
@@ -207,7 +206,7 @@ function EstimatePage({ params }: PageProps) {
   // const handleSubmit = async () => {
   //   try {
   //     const response = await updateEstimate(jobId, formData);
-  //     console.log(response);
+  //
 
   //     toast({
   //       title: "Success",
@@ -270,8 +269,7 @@ function EstimatePage({ params }: PageProps) {
     <Flex
       // padding={{ base: 2, md: 4, xl: 0 }}
       justifyContent="center"
-      overflowX="scroll"
-    >
+      overflowX="scroll">
       <Box width="100%" flex={1}>
         <Box>
           <Flex align="center" mb={{ base: 4, md: 6 }} gap={2}>
@@ -291,8 +289,7 @@ function EstimatePage({ params }: PageProps) {
             </SectionTitle>
             <Grid
               templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }}
-              gap={{ base: 3, md: 4 }}
-            >
+              gap={{ base: 3, md: 4 }}>
               <VStack align="stretch">
                 <FormLabel color="gray.600" fontSize="sm">
                   Customer Name
@@ -419,8 +416,7 @@ function EstimatePage({ params }: PageProps) {
               overflowX="scroll"
               rounded="lg"
               shadow="sm"
-              mx={{ base: -2, md: 0 }}
-            >
+              mx={{ base: -2, md: 0 }}>
               <TableContainer minW="1800px" overflowX="auto">
                 <Table variant="simple" size={{ base: "sm", md: "md" }}>
                   <Thead bg="gray.50">
@@ -523,8 +519,7 @@ function EstimatePage({ params }: PageProps) {
               size={{ base: "xs", md: "sm" }}
               variant="ghost"
               onClick={handleAddPart}
-              mt={4}
-            >
+              mt={4}>
               Add Part
             </Button>
           </Box>
@@ -535,8 +530,7 @@ function EstimatePage({ params }: PageProps) {
             <VStack
               align="stretch"
               spacing={{ base: 3, md: 4 }}
-              maxW={{ base: "100%", md: "400px" }}
-            >
+              maxW={{ base: "100%", md: "400px" }}>
               <HStack justify="space-between">
                 <Text color="gray.600">Labour:</Text>
                 <StyledInput
@@ -592,15 +586,13 @@ function EstimatePage({ params }: PageProps) {
             gap={{ base: 2, md: 4 }}
             direction={{ base: "column", md: "row" }}
             wrap="wrap"
-            mb={{ base: 6, md: 8 }}
-          >
+            mb={{ base: 6, md: 8 }}>
             <Button
               variant="outline"
               size={{ base: "xs", md: "sm" }}
               colorScheme="blue"
               w={{ base: "full", md: "auto" }}
-              onClick={() => window.history.back()}
-            >
+              onClick={() => window.history.back()}>
               Cancel
             </Button>
             <Button
@@ -609,8 +601,7 @@ function EstimatePage({ params }: PageProps) {
               size={{ base: "xs", md: "sm" }}
               onClick={handleGenerateEstimate}
               leftIcon={<FaFileInvoice />}
-              w={{ base: "full", sm: "auto" }}
-            >
+              w={{ base: "full", sm: "auto" }}>
               Generate Estimate
             </Button>
             {/* <Button

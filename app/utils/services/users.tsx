@@ -22,10 +22,9 @@ export const userService = {
   async getUserDetails(userId: string): Promise<UserResponse> {
     try {
       const response = await axios.get(`${API_BASE_URL}/users/${userId}`);
-      console.log(response.data);
+
       return response.data;
     } catch (error) {
-      console.log(error);
       throw new Error(
         error instanceof Error ? error.message : "Failed to fetch user details"
       );

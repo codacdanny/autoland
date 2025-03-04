@@ -13,7 +13,6 @@ export const fetchTechnicians = async (): Promise<Technician[]> => {
         },
       }
     );
-    console.log(" RESPONSE=> ", response.data.data);
 
     return response.data.data; // Return the technicians data
   } catch (error) {
