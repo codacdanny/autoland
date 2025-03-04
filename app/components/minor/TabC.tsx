@@ -140,7 +140,7 @@ const TabC: React.FC<TabCProps> = ({
           onChange={(val) => onChange("jobOrderStatus", val)}>
           <Stack spacing={4}>
             <Radio
-              value="In Progress"
+              value="Inprogress"
               borderColor="red.500"
               colorScheme="red"
               size="md"

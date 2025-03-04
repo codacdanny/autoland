@@ -238,30 +238,70 @@ export const EditTechnicianModal = ({
                 value={formData.team}
                 onChange={handleInputChange}
                 placeholder="Select team">
-                <option
-                  style={{
-                    backgroundColor: "#eee",
-                    color: "gray.500",
-                  }}
-                  value="Alpha">
-                  Alpha
-                </option>
-                <option
-                  style={{
-                    backgroundColor: "#eee",
-                    color: "gray.500",
-                  }}
-                  value="Beta">
-                  Beta
-                </option>
-                <option
-                  style={{
-                    backgroundColor: "#eee",
-                    color: "gray.500",
-                  }}
-                  value="Delta">
-                  Delta
-                </option>
+               <option
+              style={{
+                backgroundColor: "#eee",
+                color: "gray.500",
+              }}
+              value="Team Alpha">
+              Team ALPHA
+            </option>
+            <option
+              style={{
+                backgroundColor: "#eee",
+                color: "gray.500",
+              }}
+              value="Team Beta">
+              Team BETA
+            </option>
+            <option
+              style={{
+                backgroundColor: "#eee",
+                color: "gray.500",
+              }}
+              value="Team Delta">
+              Team DELTA
+            </option>
+            <option
+              style={{
+                backgroundColor: "#eee",
+                color: "gray.500",
+              }}
+              value="Team Gamma">
+              Team GAMMA
+            </option>
+            <option
+              style={{
+                backgroundColor: "#eee",
+                color: "gray.500",
+              }}
+              value="Team Omega">
+              Team OMEGA
+            </option>
+            <option
+              style={{
+                backgroundColor: "#eee",
+                color: "gray.500",
+              }}
+              value="Team Omega">
+              Team OMEGA
+            </option>
+            <option
+              style={{
+                backgroundColor: "#eee",
+                color: "gray.500",
+              }}
+              value="Team Omicron">
+              Team OMICRON
+            </option>
+            <option
+              style={{
+                backgroundColor: "#eee",
+                color: "gray.500",
+              }}
+              value="Team Sigma">
+              Team SIGMA
+            </option>
               </StyledSelect>
             </FormControl>
 
