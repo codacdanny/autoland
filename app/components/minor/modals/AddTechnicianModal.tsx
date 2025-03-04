@@ -251,6 +251,22 @@ export const AddTechnicianModal = ({
               value="Team Omega">
               Team OMEGA
             </option>
+                <option
+              style={{
+                backgroundColor: "#eee",
+                color: "gray.500",
+              }}
+              value="Team Omicron">
+              Team OMICRON
+            </option>
+            <option
+              style={{
+                backgroundColor: "#eee",
+                color: "gray.500",
+              }}
+              value="Team Sigma">
+              Team SIGMA
+            </option>
               </StyledSelect>
             </FormControl>
 
